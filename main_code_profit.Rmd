@@ -1,5 +1,5 @@
 ---
-title: "Simulations of efficacy scenarios for fungicide profitability"
+title: "Fungicide Profitability for Soybean Rust Management in Brazil: A Stochastic Simulation Approach"
 author: "Kaique Alves"
 output: 
   html_document: 
@@ -751,23 +751,18 @@ y_gain_perc
 
 ```
 
-```{r}
-plot_grid( plot_grid(y_gain+
-                       theme(legend.position = "none",
-                             strip.background =element_rect(fill="NA"),
-                             strip.text = element_text(color = "black")),
-          y_gain_perc+
-            theme(legend.position = "bottom",
-                  strip.background =element_rect(fill="NA"),
-                  strip.text = element_text(color = "black")),
-          nrow = 2, rel_heights = c(0.83,1)))
-ggsave("figs/combo_yield_gain.png", dpi = 600, height = 6, width =9)
-```
-
-
-
-
-
+<!-- # ```{r} -->
+<!-- # plot_grid( plot_grid(y_gain+ -->
+<!-- #                        theme(legend.position = "none", -->
+<!-- #                              strip.background =element_rect(fill="NA"), -->
+<!-- #                              strip.text = element_text(color = "black")), -->
+<!-- #           y_gain_perc+ -->
+<!-- #             theme(legend.position = "bottom", -->
+<!-- #                   strip.background =element_rect(fill="NA"), -->
+<!-- #                   strip.text = element_text(color = "black")), -->
+<!-- #           nrow = 2, rel_heights = c(0.83,1))) -->
+<!-- # ggsave("figs/combo_yield_gain.png", dpi = 600, height = 9, width =6) -->
+<!-- # ``` -->
 
 
 
