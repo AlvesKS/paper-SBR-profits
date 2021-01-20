@@ -395,7 +395,7 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/AlvesKS/simulation_fungicide_profit">
+  <a href="https://github.com/AlvesKS/paper-SBR-profits">
     <span class="fa fa-github-square"></span>
      
     source
@@ -848,11 +848,11 @@ curve(dgamma(-x,shape=shape, rate = rate), -60,0, add = T)</code></pre>
 ## Pearson&#39;s product-moment correlation
 ## 
 ## data: b1_t and b0_t 
-## t = -20.577 , df = 9998 , p-value = 0 
+## t = -21.87086 , df = 9998 , p-value = 0 
 ## alternative hypothesis: true rho is not equal to 0
 ## sample estimates:
 ## cor
-##  -0.2015667</code></pre>
+##  -0.2136786</code></pre>
 <div id="viz.-the-correlation" class="section level4">
 <h4>Viz. the correlation</h4>
 <pre class="r"><code>corr_sim_plot = data.frame(b0_t,b1_t ) %&gt;%
@@ -928,7 +928,7 @@ real_RYL</code></pre>
 head(simul_ryl)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["b0_t"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["b1_t"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["cc"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1893.687","2":"-26.115979","3":"-1.3791078","_rn_":"1"},{"1":"2960.948","2":"-19.613835","3":"-0.6624175","_rn_":"2"},{"1":"2468.772","2":"-6.164819","3":"-0.2497120","_rn_":"3"},{"1":"2688.731","2":"-16.638047","3":"-0.6188068","_rn_":"4"},{"1":"2168.755","2":"-30.421059","3":"-1.4026970","_rn_":"5"},{"1":"1679.587","2":"-3.676359","3":"-0.2188847","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["b0_t"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["b1_t"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["cc"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1762.357","2":"-4.065441","3":"-0.2306821","_rn_":"1"},{"1":"1333.193","2":"-17.243581","3":"-1.2934044","_rn_":"2"},{"1":"1715.489","2":"-15.581573","3":"-0.9082877","_rn_":"3"},{"1":"3800.698","2":"-20.606604","3":"-0.5421794","_rn_":"4"},{"1":"2960.921","2":"-5.278035","3":"-0.1782565","_rn_":"5"},{"1":"3872.068","2":"-10.150781","3":"-0.2621540","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>stat_suml_ryl = simul_ryl%&gt;% 
@@ -973,7 +973,7 @@ simul_RYL</code></pre>
   )</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["data"],"name":[1],"type":["chr"],"align":["left"]},{"label":["mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["variance"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"empirical","2":"-0.6373769","3":"-0.5483303","4":"0.1362011"},{"1":"Simulated","2":"-0.6456436","3":"-0.5558003","4":"0.1619686"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["data"],"name":[1],"type":["chr"],"align":["left"]},{"label":["mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["variance"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"empirical","2":"-0.6373769","3":"-0.5483303","4":"0.1362011"},{"1":"Simulated","2":"-0.6396626","3":"-0.5587760","4":"0.1528507"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -990,7 +990,7 @@ simulated_cc = data.frame(b0_t, b1_t, cc = (b1_t/b0_t)*100) %&gt;%
 ##  Two-sample Kolmogorov-Smirnov test
 ## 
 ## data:  actual_cc$cc and simulated_cc$cc
-## D = 0.052548, p-value = 0.639
+## D = 0.050452, p-value = 0.6889
 ## alternative hypothesis: two-sided</code></pre>
 <p>cummulative distribution</p>
 <pre class="r"><code>fx_actual = environment(ecdf(actual_cc$cc))$y
@@ -1002,7 +1002,7 @@ ks.test((fx_actual),(fx_simu))</code></pre>
 ##  Two-sample Kolmogorov-Smirnov test
 ## 
 ## data:  (fx_actual) and (fx_simu)
-## D = 0.0049015, p-value = 1
+## D = 0.004899, p-value = 1
 ## alternative hypothesis: two-sided</code></pre>
 <pre class="r"><code>ecdf_damage = ggplot()+
   stat_ecdf(aes(simulated_cc$cc,color = &quot;Simulated&quot;), size=1.2,geom = &quot;step&quot;)+
