@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Data analysis</title>
+
+<script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+<link rel="stylesheet" href="my-style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Profitability fungicide SBR control</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa fa fa-home"></span>
+     
+    About
+  </a>
+</li>
+<li>
+  <a href="main_code_profit.html">
+    <span class="fa fa fa fa-file-code-o"></span>
+     
+    Data analysis
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/AlvesKS/simulation_fungicide_profit">
+    <span class="fa fa-github-square"></span>
+     
+    source
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Data analysis</h1>
+
+</div>
+
+
+<div id="packages" class="section level1">
+<h1>Packages</h1>
+<p>Here we load all the packages we ae going to use in the analysis.</p>
+<pre class="r"><code>library(tidyverse)
+library(gsheet)
+library(cowplot)
+library(ggthemes)
+library(DescTools)
+library(minpack.lm)
+library(agricolae)
+library(readxl)
+library(patchwork)</code></pre>
+</div>
+<div id="probability-distributions" class="section level1">
+<h1>Probability distributions</h1>
+<p>Fist step is to assemble the probability distributions for the for variable we are going to use for the simulations</p>
+<div id="sbr-severity-on-untreated-check." class="section level2">
+<h2>SBR severity on untreated check.</h2>
+<div id="import-data" class="section level3">
+<h3>Import data</h3>
+<p>Importing data of soybean rust severity (SBR) on the untreated check</p>
+<pre class="r"><code>sev_data = read.csv(&quot;data/sev_data.csv&quot;)
+head(sev_data)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["trial"],"name":[1],"type":["int"],"align":["right"]},{"label":["severity"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["mse"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["active_ingredient"],"name":[4],"type":["chr"],"align":["left"]},{"label":["year"],"name":[5],"type":["int"],"align":["right"]},{"label":["spray"],"name":[6],"type":["int"],"align":["right"]},{"label":["location"],"name":[7],"type":["chr"],"align":["left"]},{"label":["state"],"name":[8],"type":["chr"],"align":["left"]}],"data":[{"1":"202","2":"0.1","3":"9.90909","4":"trif_prot","5":"2012","6":"2","7":"MAFRA","8":"SC","_rn_":"1"},{"1":"3","2":"0.1","3":"6.53177","4":"azox_cypr","5":"2005","6":"2","7":"UBERABA","8":"MG","_rn_":"2"},{"1":"3","2":"0.1","3":"6.53177","4":"tebu","5":"2005","6":"2","7":"UBERABA","8":"MG","_rn_":"3"},{"1":"8","2":"0.1","3":"0.34482","4":"azox_cypr","5":"2005","6":"2","7":"GUARAPUAVA","8":"PR","_rn_":"4"},{"1":"7","2":"0.1","3":"6.41161","4":"tebu","5":"2005","6":"2","7":"IPAMERI","8":"GO","_rn_":"5"},{"1":"7","2":"0.1","3":"6.41161","4":"azox_cypr","5":"2005","6":"2","7":"IPAMERI","8":"GO","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Filtering only values of severity in the check treatment</p>
+<pre class="r"><code>sev_check = sev_data %&gt;% 
+  filter(active_ingredient == &quot;check&quot;)
+head(sev_check)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["trial"],"name":[1],"type":["int"],"align":["right"]},{"label":["severity"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["mse"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["active_ingredient"],"name":[4],"type":["chr"],"align":["left"]},{"label":["year"],"name":[5],"type":["int"],"align":["right"]},{"label":["spray"],"name":[6],"type":["int"],"align":["right"]},{"label":["location"],"name":[7],"type":["chr"],"align":["left"]},{"label":["state"],"name":[8],"type":["chr"],"align":["left"]}],"data":[{"1":"152","2":"0.4","3":"0.0076","4":"check","5":"2010","6":"2","7":"SANTO ANTÃ”NIO DA PATRULHA","8":"RS","_rn_":"1"},{"1":"33","2":"0.5","3":"0.0271","4":"check","5":"2006","6":"2","7":"PASSO FUNDO","8":"RS","_rn_":"2"},{"1":"85","2":"1.3","3":"0.0409","4":"check","5":"2008","6":"2","7":"UBERABA","8":"MG","_rn_":"3"},{"1":"4","2":"5.0","3":"0.0282","4":"check","5":"2005","6":"2","7":"MARACAJÃš","8":"MS","_rn_":"4"},{"1":"210","2":"5.5","3":"2.3139","4":"check","5":"2013","6":"2","7":"SÃƒO GABRIEL DO OESTE","8":"MS","_rn_":"5"},{"1":"218","2":"5.8","3":"0.7697","4":"check","5":"2013","6":"2","7":"DOURADOS","8":"MS","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="empirical-distribution" class="section level3">
+<h3>Empirical distribution</h3>
+<pre class="r"><code>sev_check %&gt;% 
+  ggplot(aes(severity/100))+
+  geom_histogram(bins = 20, color = &quot;black&quot;, fill = &quot;gray&quot;)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="modeling" class="section level3">
+<h3>Modeling</h3>
+<p>Since severity in proportional terms is between zero and one, we fit the empirical distribution into a beta probability distribution. For that we need to find the shape and scale parameters of the beta distribution function.</p>
+<p>For that, obtain the empirical cumulative distribution and fit to the beta cumulative distribution.</p>
+<pre class="r"><code>sev = sev_check$severity
+Fx= environment(ecdf(sev))$y
+x = environment(ecdf(sev))$x/100
+
+summary(nlsLM(Fx ~ pbeta(x, shape1, shape2, log = FALSE) ,
+      start = c(shape1 = 1, shape2 = 1),
+      control = nls.lm.control(maxiter = 100000)))</code></pre>
+<pre><code>## Warning in nls.lm(par = start, fn = FCT, jac = jac, control = control, lower =
+## lower, : resetting `maxiter&#39; to 1024!</code></pre>
+<pre><code>## 
+## Formula: Fx ~ pbeta(x, shape1, shape2, log = FALSE)
+## 
+## Parameters:
+##        Estimate Std. Error t value Pr(&gt;|t|)    
+## shape1  1.70736    0.02761   61.83   &lt;2e-16 ***
+## shape2  1.26581    0.01925   65.75   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.02053 on 186 degrees of freedom
+## 
+## Number of iterations to convergence: 6 
+## Achieved convergence tolerance: 1.49e-08</code></pre>
+</div>
+<div id="kolmogorov-smirnov-test" class="section level3">
+<h3>Kolmogorov-Smirnov Test</h3>
+<pre class="r"><code>ks.test(Fx,pbeta(x, 1.707, 1.266) )</code></pre>
+<pre><code>## Warning in ks.test(Fx, pbeta(x, 1.707, 1.266)): p-value will be approximate in
+## the presence of ties</code></pre>
+<pre><code>## 
+##  Two-sample Kolmogorov-Smirnov test
+## 
+## data:  Fx and pbeta(x, 1.707, 1.266)
+## D = 0.053191, p-value = 0.953
+## alternative hypothesis: two-sided</code></pre>
+<pre class="r"><code>plot(x,Fx)
+curve(pbeta(x, 1.707, 1.266),0,1, add = T)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>plot(Fx,pbeta(x, 1.707, 1.266) )
+abline(a=0,b=1)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="visualization" class="section level3">
+<h3>Visualization</h3>
+<pre class="r"><code>sev_dist_plot = sev_check %&gt;% 
+  ggplot(aes(severity/100))+
+ geom_histogram(aes(y = ..density..),bins = 10, color = &quot;white&quot;, fill = &quot;#AC08FF&quot;)+
+   stat_function(fun=function(x) dbeta(x, 1.707, 1.266), color= &quot;black&quot;, size = 1.2)+
+  theme_bw()+
+  labs(x=&quot;Severity (proportion)&quot;, y = &quot;Density&quot;)
+sev_dist_plot</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code># ggsave(&quot;figs/sev_dist.png&quot;, dpi=600, height = 3, width = 4)</code></pre>
+</div>
+</div>
+<div id="soybean-price" class="section level2">
+<h2>Soybean price</h2>
+<div id="import-data-1" class="section level3">
+<h3>Import data</h3>
+<pre class="r"><code>soybean = gsheet2tbl(&quot;https://docs.google.com/spreadsheets/d/1-jQ9OgWdLQCb0iB0FqbrhuVi7LiNhqxvf9QU4-iuc3o/edit#gid=1085329359&quot;) 
+head(soybean)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["state"],"name":[1],"type":["chr"],"align":["left"]},{"label":["month"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["year"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["price"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["national_price"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"GO","2":"10","3":"2019","4":"78.2641","5":"76.9515"},{"1":"GO","2":"9","3":"2019","4":"77.3741","5":"75.7721"},{"1":"GO","2":"8","3":"2019","4":"73.0297","5":"71.6310"},{"1":"GO","2":"7","3":"2019","4":"68.0732","5":"68.4306"},{"1":"GO","2":"6","3":"2019","4":"69.7431","5":"70.1475"},{"1":"GO","2":"5","3":"2019","4":"67.1912","5":"66.1616"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>conversion to US dollar</p>
+<pre class="r"><code>sbr_price = soybean %&gt;% 
+  filter(year&gt;=2018) %&gt;% 
+  mutate(price = (price/60)/4,
+         national_price = (national_price/60)/4)
+sbr_price</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["state"],"name":[1],"type":["chr"],"align":["left"]},{"label":["month"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["year"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["price"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["national_price"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"GO","2":"10","3":"2019","4":"0.3261004","5":"0.3206312"},{"1":"GO","2":"9","3":"2019","4":"0.3223921","5":"0.3157171"},{"1":"GO","2":"8","3":"2019","4":"0.3042904","5":"0.2984625"},{"1":"GO","2":"7","3":"2019","4":"0.2836383","5":"0.2851275"},{"1":"GO","2":"6","3":"2019","4":"0.2905963","5":"0.2922812"},{"1":"GO","2":"5","3":"2019","4":"0.2799633","5":"0.2756733"},{"1":"GO","2":"4","3":"2019","4":"0.2818404","5":"0.2820121"},{"1":"GO","2":"3","3":"2019","4":"0.2831954","5":"0.2880346"},{"1":"GO","2":"2","3":"2019","4":"0.2779683","5":"0.2816129"},{"1":"GO","2":"1","3":"2019","4":"0.3006571","5":"0.2886583"},{"1":"GO","2":"12","3":"2018","4":"0.3147517","5":"0.3006558"},{"1":"GO","2":"11","3":"2018","4":"0.3223987","5":"0.3084471"},{"1":"GO","2":"10","3":"2018","4":"0.3311533","5":"0.3244358"},{"1":"GO","2":"9","3":"2018","4":"0.3404375","5":"0.3313658"},{"1":"GO","2":"8","3":"2018","4":"0.3149771","5":"0.3161013"},{"1":"GO","2":"7","3":"2018","4":"0.3041267","5":"0.3076508"},{"1":"GO","2":"6","3":"2018","4":"0.2950892","5":"0.3002729"},{"1":"GO","2":"5","3":"2018","4":"0.3052571","5":"0.3096954"},{"1":"GO","2":"4","3":"2018","4":"0.2898854","5":"0.3011587"},{"1":"GO","2":"3","3":"2018","4":"0.2743675","5":"0.2803408"},{"1":"GO","2":"2","3":"2018","4":"0.2626971","5":"0.2600579"},{"1":"GO","2":"1","3":"2018","4":"0.2632133","5":"0.2581300"},{"1":"MT","2":"10","3":"2019","4":"0.3104700","5":"0.3206312"},{"1":"MT","2":"9","3":"2019","4":"0.3072337","5":"0.3157171"},{"1":"MT","2":"8","3":"2019","4":"0.2893454","5":"0.2984625"},{"1":"MT","2":"7","3":"2019","4":"0.2665413","5":"0.2851275"},{"1":"MT","2":"6","3":"2019","4":"0.2717983","5":"0.2922812"},{"1":"MT","2":"5","3":"2019","4":"0.2631771","5":"0.2756733"},{"1":"MT","2":"4","3":"2019","4":"0.2658988","5":"0.2820121"},{"1":"MT","2":"3","3":"2019","4":"0.2670996","5":"0.2880346"},{"1":"MT","2":"2","3":"2019","4":"0.2599358","5":"0.2816129"},{"1":"MT","2":"1","3":"2019","4":"0.2592479","5":"0.2886583"},{"1":"MT","2":"12","3":"2018","4":"0.2750046","5":"0.3006558"},{"1":"MT","2":"11","3":"2018","4":"0.2806400","5":"0.3084471"},{"1":"MT","2":"10","3":"2018","4":"0.2997812","5":"0.3244358"},{"1":"MT","2":"9","3":"2018","4":"0.3106529","5":"0.3313658"},{"1":"MT","2":"8","3":"2018","4":"0.2984175","5":"0.3161013"},{"1":"MT","2":"7","3":"2018","4":"0.2915133","5":"0.3076508"},{"1":"MT","2":"6","3":"2018","4":"0.2983546","5":"0.3002729"},{"1":"MT","2":"5","3":"2018","4":"0.2949412","5":"0.3096954"},{"1":"MT","2":"4","3":"2018","4":"0.2824846","5":"0.3011587"},{"1":"MT","2":"3","3":"2018","4":"0.2624729","5":"0.2803408"},{"1":"MT","2":"2","3":"2018","4":"0.2455313","5":"0.2600579"},{"1":"MT","2":"1","3":"2018","4":"0.2398992","5":"0.2581300"},{"1":"RS","2":"10","3":"2019","4":"0.3182296","5":"0.3206312"},{"1":"RS","2":"9","3":"2019","4":"0.3157217","5":"0.3157171"},{"1":"RS","2":"8","3":"2019","4":"0.3002283","5":"0.2984625"},{"1":"RS","2":"7","3":"2019","4":"0.2879921","5":"0.2851275"},{"1":"RS","2":"6","3":"2019","4":"0.2961279","5":"0.2922812"},{"1":"RS","2":"5","3":"2019","4":"0.2765758","5":"0.2756733"},{"1":"RS","2":"4","3":"2019","4":"0.2840887","5":"0.2820121"},{"1":"RS","2":"3","3":"2019","4":"0.2938596","5":"0.2880346"},{"1":"RS","2":"2","3":"2019","4":"0.2832600","5":"0.2816129"},{"1":"RS","2":"1","3":"2019","4":"0.2883783","5":"0.2886583"},{"1":"RS","2":"12","3":"2018","4":"0.2983500","5":"0.3006558"},{"1":"RS","2":"11","3":"2018","4":"0.3084912","5":"0.3084471"},{"1":"RS","2":"10","3":"2018","4":"0.3257229","5":"0.3244358"},{"1":"RS","2":"9","3":"2018","4":"0.3330371","5":"0.3313658"},{"1":"RS","2":"8","3":"2018","4":"0.3163733","5":"0.3161013"},{"1":"RS","2":"7","3":"2018","4":"0.3085233","5":"0.3076508"},{"1":"RS","2":"6","3":"2018","4":"0.2974583","5":"0.3002729"},{"1":"RS","2":"5","3":"2018","4":"0.3141046","5":"0.3096954"},{"1":"RS","2":"4","3":"2018","4":"0.3091121","5":"0.3011587"},{"1":"RS","2":"3","3":"2018","4":"0.2847008","5":"0.2803408"},{"1":"RS","2":"2","3":"2018","4":"0.2589637","5":"0.2600579"},{"1":"RS","2":"1","3":"2018","4":"0.2537404","5":"0.2581300"},{"1":"TO","2":"10","3":"2019","4":"0.3266304","5":"0.3206312"},{"1":"TO","2":"9","3":"2019","4":"0.3050779","5":"0.3157171"},{"1":"TO","2":"8","3":"2019","4":"0.2855583","5":"0.2984625"},{"1":"TO","2":"7","3":"2019","4":"0.2795400","5":"0.2851275"},{"1":"TO","2":"6","3":"2019","4":"0.2787888","5":"0.2922812"},{"1":"TO","2":"5","3":"2019","4":"0.2641538","5":"0.2756733"},{"1":"TO","2":"4","3":"2019","4":"0.2766254","5":"0.2820121"},{"1":"TO","2":"3","3":"2019","4":"0.2797596","5":"0.2880346"},{"1":"TO","2":"2","3":"2019","4":"0.2809004","5":"0.2816129"},{"1":"TO","2":"1","3":"2019","4":"0.3042921","5":"0.2886583"},{"1":"TO","2":"12","3":"2018","4":"0.3157050","5":"0.3006558"},{"1":"TO","2":"11","3":"2018","4":"0.3075079","5":"0.3084471"},{"1":"TO","2":"10","3":"2018","4":"0.3164967","5":"0.3244358"},{"1":"TO","2":"9","3":"2018","4":"0.3107813","5":"0.3313658"},{"1":"TO","2":"8","3":"2018","4":"0.3104392","5":"0.3161013"},{"1":"TO","2":"7","3":"2018","4":"0.3011658","5":"0.3076508"},{"1":"TO","2":"6","3":"2018","4":"0.2932787","5":"0.3002729"},{"1":"TO","2":"5","3":"2018","4":"0.2887567","5":"0.3096954"},{"1":"TO","2":"4","3":"2018","4":"0.2828617","5":"0.3011587"},{"1":"TO","2":"3","3":"2018","4":"0.2701850","5":"0.2803408"},{"1":"TO","2":"2","3":"2018","4":"0.2481317","5":"0.2600579"},{"1":"TO","2":"1","3":"2018","4":"0.2595833","5":"0.2581300"},{"1":"PR","2":"10","3":"2019","4":"0.3189779","5":"0.3206312"},{"1":"PR","2":"9","3":"2019","4":"0.3150921","5":"0.3157171"},{"1":"PR","2":"8","3":"2019","4":"0.2956258","5":"0.2984625"},{"1":"PR","2":"7","3":"2019","4":"0.2866842","5":"0.2851275"},{"1":"PR","2":"6","3":"2019","4":"0.2977008","5":"0.2922812"},{"1":"PR","2":"5","3":"2019","4":"0.2792292","5":"0.2756733"},{"1":"PR","2":"4","3":"2019","4":"0.2856742","5":"0.2820121"},{"1":"PR","2":"3","3":"2019","4":"0.2885300","5":"0.2880346"},{"1":"PR","2":"2","3":"2019","4":"0.2897938","5":"0.2816129"},{"1":"PR","2":"1","3":"2019","4":"0.2872200","5":"0.2886583"},{"1":"PR","2":"12","3":"2018","4":"0.2953100","5":"0.3006558"},{"1":"PR","2":"11","3":"2018","4":"0.3057992","5":"0.3084471"},{"1":"PR","2":"10","3":"2018","4":"0.3284579","5":"0.3244358"},{"1":"PR","2":"9","3":"2018","4":"0.3368942","5":"0.3313658"},{"1":"PR","2":"8","3":"2018","4":"0.3250467","5":"0.3161013"},{"1":"PR","2":"7","3":"2018","4":"0.3181621","5":"0.3076508"},{"1":"PR","2":"6","3":"2018","4":"0.3148100","5":"0.3002729"},{"1":"PR","2":"5","3":"2018","4":"0.3177804","5":"0.3096954"},{"1":"PR","2":"4","3":"2018","4":"0.3047558","5":"0.3011587"},{"1":"PR","2":"3","3":"2018","4":"0.2877096","5":"0.2803408"},{"1":"PR","2":"2","3":"2018","4":"0.2680100","5":"0.2600579"},{"1":"PR","2":"1","3":"2018","4":"0.2647508","5":"0.2581300"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>sbr_price %&gt;% 
+  ggplot(aes(year,price)) +
+  geom_jitter(alpha =.2, size =2)+
+  geom_boxplot(aes(group = year), fill = NA, size= 1)+
+  scale_color_gradient()+
+  theme_minimal_hgrid()</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code>  # facet_wrap(~state)</code></pre>
+<p>Mean and Standad deviantion</p>
+<pre class="r"><code>mean(sbr_price$price)</code></pre>
+<pre><code>## [1] 0.2932792</code></pre>
+<pre class="r"><code>sd(sbr_price$price)</code></pre>
+<pre><code>## [1] 0.02167031</code></pre>
+</div>
+<div id="empirical-distribution-1" class="section level3">
+<h3>Empirical distribution</h3>
+<pre class="r"><code>sbr_price %&gt;% 
+  ggplot(aes(price))+
+  geom_histogram(bins = 10, fill = &quot;steelblue&quot;, color = &quot;white&quot;)+
+  theme_bw()+
+  labs(x = &quot;Soybean prince&quot;)+
+  scale_x_continuous(breaks = seq(0,1,by=0.025))</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<pre class="r"><code>hist((sbr_price$price), prob = T)
+curve(dnorm(x, mean(sbr_price$price), sd(sbr_price$price)),0.15,0.35, add = T)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<pre class="r"><code>plot(ecdf(sbr_price$price))
+curve(pnorm(x, mean(sbr_price$price), sd(sbr_price$price)),0.2,0.35, add = T)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>Mean and median</p>
+<pre class="r"><code>mean(sbr_price$price)</code></pre>
+<pre><code>## [1] 0.2932792</code></pre>
+<pre class="r"><code>median(sbr_price$price)</code></pre>
+<pre><code>## [1] 0.2935692</code></pre>
+</div>
+<div id="shapiro" class="section level3">
+<h3>Shapiro</h3>
+<pre class="r"><code>shapiro.test(sbr_price$price)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  sbr_price$price
+## W = 0.99021, p-value = 0.6164</code></pre>
+</div>
+<div id="kolmogorov-smirnov-test-1" class="section level3">
+<h3>Kolmogorov-Smirnov Test</h3>
+<pre class="r"><code>Fx = environment(ecdf(sbr_price$price))$y
+x= environment(ecdf(sbr_price$price))$x
+ks.test(Fx, pnorm(x, mean(sbr_price$price), sd(sbr_price$price)))</code></pre>
+<pre><code>## 
+##  Two-sample Kolmogorov-Smirnov test
+## 
+## data:  Fx and pnorm(x, mean(sbr_price$price), sd(sbr_price$price))
+## D = 0.054545, p-value = 0.9967
+## alternative hypothesis: two-sided</code></pre>
+<pre class="r"><code>plot(Fx, pnorm(x, mean(sbr_price$price), sd(sbr_price$price)))</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+</div>
+<div id="vizualization" class="section level3">
+<h3>Vizualization</h3>
+<pre class="r"><code>price_plot = sbr_price %&gt;% 
+  ggplot(aes(price))+
+ geom_histogram(aes(y = ..density..),bins = 10, color = &quot;white&quot;, fill = &quot;#1C8C20&quot;)+
+   stat_function(fun=function(x) dnorm(x, mean(sbr_price$price), sd(sbr_price$price)), color= &quot;black&quot;, size = 1.2)+
+  theme_bw()+
+  labs(x=&quot;Soybean price (US$/kg)&quot;, y = &quot;Density&quot;)+
+  scale_x_continuous(breaks = seq(0,1,by=0.025))
+price_plot</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<pre class="r"><code># ggsave(&quot;figs/sev_dist.png&quot;, dpi=600, height = 3, width = 4)</code></pre>
+</div>
+</div>
+<div id="regression-coeficients" class="section level2">
+<h2>Regression coeficients</h2>
+<div id="import-data-2" class="section level3">
+<h3>import data</h3>
+<p>Importing regression Slope and intercept data from the relationship between SBR severity and yield</p>
+<pre class="r"><code>damage_data = read_excel(&quot;data/dados histograma.xlsx&quot;) %&gt;% 
+  mutate(Slope = b1,
+         Intercept = b0) %&gt;% 
+  dplyr::select(-b1,-b0)
+head(damage_data)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["ensaio"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Slope"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Intercept"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"-27.44720","3":"3197.271"},{"1":"2","2":"-5.88864","3":"2131.976"},{"1":"3","2":"-13.02720","3":"2729.020"},{"1":"5","2":"-23.03550","3":"2482.799"},{"1":"6","2":"-8.45086","3":"2790.171"},{"1":"9","2":"-30.60020","3":"2611.623"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="empirical-distribution-2" class="section level3">
+<h3>Empirical distribution</h3>
+<p>Visualizando os hitogramas do slope e intercepto</p>
+<pre class="r"><code>damage_data %&gt;% 
+  gather(2:3, key = &quot;par&quot;, value = &quot;value&quot;) %&gt;% 
+  ggplot(aes(value))+
+  geom_histogram(bins = 10, color = &quot;gray40&quot;, fill = &quot;gray90&quot;)+
+  facet_wrap(~par, scales = &quot;free_x&quot;)+
+  theme_bw()</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+</div>
+<div id="regression-lines" class="section level3">
+<h3>Regression lines</h3>
+<pre class="r"><code>  ggplot() +
+  geom_point(aes(x = 0:100, y = seq(0,5000,by = 50)), color = NA)+
+  geom_abline(data =damage_data, aes(slope = Slope, intercept = Intercept),
+              alpha = 0.5, color = &quot;gray&quot;)+
+  geom_abline(intercept = 2977,slope = -18, size = 1.2)+
+  geom_abline(intercept = 2862,slope = -19.4 , size = .51, linetype = 2)+
+  geom_abline(intercept = 3093,slope = -16.6, size = .51, linetype = 2)+
+  
+  labs(x = &quot;SBR Severity (%)&quot;, y = &quot;Yield (kg/ha) &quot;)+
+  theme_base()</code></pre>
+<pre><code>## Warning: Removed 101 rows containing missing values (geom_point).</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+</div>
+<div id="correlation" class="section level3">
+<h3>correlation</h3>
+<p>Correlation between slope and intercept</p>
+<pre class="r"><code>correlation(damage_data$Slope, damage_data$Intercept)</code></pre>
+<pre><code>## 
+## Pearson&#39;s product-moment correlation
+## 
+## data: damage_data$Slope and damage_data$Intercept 
+## t = -3.144296 , df = 202 , p-value = 0.001915808 
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+## cor
+##  -0.2160089</code></pre>
+<div id="plot" class="section level4">
+<h4>plot</h4>
+<pre class="r"><code>corr_emp_plot = damage_data %&gt;% 
+  ggplot(aes(Intercept, Slope))+
+  geom_point(color = &quot;black&quot;, size =2, alpha =0.5)+
+  # geom_density2d_filled()+
+  geom_smooth(method = &quot;lm&quot;, se = F, color =&quot;Red&quot;, size=1.2, fullrange=TRUE)+
+  theme_light()+
+  labs(title = &quot;Empirical: r = -0.216&quot;)+
+  coord_cartesian(
+    xlim = c(0,6000),
+    ylim = c(-75,0)
+  )
+corr_emp_plot</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+</div>
+</div>
+<div id="cumulative-density" class="section level3">
+<h3>Cumulative density</h3>
+</div>
+<div id="intercept" class="section level3">
+<h3>Intercept</h3>
+<pre class="r"><code>mean_intercept = mean(damage_data$Intercept)
+sd_intercept = sd(damage_data$Intercept)
+
+plot(ecdf(damage_data$Intercept))
+curve(pnorm(x, mean_intercept,sd_intercept), 1000,5000, add = T, col = &quot;red&quot;)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+</div>
+<div id="kolmogorov-smirnov-test-2" class="section level3">
+<h3>Kolmogorov-Smirnov Test</h3>
+<pre class="r"><code>Fx = environment(ecdf(damage_data$Intercept))$y
+x= environment(ecdf(damage_data$Intercept))$x
+ks.test(Fx, pnorm(x, mean(damage_data$Intercept), sd(damage_data$Intercept)))</code></pre>
+<pre><code>## 
+##  Two-sample Kolmogorov-Smirnov test
+## 
+## data:  Fx and pnorm(x, mean(damage_data$Intercept), sd(damage_data$Intercept))
+## D = 0.034314, p-value = 0.9997
+## alternative hypothesis: two-sided</code></pre>
+<pre class="r"><code>plot(Fx, pnorm(x, mean(damage_data$Intercept), sd(damage_data$Intercept)))</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<pre class="r"><code>intercep_plot = damage_data %&gt;% 
+  ggplot(aes(Intercept))+
+  geom_histogram(aes(y = ..density..),bins = 10, color = &quot;white&quot;, fill = &quot;#FF4917&quot;)+
+  stat_function(fun=function(x) dnorm(x, mean_intercept, sd_intercept), color =&quot;black&quot;, size =1.2)+
+  theme_bw()+
+  labs(x=&quot;Intercept (kg/ha)&quot;, y = &quot;Density&quot;)
+intercep_plot</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+</div>
+<div id="slope" class="section level3">
+<h3>Slope</h3>
+<pre class="r"><code>mean_slope = mean(damage_data$Slope)
+sd_slope = sd(damage_data$Slope)
+
+plot(ecdf(damage_data$Slope))
+curve(pnorm(x, mean_slope, sd_slope), -60,5, add = T, col = &quot;red&quot;)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<div id="modeling-1" class="section level4">
+<h4>Modeling</h4>
+<p>Fitting gamma distribution to the empirical cumulative density of the slope data</p>
+<pre class="r"><code>Fx =environment(ecdf(-damage_data$Slope))$y
+x = environment(ecdf(-damage_data$Slope))$x
+
+slope_reg = nlsLM(Fx ~ pgamma(x, shape, rate,log = FALSE) ,
+      start = c(shape = 2.5, rate = 0.13),
+      control = nls.lm.control(maxiter = 1024))
+summary(slope_reg)</code></pre>
+<pre><code>## 
+## Formula: Fx ~ pgamma(x, shape, rate, log = FALSE)
+## 
+## Parameters:
+##       Estimate Std. Error t value Pr(&gt;|t|)    
+## shape 3.044261   0.031275   97.34   &lt;2e-16 ***
+## rate  0.168269   0.001929   87.22   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.014 on 201 degrees of freedom
+## 
+## Number of iterations to convergence: 4 
+## Achieved convergence tolerance: 1.49e-08</code></pre>
+</div>
+</div>
+<div id="kolmogorov-smirnov-test-3" class="section level3">
+<h3>Kolmogorov-Smirnov Test</h3>
+<pre class="r"><code>shape = summary(slope_reg)$coef[1]
+rate = summary(slope_reg)$coef[2]
+
+Fx =environment(ecdf(-damage_data$Slope))$y
+x = environment(ecdf(-damage_data$Slope))$x
+ks.test(Fx, pgamma(x, shape, rate))</code></pre>
+<pre><code>## 
+##  Two-sample Kolmogorov-Smirnov test
+## 
+## data:  Fx and pgamma(x, shape, rate)
+## D = 0.034483, p-value = 0.9997
+## alternative hypothesis: two-sided</code></pre>
+<pre class="r"><code>shape = summary(slope_reg)$coef[1]
+rate = summary(slope_reg)$coef[2]
+
+slope_plot = damage_data %&gt;% 
+  ggplot(aes(Slope))+
+ geom_histogram(aes(y = ..density..),bins = 10, color = &quot;white&quot;, fill = &quot;#159EE6&quot;)+
+   stat_function(fun=function(x) dgamma(-x, shape, rate), size = 1.2, color = &quot;black&quot;)+
+  theme_bw()+
+  labs(x=&quot;Slope (kg/p.p.)&quot;, y = &quot;Density&quot;)
+slope_plot</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+</div>
+<div id="kolmogorov-smirnov-test-4" class="section level3">
+<h3>Kolmogorov-Smirnov Test</h3>
+<pre class="r"><code>ks.test(Fx,pgamma(x, shape, rate))</code></pre>
+<pre><code>## 
+##  Two-sample Kolmogorov-Smirnov test
+## 
+## data:  Fx and pgamma(x, shape, rate)
+## D = 0.034483, p-value = 0.9997
+## alternative hypothesis: two-sided</code></pre>
+</div>
+<div id="multivariate-simulation-using-copula" class="section level3">
+<h3>Multivariate Simulation using copula</h3>
+<p>Simulating two normal distributions correlated #### Function</p>
+<pre class="r"><code>######################################
+gera.norm.bid.geral&lt;-function(tamanho.amostra,correlacao,m1,m2,sigma1,sigma2)
+{
+  ro&lt;-correlacao
+  n&lt;-tamanho.amostra
+  x&lt;-matrix(0,n,2)
+  for (i in 1:n)
+  {x[i,1]&lt;-rnorm(1,m1,sigma1)
+  x[i,2]&lt;-rnorm(1,m2+ro*sigma1/sigma2*(x[i,1]-m1),sigma2*(sqrt(1-ro^2)))
+  }
+  return(x)
+}</code></pre>
+<p>Test for correlation of 0.9</p>
+<pre class="r"><code>#testando
+j&lt;-gera.norm.bid.geral(1000,0.9,0,0,1,1)
+
+plot(j[,1],j[,2])</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<p>For our data, we will use the positive correlation, becouse we want positive values of slope</p>
+<pre class="r"><code>#testando
+j&lt;-gera.norm.bid.geral(10000,0.2160089,0,0,1,1)
+
+plot(j[,1],j[,2])</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+</div>
+<div id="intercept-1" class="section level3">
+<h3>Intercept</h3>
+<p>Now we obtaing the probabilities from first distribution and insert in the quantiles function for the normal distribution of the intercept</p>
+<pre class="r"><code>b0 = pnorm(j[,2])
+b0_t = qnorm(b0, 2977, 58.9*sqrt(210))
+hist(b0_t, prob = T)
+curve(dnorm(x, mean_intercept, sd_intercept), 0, 6000, add = T)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+</div>
+<div id="slope-1" class="section level3">
+<h3>Slope</h3>
+<p>Now we obtaing the probabilities from first distribution and insert in the quantiles function for the gamma ditribution and multiply for -1 for obtain the negative outputs of the coeficient</p>
+<pre class="r"><code>b1 = pnorm(j[,1])
+b1_t = qgamma(b1, shape, rate = rate)*-1
+hist(b1_t, prob = T)
+curve(dgamma(-x,shape=shape, rate = rate), -60,0, add = T)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
+<p>Now we recalculate the correlation between the simulated coeficients. It matchs!</p>
+<pre class="r"><code>correlation(b1_t, b0_t)</code></pre>
+<pre><code>## 
+## Pearson&#39;s product-moment correlation
+## 
+## data: b1_t and b0_t 
+## t = -20.577 , df = 9998 , p-value = 0 
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+## cor
+##  -0.2015667</code></pre>
+<div id="viz.-the-correlation" class="section level4">
+<h4>Viz. the correlation</h4>
+<pre class="r"><code>corr_sim_plot = data.frame(b0_t,b1_t ) %&gt;%
+  mutate(alfa =(b1_t/b0_t)*100 ) %&gt;% 
+  filter(alfa &gt; -3 &amp; alfa &lt; 0) %&gt;% 
+ggplot(aes(b0_t,b1_t ))+
+  geom_point( size =2, color = &quot;orange&quot;, alpha =0.3)+
+  # geom_density_2d(color = &quot;black&quot;)+
+  geom_smooth(method = lm, color = &quot;red&quot;, se = F, size = 1.2)+
+  theme_light()+
+  labs(y= &quot;Slope&quot;,
+       x = &quot;Intercept&quot;,
+       title = &quot;Simulated: r = -0.204&quot;)+
+  coord_cartesian(
+    xlim = c(0,6000),
+    ylim = c(-75,0)
+  )
+corr_sim_plot</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
+</div>
+<div id="combo-distributions" class="section level4">
+<h4>Combo distributions</h4>
+<pre class="r"><code># plot_grid(sev_dist_plot,price_plot, intercep_plot, slope_plot, labels = &quot;AUTO&quot;, nrow =2)
+
+(sev_dist_plot+price_plot)/
+  (intercep_plot+slope_plot)+
+  # (corr_emp_plot+corr_sim_plot)+
+  plot_annotation(tag_levels = &#39;A&#39;)&amp;
+  theme(plot.title = element_text(size =8))</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;figs/coef_dist.png&quot;, dpi = 600, height = 5, width = 6)
+ggsave(&quot;figs/coef_dist.pdf&quot;, dpi = 600, height = 5, width = 6)</code></pre>
+</div>
+</div>
+<div id="relative-yield-loss" class="section level3">
+<h3>Relative yield loss</h3>
+<p>Here we calculate the yield relative loss due to SBR severity using the original data set</p>
+<pre class="r"><code>empiric_ryl= damage_data %&gt;% 
+  mutate(cc = (Slope/Intercept)*100) %&gt;% 
+  filter( cc &gt; -3 &amp; cc &lt;0 )
+head(empiric_ryl)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["ensaio"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Slope"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Intercept"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["cc"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"-27.44720","3":"3197.271","4":"-0.8584571"},{"1":"2","2":"-5.88864","3":"2131.976","4":"-0.2762057"},{"1":"3","2":"-13.02720","3":"2729.020","4":"-0.4773582"},{"1":"5","2":"-23.03550","3":"2482.799","4":"-0.9278037"},{"1":"6","2":"-8.45086","3":"2790.171","4":"-0.3028796"},{"1":"9","2":"-30.60020","3":"2611.623","4":"-1.1716929"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>stat_emp_ryl =empiric_ryl%&gt;% 
+  summarise(data = &quot;empirical&quot;,
+            mean =  mean(cc),
+            median =  median(cc),
+            variance = var(cc))</code></pre>
+<pre class="r"><code>real_RYL= empiric_ryl %&gt;% 
+  ggplot(aes(cc))+
+ geom_histogram(aes(y = ..density..),bins = 10, color = &quot;white&quot;, fill = &quot;black&quot;)+
+  scale_y_continuous(limits = c(0,1.4),breaks =  seq(0, 1.4,by = 0.4))+
+  geom_vline(data = stat_emp_ryl, aes(xintercept = mean, color = &quot;Mean&quot;),size =1)+
+  geom_vline(data = stat_emp_ryl, aes(xintercept = median, color = &quot;Median&quot;),size =1)+
+  theme_bw()+
+  scale_color_calc()+
+  labs(x = &quot;Relative yield loss (%/p.p.)&quot;,
+       y = &quot;Density&quot;,
+       color = &quot;&quot;,
+       title = &quot;Empirical&quot;)+
+  xlim(-3,0.2)+
+  theme(legend.position = &quot;top&quot;)
+real_RYL</code></pre>
+<pre><code>## Warning: Removed 2 rows containing missing values (geom_bar).</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
+<p>And here we calculate the relative yield loss due to SBR severity using the simulated data set</p>
+<pre class="r"><code>simul_ryl = data.frame(b0_t, b1_t, cc = (b1_t/b0_t)*100) %&gt;% 
+  filter( cc &gt; -3 &amp; cc &lt;0 )
+head(simul_ryl)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["b0_t"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["b1_t"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["cc"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1893.687","2":"-26.115979","3":"-1.3791078","_rn_":"1"},{"1":"2960.948","2":"-19.613835","3":"-0.6624175","_rn_":"2"},{"1":"2468.772","2":"-6.164819","3":"-0.2497120","_rn_":"3"},{"1":"2688.731","2":"-16.638047","3":"-0.6188068","_rn_":"4"},{"1":"2168.755","2":"-30.421059","3":"-1.4026970","_rn_":"5"},{"1":"1679.587","2":"-3.676359","3":"-0.2188847","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>stat_suml_ryl = simul_ryl%&gt;% 
+  summarise(data = &quot;Simulated&quot;,
+            mean =  mean(cc),
+            median =  median(cc),
+            variance = var(cc))</code></pre>
+<pre class="r"><code>simul_RYL =simul_ryl %&gt;% 
+  ggplot(aes(cc))+
+ geom_histogram(aes(y = ..density..),bins = 10, color = &quot;white&quot;, fill = &quot;orange&quot;)+
+  scale_y_continuous(limits = c(0,1.4),breaks =  seq(0, 1.4,by = 0.4))+
+  geom_vline(data = stat_suml_ryl, aes(xintercept = mean, color = &quot;Mean&quot;),size =1)+
+  geom_vline(data = stat_suml_ryl, aes(xintercept = median, color = &quot;Median&quot;),size =1)+
+  theme_bw()+
+  scale_color_calc()+
+  labs(x = &quot;Relative yield loss (%/p.p.)&quot;,
+       y = &quot;Density&quot;,
+       color =&quot;&quot;,
+       title = &quot;Simulated&quot;)+
+  xlim(-3,0.2)+
+  theme(legend.position = &quot;top&quot;)
+simul_RYL</code></pre>
+<pre><code>## Warning: Removed 2 rows containing missing values (geom_bar).</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-49-1.png" width="672" /></p>
+</div>
+<div id="comparision-of-mean-median-and-variance" class="section level3">
+<h3>Comparision of mean, median and variance</h3>
+<pre class="r"><code>damage_data %&gt;% 
+  mutate(cc = (Slope/Intercept)*100) %&gt;% 
+  filter( cc &gt; -3 &amp; cc &lt;0 ) %&gt;% 
+  summarise(data = &quot;empirical&quot;,
+            mean =  mean(cc),
+            median =  median(cc),
+            variance = var(cc)) %&gt;% 
+  bind_rows(
+    data.frame(b0_t, b1_t, cc = (b1_t/b0_t)*100) %&gt;% 
+  filter( cc &gt; -3 &amp; cc &lt;0 ) %&gt;% 
+  summarise(data = &quot;Simulated&quot;,
+            mean =  mean(cc),
+            median =  median(cc),
+            variance = var(cc))
+  )</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["data"],"name":[1],"type":["chr"],"align":["left"]},{"label":["mean"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["variance"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"empirical","2":"-0.6373769","3":"-0.5483303","4":"0.1362011"},{"1":"Simulated","2":"-0.6456436","3":"-0.5558003","4":"0.1619686"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="kolmogorov-smirnov-test-5" class="section level3">
+<h3>Kolmogorov-Smirnov Test</h3>
+<pre class="r"><code>actual_cc = damage_data %&gt;% 
+  mutate(cc = (Slope/Intercept)*100)
+
+simulated_cc = data.frame(b0_t, b1_t, cc = (b1_t/b0_t)*100) %&gt;% 
+  filter( cc &gt; -3 &amp; cc &lt;0 )</code></pre>
+<p>Distribution</p>
+<pre class="r"><code>ks.test(actual_cc$cc, simulated_cc$cc)</code></pre>
+<pre><code>## 
+##  Two-sample Kolmogorov-Smirnov test
+## 
+## data:  actual_cc$cc and simulated_cc$cc
+## D = 0.052548, p-value = 0.639
+## alternative hypothesis: two-sided</code></pre>
+<p>cummulative distribution</p>
+<pre class="r"><code>fx_actual = environment(ecdf(actual_cc$cc))$y
+fx_simu = environment(ecdf(simulated_cc$cc))$y
+ks.test((fx_actual),(fx_simu))</code></pre>
+<pre><code>## Warning in ks.test((fx_actual), (fx_simu)): p-value will be approximate in the
+## presence of ties</code></pre>
+<pre><code>## 
+##  Two-sample Kolmogorov-Smirnov test
+## 
+## data:  (fx_actual) and (fx_simu)
+## D = 0.0049015, p-value = 1
+## alternative hypothesis: two-sided</code></pre>
+<pre class="r"><code>ecdf_damage = ggplot()+
+  stat_ecdf(aes(simulated_cc$cc,color = &quot;Simulated&quot;), size=1.2,geom = &quot;step&quot;)+
+  stat_ecdf(aes(actual_cc$cc, color = &quot;Empirical&quot;), size=1.2,geom = &quot;step&quot;)+
+  theme_bw()+
+  scale_color_manual(values = c(&quot;black&quot;,&quot;orange&quot;))+
+  labs(y = &quot;Probability&quot;,
+       x = &quot;Relative percent yield loss&quot;,
+       color =&quot;&quot;,
+       title = &quot;Cumulative distribution function&quot;)+
+  theme(legend.position = &quot;top&quot;,
+        legend.background = element_blank())
+ecdf_damage</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p>
+</div>
+<div id="combo-yield-loss" class="section level3">
+<h3>Combo Yield loss</h3>
+<pre class="r"><code>((corr_emp_plot/corr_sim_plot)|(real_RYL/simul_RYL)+plot_layout(guides = &#39;collect&#39;)| ecdf_damage ) +
+  # plot_layout(heights = c(1,1,0.5))+
+  plot_annotation(tag_levels = &#39;A&#39;) &amp; 
+  
+  theme(legend.position = &#39;bottom&#39;,
+        plot.title = element_text(size=9),
+        legend.key.size= unit(3, &quot;mm&quot;),
+        legend.text =  element_text(size = 7))</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;
+## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 2 rows containing missing values (geom_bar).
+
+## Warning: Removed 2 rows containing missing values (geom_bar).</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-55-1.png" width="768" /></p>
+<pre class="r"><code>ggsave(&quot;figs/RYL.png&quot;, dpi = 600, height = 5, width = 10)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;
+## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 2 rows containing missing values (geom_bar).
+
+## Warning: Removed 2 rows containing missing values (geom_bar).</code></pre>
+<pre class="r"><code>ggsave(&quot;figs/RYL.pdf&quot;, dpi = 600, height = 5, width = 10)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;
+## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 2 rows containing missing values (geom_bar).
+
+## Warning: Removed 2 rows containing missing values (geom_bar).</code></pre>
+</div>
+</div>
+</div>
+<div id="simulations" class="section level1">
+<h1>Simulations</h1>
+<pre class="r"><code>set.seed(1)
+n=40000
+lambda = seq(0,1, by=0.05)
+fun_price = seq(-10, 260, by=15)
+n_aplication = 1
+operational_cost = 10  
+
+comb_matrix = as.matrix(data.table::CJ(lambda,fun_price))
+colnames(comb_matrix) = c(&quot;lambda&quot;,&quot;fun_price&quot;)
+comb_matrix = cbind(comb_matrix,operational_cost, n_aplication)
+C = comb_matrix[,&quot;n_aplication&quot;]*(comb_matrix[,&quot;operational_cost&quot;]+comb_matrix[,&quot;fun_price&quot;] )
+comb_matrix = cbind(comb_matrix,C)
+
+N = length(comb_matrix[,1])*n
+big_one = matrix(0, ncol = 12, nrow =N)
+big_one[,1] = rep(comb_matrix[,1],n)
+big_one[,2] = rep(comb_matrix[,2],n)
+big_one[,3] = rep(comb_matrix[,3],n)
+big_one[,4] = rep(comb_matrix[,4],n)
+big_one[,5] = rep(comb_matrix[,5],n)
+
+set.seed(1)
+sn = rbeta(N, 1.707, 1.266)
+sf = sn*(1-big_one[,1])
+# simulating the coeficientes 
+set.seed(1)
+normal_correlated&lt;-gera.norm.bid.geral(N,0.21,0,0,1,1)
+b0_n = pnorm(normal_correlated[,2])
+b1_n = pnorm(normal_correlated[,1])
+b0 = qnorm(b0_n, mean_intercept,sd_intercept)
+b1 = -qgamma(b1_n, shape, rate,)
+rm(b0_n,b1_n,normal_correlated)
+# b0[b0&lt;0] = 0.0001
+# Calculating the alha coeficient
+alfa = (b1/b0)*100
+# alfa[alfa &gt; 0] = 0
+# alfa[alfa &lt; -3] = -3
+
+# Calculating yield gain
+# yn = b0*(1+sn*alfa) # Yield  non-treated
+# yf = b0*(1+sf*alfa) # Yield  treated
+yn  = b0 - (-alfa*b0*sn)
+yf  = b0 - (-alfa*b0*sf)
+# yn[yn&lt;0] = 0
+# yf[yf&lt;0] = 0
+# yield_gain = yf-yn # yield gain
+# yield_gain_perc = (1-(yn/yf))*100
+
+
+# Simulating soybean price
+set.seed(1)
+soy_price = rnorm(N, mean(sbr_price$price),sd(sbr_price$price))
+# income = yield_gain*soy_price # calculating the income
+
+big_one[,6] = yn
+big_one[,7] = yf
+big_one[,8] = soy_price
+big_one[,9] = b1
+big_one[,10] = alfa
+big_one[,11] = b0
+big_one[,12] = sn
+colnames(big_one)  = c(&quot;lambda&quot;,&quot;fun_price&quot;,&quot;operational_cost&quot;,&quot;n_aplication&quot;,&quot;C&quot;,&quot;yn&quot;,&quot;yf&quot;,&quot;soy_price&quot;,&quot;b1&quot;,&quot;alfa&quot;,&quot;b0&quot;, &quot;sn&quot;)</code></pre>
+<pre class="r"><code>big_one_df = as.data.frame(big_one) %&gt;% 
+  filter(b0&gt;=0) %&gt;% 
+  filter(yn&gt;0) %&gt;% 
+  filter(alfa &gt; -3 &amp; alfa &lt; 0) %&gt;% 
+  mutate(yield_gain = yf-yn,
+         # yield_gain_perc = ((yf - yn)/yn)*100,
+         yield_gain_perc = ((yf/yn)-1)*100,
+         income = yield_gain*soy_price,
+         CP = C/soy_price,
+         # profit = (yield_gain&gt;=CP)*1,
+         profit = (income&gt;=C)*1)</code></pre>
+<div id="breacking-even" class="section level3">
+<h3>Breacking even</h3>
+<div id="tetris" class="section level4">
+<h4>Tetris</h4>
+<pre class="r"><code>big_one_df %&gt;% 
+  # mutate(sev_class = case_when(sn &gt; median(sn) ~ &quot;High severity&quot;,
+                                 # sn &lt;= median(sn) ~ &quot;Low severity&quot;)) %&gt;% 
+  filter(lambda &gt;=0.3) %&gt;%
+  group_by(lambda, C) %&gt;% 
+  summarise(n=n(),sumn = sum(profit), prob = sumn/n) %&gt;%
+  # filter(prob&gt;0.5) %&gt;%
+  mutate(prob2 = case_when(prob &lt; 0.50 ~ &quot;Pr(I \u2265 C) \u2264 0.5 &quot;,
+                          prob &gt;= 0.50 ~ &quot;Pr(I \u2265 C) &gt; 0.5&quot;)) %&gt;% #,
+  # #                         prob &gt;= 0.75 ~ &quot;75% \u2264 p &lt; 100% &quot;  )) %&gt;% 
+  ggplot(aes(as.factor(lambda*100),as.factor(C), fill = prob, 
+             # color = prob2
+             ))+
+  geom_tile(size = 0.5, color =&quot;white&quot;)+
+  scale_fill_viridis_b(option =&quot;B&quot;, direction = -1)+
+  # scale_fill_manual(values = c(&quot;darkred&quot;,  &quot;steelblue&quot;))+
+  # scale_fill_gradient2(low = &quot;#E60E00&quot;,mid = &quot;#00030F&quot;, high = &quot;#55E344&quot;,midpoint = 0.5)+
+  scale_color_manual(values = c(&quot;#E60E00&quot;,&quot;#55E344&quot;))+
+  # scale_fill_gradient2(low = &quot;red&quot;,mid = &quot;black&quot;, high = &quot;steelblue&quot;,midpoint = 0.5)+
+  # scale_color_manual(values = c(&quot;red&quot;,&quot;steelblue&quot;)) + 
+  guides(color = guide_legend(override.aes = list(size=2)))+
+  # scale_fill_viridis_d(option = &quot;B&quot;)+
+  labs(x = &quot;Fungicide efficacy (%)&quot;,
+       y = &quot;Fungicide + Application cost ($)&quot;,
+       fill  = &quot;Pr(I \u2265 C)&quot;,
+       color =&quot;&quot; )+
+  # facet_wrap(~sev_class)+
+  theme_light()</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39; (override with `.groups` argument)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
+<pre class="r"><code># ggsave(&quot;figs/tetris.png&quot;, dpi = 600, height = 5, width = 7)</code></pre>
+</div>
+<div id="tetris-2" class="section level4">
+<h4>Tetris 2</h4>
+<pre class="r"><code>median(big_one_df$b0)</code></pre>
+<pre><code>## [1] 2995.191</code></pre>
+<pre class="r"><code>tetris_plot = function(s_class, y_class, pal =1){
+big_one_df %&gt;% 
+  mutate(sev_class = case_when(sn &gt; median(sn) ~ &quot;High severity&quot;,
+                                 sn &lt;= median(sn) ~ &quot;Low severity&quot;),
+      yield_class =  case_when(b0 &gt; median(b0) ~ &quot;High yield&quot;,
+                                 b0 &lt;= median(b0) ~ &quot;Low yield&quot;)) %&gt;%
+    filter(lambda &gt;=0.3) %&gt;% 
+  group_by(lambda, C, sev_class,yield_class) %&gt;% 
+  summarise(n=n(),sumn = sum(profit), prob = sumn/n) %&gt;%
+  mutate(prob = case_when(prob &gt;= .75 ~ &quot;\u2265 0.75&quot;,
+                          prob &lt; .75 &amp; prob &gt;= 0.5 ~ &quot;0.50-0.75&quot;,
+                          prob &lt; .50 &amp; prob &gt;= .25 ~ &quot;0.25-0.50&quot;,
+                          prob &lt; .25 ~ &quot;&lt; 0.25&quot;),
+         prob =factor(prob,level = c(&quot;&lt; 0.25&quot;,&quot;0.25-0.50&quot;,&quot;0.50-0.75&quot;, &quot;\u2265 0.75&quot;))) %&gt;%
+    filter(sev_class== s_class,
+           yield_class == y_class) %&gt;% 
+  ggplot(aes(as.factor(lambda*100),as.factor(C), fill = prob))+
+  geom_tile(size = 0.25, color =&quot;gray70&quot;)+
+  scale_fill_brewer(palette = pal)+
+  labs(x = &quot;Fungicide efficacy (%)&quot;,
+       y = &quot;Fungicide + Application cost ($)&quot;,
+       fill  = &quot;Probability&quot;,
+       color =&quot;&quot; )+
+  # facet_grid(~sev_class)+
+  guides(color = guide_legend(override.aes = list(size=2)))+
+  theme_light()+
+  theme(text = element_text(size = 10),
+        legend.position = &quot;bottom&quot;,
+        axis.text = element_text(size = 7),
+        panel.spacing = unit(1.75, &quot;lines&quot;),
+        strip.background =element_rect(fill=&quot;NA&quot;),
+        strip.text = element_text(color = &quot;black&quot;, size =12))
+}</code></pre>
+<pre class="r"><code>tetris_Sh_Sh = tetris_plot(s_class = &quot;High severity&quot;,
+                          y_class = &quot;High yield&quot;,pal =1)+
+  labs(title = &quot;High severity&quot;,
+       subtitle = &quot;High yield&quot;)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39;, &#39;C&#39;, &#39;sev_class&#39; (override with `.groups` argument)</code></pre>
+<pre class="r"><code>tetris_Sl_Yh = tetris_plot(s_class = &quot;Low severity&quot;,
+                          y_class = &quot;High yield&quot;,pal =1
+                         )+
+  labs(title = &quot;Low severity&quot;,
+       subtitle = &quot;High yield&quot;)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39;, &#39;C&#39;, &#39;sev_class&#39; (override with `.groups` argument)</code></pre>
+<pre class="r"><code>tetris_Sh_Yl = tetris_plot(s_class = &quot;High severity&quot;,
+                          y_class = &quot;Low yield&quot;,pal =2
+                         )+
+  labs(title = &quot;High severity&quot;,
+       subtitle = &quot;Low yield&quot;)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39;, &#39;C&#39;, &#39;sev_class&#39; (override with `.groups` argument)</code></pre>
+<pre class="r"><code>tetris_Sl_Sh = tetris_plot(s_class = &quot;Low severity&quot;,
+                          y_class = &quot;Low yield&quot;,pal =2
+                         )+
+  labs(title = &quot;Low severity&quot;,
+       subtitle = &quot;Low yield&quot;)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39;, &#39;C&#39;, &#39;sev_class&#39; (override with `.groups` argument)</code></pre>
+</div>
+<div id="combo-tetris" class="section level4">
+<h4>Combo tetris</h4>
+<pre class="r"><code>((tetris_Sh_Sh+tetris_Sl_Yh)+plot_layout(guides = &quot;collect&quot;))/((tetris_Sh_Yl+tetris_Sl_Sh)+
+   plot_layout(guides = &quot;collect&quot;))+
+  plot_annotation(tag_levels = &#39;A&#39;)&amp;
+  theme(legend.position = &quot;bottom&quot;,
+        plot.title = element_text(size = 8),
+        plot.subtitle = element_text(size = 8))</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-62-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;figs/box_classes.png&quot;, dpi = 500, height = 8.5, width = 7.5)
+ggsave(&quot;figs/box_classes.pdf&quot;, dpi = 500, height = 8.5, width = 7.5)</code></pre>
+</div>
+</div>
+<div id="yield-gain" class="section level2">
+<h2>Yield gain</h2>
+<div id="absolute-gain" class="section level3">
+<h3>Absolute gain</h3>
+<pre class="r"><code>overal_yg = big_one_df %&gt;%
+  mutate(sev_class = &quot; Overall&quot;) %&gt;% 
+  group_by(lambda,sev_class) %&gt;% 
+  summarise(yield_gain_median = median(yield_gain),
+            yield_gain_mean = mean(yield_gain),
+            up_95 = quantile(yield_gain, 0.975),
+            low_95 = quantile(yield_gain, 0.025),
+            up_75 = quantile(yield_gain, 0.75),
+            low_75 = quantile(yield_gain, 0.25))</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39; (override with `.groups` argument)</code></pre>
+<pre class="r"><code># m_absol = lm(yield_gain ~ lambda, big_one_df %&gt;% mutate(lambda=lambda*100))
+# summary(m_absol)</code></pre>
+<pre class="r"><code>over_gg_kg = overal_yg %&gt;% 
+  ggplot(aes(lambda*100,yield_gain_mean))+
+  geom_line(aes(lambda*100, low_95),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(aes(lambda*100, up_95),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(size = 1.2, aes(lambda*100,yield_gain_median))+
+  # scale_linetype_manual(values=c(1,2))+
+  theme_light()+
+  # geom_abline(slope = 9.61, intercept = -0.1 )+
+  # coord_equal()+
+  labs(x = &quot;Fungicide efficacy (%)&quot;,
+       y = &quot;Yield gain (kg/ha)&quot;,
+       color = &quot;Fungicide mixture&quot;, #(Dalla lana et al., 2018)
+       linetype = &quot;&quot;, fill = &quot;&quot;)</code></pre>
+<pre><code>## Warning: Ignoring unknown parameters: fill
+
+## Warning: Ignoring unknown parameters: fill</code></pre>
+<pre class="r"><code>over_gg_kg</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-65-1.png" width="672" /></p>
+<pre class="r"><code>ygain_plot = function(s_class){
+big_one_df %&gt;% 
+  mutate(sev_class = case_when(sn &gt; median(sn) ~ &quot;High severity&quot;,
+                                 sn &lt;= median(sn) ~ &quot;Low severity&quot;),
+      yield_class =  case_when(b0 &gt; median(b0) ~ &quot;High yield&quot;,
+                                 b0 &lt;= median(b0) ~ &quot;Low yield&quot;)) %&gt;%
+  group_by(lambda, sev_class,yield_class ) %&gt;% 
+  summarise(yield_gain_median = median(yield_gain),
+            yield_gain_mean = mean(yield_gain),
+            up_95 = quantile(yield_gain, 0.975),
+            low_95 = quantile(yield_gain, 0.025),
+            up_75 = quantile(yield_gain, 0.75),
+            low_75 = quantile(yield_gain, 0.25)) %&gt;% 
+  mutate(sev_class = factor(sev_class, levels = c(&quot;Low severity&quot;,&quot;High severity&quot;))) %&gt;%
+    filter(sev_class ==s_class ) %&gt;% 
+  ggplot(aes(lambda*100,yield_gain_mean))+
+  geom_line(aes(lambda*100, low_95, color = yield_class),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(aes(lambda*100, up_95,color = yield_class),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(size = 1.2, aes(lambda*100,yield_gain_median,color = yield_class))+
+  # scale_color_manual(values = c(&quot;#009628&quot;,&quot;#8A0004&quot;))+
+  scale_color_manual(values = c(&quot;steelblue&quot;,&quot;#009628&quot;))+
+  theme_light()+
+    coord_cartesian(ylim=c(0,3000))+
+  labs(x = &quot;Fungicide efficacy (%)&quot;,
+       y = &quot;Yield gain (kg/ha)&quot;,
+       color = &quot;Attainable Yield&quot;, #(Dalla lana et al., 2018)
+       linetype = &quot;&quot;)
+}
+high_sev_yg = ygain_plot(s_class = &quot;High severity&quot;)+
+  labs(title = &quot;High severity&quot;)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39;, &#39;sev_class&#39; (override with `.groups` argument)</code></pre>
+<pre><code>## Warning: Ignoring unknown parameters: fill
+
+## Warning: Ignoring unknown parameters: fill</code></pre>
+<pre class="r"><code>low_sev_yg = ygain_plot(s_class = &quot;Low severity&quot;)+
+  labs(title = &quot;Low severity&quot;)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39;, &#39;sev_class&#39; (override with `.groups` argument)</code></pre>
+<pre><code>## Warning: Ignoring unknown parameters: fill
+
+## Warning: Ignoring unknown parameters: fill</code></pre>
+<pre class="r"><code>high_sev_yg+low_sev_yg</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-67-1.png" width="672" /></p>
+<pre class="r"><code>big_one_df %&gt;%
+  mutate(sev_class = case_when(sn &gt; median(sn) ~ &quot;High severity&quot;,
+                                 sn &lt;= median(sn) ~ &quot;Low severity&quot;),
+      yield_class =  case_when(b0 &gt; median(b0) ~ &quot;High yield&quot;,
+                                 b0 &lt;= median(b0) ~ &quot;Low yield&quot;)) %&gt;%
+  group_by(lambda, sev_class,yield_class ) %&gt;% 
+  summarise(yield_gain_mean = mean(yield_gain),
+            yield_gain_median = median(yield_gain, na.rm = T),
+            low_95 = quantile(yield_gain, 0.025),
+            up_95 = quantile(yield_gain, 0.975),
+            up_75 = quantile(yield_gain, 0.75),
+            low_75 = quantile(yield_gain, 0.25)) %&gt;% 
+  bind_rows(overal_yg) %&gt;% 
+  filter(lambda==.75) %&gt;% 
+  arrange(yield_class)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39;, &#39;sev_class&#39; (override with `.groups` argument)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["lambda"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sev_class"],"name":[2],"type":["chr"],"align":["left"]},{"label":["yield_class"],"name":[3],"type":["chr"],"align":["left"]},{"label":["yield_gain_mean"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["yield_gain_median"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["low_95"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["up_95"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["up_75"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["low_75"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.75","2":"High severity","3":"High yield","4":"1097.6609","5":"1005.6984","6":"252.00581","7":"2401.151","8":"1447.5514","9":"660.9616"},{"1":"0.75","2":"Low severity","3":"High yield","4":"529.1057","5":"444.3926","6":"55.31494","7":"1486.599","8":"719.2909","9":"247.7504"},{"1":"0.75","2":"High severity","3":"Low yield","4":"826.8404","5":"768.6629","6":"179.40010","7":"1769.329","8":"1100.5032","9":"500.1639"},{"1":"0.75","2":"Low severity","3":"Low yield","4":"429.0164","5":"356.1993","6":"42.12051","7":"1221.035","8":"587.5728","9":"195.5694"},{"1":"0.75","2":"Overall","3":"NA","4":"721.6038","5":"610.3045","6":"71.56763","7":"1974.058","8":"996.6373","9":"334.4614"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="percent-gain" class="section level3">
+<h3>Percent gain</h3>
+<pre class="r"><code>overal_percet = big_one_df %&gt;%
+  mutate(sev_class = &quot; Overall&quot;) %&gt;% 
+  group_by(lambda,sev_class) %&gt;% 
+  mutate(yield_gain_perc = case_when(yield_gain_perc&gt;quantile(yield_gain_perc,0.999)~quantile(yield_gain_perc,0.999),
+                                     yield_gain_perc&lt;=quantile(yield_gain_perc,0.999) ~yield_gain_perc)) %&gt;%
+  summarise(yield_gain_mean = mean(yield_gain_perc,na.rm = T),
+            yield_gain_median = median(yield_gain_perc,na.rm = T),
+            low_95 = quantile(yield_gain_perc, 0.025,na.rm = T),
+            up_95 = quantile(yield_gain_perc, 0.975,na.rm = T),
+            up_75 = quantile(yield_gain_perc, 0.75,na.rm = T),
+            low_75 = quantile(yield_gain_perc, 0.25,na.rm = T))  </code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39; (override with `.groups` argument)</code></pre>
+<pre class="r"><code>over_gg = overal_percet %&gt;% 
+  ggplot(aes(lambda*100,yield_gain_mean))+
+  geom_line(aes(lambda*100, low_95),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(aes(lambda*100, up_95),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(size = 1.2, aes(lambda*100,yield_gain_median))+
+  # scale_linetype_manual(values=c(1,2))+
+  theme_light()+
+  # coord_equal()+
+  labs(x = &quot;Fungicide efficacy (%)&quot;,
+       y = &quot;Yield gain %&quot;,
+       color = &quot;Fungicide mixture&quot;, #(Dalla lana et al., 2018)
+       linetype = &quot;&quot;, fill = &quot;&quot;)+
+  coord_cartesian(ylim = c(0,100), xlim = c(-10,100))</code></pre>
+<pre><code>## Warning: Ignoring unknown parameters: fill
+
+## Warning: Ignoring unknown parameters: fill</code></pre>
+<pre class="r"><code>over_gg</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-70-1.png" width="672" /></p>
+<pre class="r"><code>ygain_perc_plot = function(s_class){
+big_one_df %&gt;% 
+  mutate(sev_class = case_when(sn &gt; median(sn) ~ &quot;High severity&quot;,
+                                 sn &lt;= median(sn) ~ &quot;Low severity&quot;),
+      yield_class =  case_when(b0 &gt; median(b0) ~ &quot;High yield&quot;,
+                                 b0 &lt;= median(b0) ~ &quot;Low yield&quot;)) %&gt;%
+  group_by(lambda, sev_class,yield_class ) %&gt;% 
+  summarise(yield_gain_median = median(yield_gain_perc),
+            yield_gain_mean = mean(yield_gain_perc),
+            up_95 = quantile(yield_gain_perc, 0.975),
+            low_95 = quantile(yield_gain_perc, 0.025),
+            up_75 = quantile(yield_gain_perc, 0.75),
+            low_75 = quantile(yield_gain_perc, 0.25)) %&gt;% 
+  mutate(sev_class = factor(sev_class, levels = c(&quot;Low severity&quot;,&quot;High severity&quot;))) %&gt;%
+    filter(sev_class ==s_class ) %&gt;% 
+  ggplot(aes(lambda*100,yield_gain_mean))+
+  geom_line(aes(lambda*100, low_95, color = yield_class),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(aes(lambda*100, up_95,color = yield_class),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(size = 1.2, aes(lambda*100,yield_gain_median,color = yield_class))+
+  # scale_color_manual(values = c(&quot;#009628&quot;,&quot;#8A0004&quot;))+
+  scale_color_manual(values = c(&quot;steelblue&quot;,&quot;#009628&quot;))+
+
+  theme_light()+
+  labs(x = &quot;Fungicide efficacy (%)&quot;,
+       y = &quot;Yield gain (%)&quot;,
+       color = &quot;Attainable Yield&quot;, 
+       linetype = &quot;&quot;, fill = &quot;&quot;)+
+  coord_cartesian(ylim = c(0,100))
+}
+high_sev_yg_perc = ygain_perc_plot(s_class = &quot;High severity&quot;)+
+  labs(title = &quot;High severity&quot;)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39;, &#39;sev_class&#39; (override with `.groups` argument)</code></pre>
+<pre><code>## Warning: Ignoring unknown parameters: fill
+
+## Warning: Ignoring unknown parameters: fill</code></pre>
+<pre class="r"><code>low_sev_yg_perc = ygain_perc_plot(s_class = &quot;Low severity&quot;)+
+  labs(title = &quot;Low severity&quot;)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39;, &#39;sev_class&#39; (override with `.groups` argument)</code></pre>
+<pre><code>## Warning: Ignoring unknown parameters: fill
+
+## Warning: Ignoring unknown parameters: fill</code></pre>
+</div>
+<div id="combo-yied-gain" class="section level3">
+<h3>Combo yied gain</h3>
+<pre class="r"><code>(high_sev_yg+low_sev_yg)/
+(high_sev_yg_perc+low_sev_yg_perc)+
+  plot_layout(guides = &quot;collect&quot;,
+               heights = c(1,1))+
+  plot_annotation(tag_levels = &#39;A&#39;)&amp; 
+  theme(plot.title = element_text(size =8))</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-72-1.png" width="672" /></p>
+<pre class="r"><code>ggsave(&quot;figs/yield_gain_perc.png&quot;, dpi = 600, height = 6, width =8)
+ggsave(&quot;figs/yield_gain_perc.pdf&quot;, dpi = 600, height = 6, width =8)</code></pre>
+<pre class="r"><code> big_one_df %&gt;%
+  mutate(sev_class = case_when(sn &gt; median(sn) ~ &quot;High severity&quot;,
+                                 sn &lt;= median(sn) ~ &quot;Low severity&quot;),
+      yield_class =  case_when(b0 &gt; median(b0) ~ &quot;High yield&quot;,
+                                 b0 &lt;= median(b0) ~ &quot;Low yield&quot;)) %&gt;%
+  group_by(lambda,sev_class,yield_class) %&gt;%
+  mutate(yield_gain_perc = case_when(yield_gain_perc&gt;quantile(yield_gain_perc,0.999)~quantile(yield_gain_perc,0.999),
+                                     yield_gain_perc&lt;=quantile(yield_gain_perc,0.999) ~yield_gain_perc)) %&gt;%
+  summarise(yield_gain_mean = mean((yield_gain_perc),na.rm = T),
+            yield_gain_median = median((yield_gain_perc),na.rm = T),
+            low_95 = quantile((yield_gain_perc), 0.025,na.rm = T),
+            up_95 = quantile((yield_gain_perc), 0.975,na.rm = T),
+            up_75 = quantile((yield_gain_perc), 0.75,na.rm = T),
+            low_75 = quantile((yield_gain_perc), 0.25,na.rm = T)) %&gt;% 
+  bind_rows(overal_percet)%&gt;% 
+  filter(lambda==0.75) %&gt;% 
+  arrange(yield_class)</code></pre>
+<pre><code>## `summarise()` regrouping output by &#39;lambda&#39;, &#39;sev_class&#39; (override with `.groups` argument)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["lambda"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["sev_class"],"name":[2],"type":["chr"],"align":["left"]},{"label":["yield_class"],"name":[3],"type":["chr"],"align":["left"]},{"label":["yield_gain_mean"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["yield_gain_median"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["low_95"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["up_95"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["up_75"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["low_75"],"name":[9],"type":["dbl"],"align":["right"]}],"data":[{"1":"0.75","2":"High severity","3":"High yield","4":"113.66432","5":"43.68773","6":"7.714640","7":"545.94260","8":"84.67157","9":"24.031748"},{"1":"0.75","2":"Low severity","3":"High yield","4":"22.69060","5":"14.57543","6":"1.558041","7":"90.43382","8":"26.84064","9":"7.524787"},{"1":"0.75","2":"High severity","3":"Low yield","4":"236.36097","5":"61.14187","6":"8.923423","7":"1258.38523","8":"134.02329","9":"30.979298"},{"1":"0.75","2":"Low severity","3":"Low yield","4":"46.58283","5":"19.99875","6":"1.907038","7":"215.52167","8":"40.24537","9":"9.760793"},{"1":"0.75","2":"Overall","3":"NA","4":"98.53145","5":"29.59557","6":"2.611608","7":"505.73865","8":"64.85672","9":"13.838138"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</div>
+<div id="examples" class="section level1">
+<h1>Examples</h1>
+<p>Fungicide PICO+TEBU</p>
+<pre class="r"><code>n = 1000
+# yield = rnorm(1000,682.11, 28.97)
+efficacy = (1-exp(rnorm(1000,-1.204,0.0462)))
+
+sev_n = rbeta(n, 1.707, 1.266)
+sev_f = sev_n*(1-efficacy) 
+
+normal_correlated&lt;-gera.norm.bid.geral(n,0.21,0,0,1,1)
+b0_n = pnorm(normal_correlated[,2])
+b1_n = pnorm(normal_correlated[,1])
+b0 = qnorm(b0_n, mean_intercept,sd_intercept)
+b1 = -qgamma(b1_n, shape, rate,)
+rm(b0_n,b1_n,normal_correlated)
+
+# Calculating the alpha coeficient
+alfa = (b1/b0)*100
+
+# Calculating yield gain
+yn  = b0 - (-alfa*b0*sev_n)
+yf  = b0 - (-alfa*b0*sev_f)
+
+cost = 125
+soy_price = rnorm(n, mean(sbr_price$price),sd(sbr_price$price))
+
+yield_gain = yf-yn
+yield_gain_perc = ((yf - yn)/yn)*100
+yield_gain_perc = ((yf/yn)-1)*100
+income = yield_gain*soy_price
+CP = cost/soy_price
+profit = (yield_gain&gt;=CP)*1
+mean(profit)</code></pre>
+<pre><code>## [1] 0.664</code></pre>
+<pre class="r"><code>hist(income-cost)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-74-1.png" width="672" /></p>
+<pre class="r"><code>hist(efficacy)</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-74-2.png" width="672" /></p>
+<div id="simulations-overtime" class="section level2">
+<h2>simulations overtime</h2>
+<div id="tebu" class="section level3">
+<h3>Tebu</h3>
+<pre class="r"><code>box_time = data.frame()
+time = seq(0,10, 1)
+
+b0_decline =-1.518
+b0_se_decline =  0.065
+b1_decline = 0.147
+b1_se_decline = 0.012
+n = 30000
+for(i in 1:length(time)){
+  
+y =  rnorm(n, b0_decline,b0_se_decline) + time[i]* rnorm(n,b1_decline,b1_se_decline)  
+efficacy = (1-exp(y))
+a = data.frame(time = time[i],lambda=efficacy)
+box_time = box_time %&gt;% 
+  bind_rows(a)
+}
+
+# box_time
+
+
+
+# box_time %&gt;% 
+#   ggplot(aes(time, lambda*100))+
+#   geom_point()+
+#   labs(y = &quot;Efficacy&quot;)+
+#   ylim(0,100)</code></pre>
+<pre class="r"><code>simul_decay = function(data_ef, cost){
+# cost = 75
+N = n*length(time)
+sev_n = rbeta(N, 1.707, 1.266)
+sev_f = sev_n*(1-data_ef$lambda) 
+normal_correlated&lt;-gera.norm.bid.geral(N,0.21,0,0,1,1)
+b0_n = pnorm(normal_correlated[,2])
+b1_n = pnorm(normal_correlated[,1])
+b0 = qnorm(b0_n, mean_intercept,sd_intercept)
+b1 = -qgamma(b1_n, shape, rate,)
+rm(b0_n,b1_n,normal_correlated)
+
+# Calculating the alpha coeficient
+alfa = (b1/b0)*100
+
+# Calculating yield gain
+yn  = b0 - (-alfa*b0*sev_n)
+yf  = b0 - (-alfa*b0*sev_f)
+
+soy_price = rnorm(N, mean(sbr_price$price),sd(sbr_price$price))
+
+yield_gain = yf-yn
+yield_gain_perc = ((yf - yn)/yn)*100
+yield_gain_perc = ((yf/yn)-1)*100
+income = yield_gain*soy_price
+CP = cost/soy_price
+profit = (yield_gain&gt;=CP)
+profit_50 = (income&gt;=cost+(cost*0.5))#*1
+
+box_time2 = data_ef %&gt;% 
+  mutate(yield_gain) %&gt;% 
+  mutate(yield_gain_perc) %&gt;% 
+  mutate(income) %&gt;% 
+  mutate(CP, cost) %&gt;% 
+  mutate(profit,
+         profit_50) %&gt;% 
+  group_by(time) %&gt;% 
+  mutate(P = mean(profit),
+         P_50 = mean(profit_50))
+return(box_time2)
+}</code></pre>
+<pre class="r"><code>tebu_75 = simul_decay(data_ef = box_time, cost = 75)
+tebu_100 = simul_decay(data_ef = box_time, cost = 100)
+tebu_125 = simul_decay(data_ef = box_time, cost = 125)
+tebu = bind_rows(tebu_75,tebu_100, tebu_125)</code></pre>
+<pre class="r"><code>tebu %&gt;% 
+  group_by(time,cost) %&gt;% 
+  slice(1L) %&gt;% 
+  pivot_longer(10:11, names_to = &quot;Profits&quot;, values_to = &quot;prob&quot;) %&gt;% 
+  mutate(Profits = case_when(Profits ==&quot;P&quot; ~ &quot; Break-even&quot;,
+                             Profits ==&quot;P_50&quot; ~ &quot;50% profit&quot;)) %&gt;% 
+  ggplot()+
+  geom_hline(yintercept = 0.5, color = &quot;gray&quot;, size =1, linetype =2)+
+  geom_line(aes((time+2004), prob, color = as.factor(cost) ),
+            size = 1.2)+
+  facet_wrap(~Profits)+
+  scale_color_colorblind()+
+  labs(y = &quot;Probability of offseting costs&quot;,
+       x = &quot;Time&quot;,
+       color = &quot;Cost (US$)&quot;)+
+  ylim(0,1)+
+  theme_minimal_grid()</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-78-1.png" width="672" /></p>
+</div>
+<div id="cypr" class="section level3">
+<h3>Cypr</h3>
+<pre class="r"><code>box_time_mix = data.frame()
+time = seq(0,10, 1)
+#mix intercept
+# b0_decline =-2.151
+# b0_se_decline =  0.121
+
+# tebu intercept
+b0_decline =-1.518
+b0_se_decline =  0.065
+
+# b1_decline = 0.132
+# b1_se_decline = 0.022
+
+b1_decline =0.061
+b1_se_decline = 0.015
+
+n = 30000
+for(i in 1:length(time)){
+  
+y =  rnorm(n, b0_decline,b0_se_decline) + time[i]* rnorm(n,b1_decline,b1_se_decline)  
+efficacy = (1-exp(y))
+a = data.frame(time = time[i],lambda=efficacy)
+box_time_mix = box_time_mix %&gt;% 
+  bind_rows(a)
+}</code></pre>
+<pre class="r"><code>mix_75 = simul_decay(data_ef =  box_time_mix, cost = 75)
+mix_100 = simul_decay(data_ef = box_time_mix, cost = 100)
+mix_125 = simul_decay(data_ef = box_time_mix, cost = 125)
+mix = bind_rows(mix_75,mix_100, mix_125)</code></pre>
+<pre class="r"><code>mix %&gt;% 
+  group_by(time,cost) %&gt;% 
+  slice(1L) %&gt;% 
+  pivot_longer(10:11, names_to = &quot;Profits&quot;, values_to = &quot;prob&quot;) %&gt;% 
+  mutate(Profits = case_when(Profits ==&quot;P&quot; ~ &quot; Break-even&quot;,
+                             Profits ==&quot;P_50&quot; ~ &quot;50% profit&quot;)) %&gt;% 
+  ggplot()+
+  geom_hline(yintercept = 0.5, color = &quot;gray&quot;, size =1, linetype =2)+
+  geom_line(aes((time+2004), prob, color = as.factor(cost) ),
+            size = 1.2)+
+  facet_wrap(~Profits)+  
+  scale_color_colorblind()+
+  labs(y = &quot;Probability of offseting costs&quot;,
+       x = &quot;Time&quot;,
+       color = &quot;Cost (US$)&quot;)+
+  ylim(0,1)+
+  theme_light()</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-81-1.png" width="672" /></p>
+<div id="combo-figura" class="section level4">
+<h4>Combo figura</h4>
+<pre class="r"><code>prob_time =  function(data, prof_class){
+
+data %&gt;% 
+  group_by(time,cost) %&gt;% 
+  slice(1L) %&gt;% 
+  pivot_longer(10:11, names_to = &quot;Profits&quot;, values_to = &quot;prob&quot;) %&gt;% 
+  mutate(Profits = case_when(Profits ==&quot;P&quot; ~ &quot;Break-even&quot;,
+                             Profits ==&quot;P_50&quot; ~ &quot;50% profit&quot;)) %&gt;% 
+  filter(Profits == prof_class) %&gt;% 
+  ggplot(aes((time), prob))+
+    
+  annotate(&quot;rect&quot;,ymin = 0, ymax =0.25, 
+            xmin = -5, xmax = 15,
+            fill = &quot;#eff3ff&quot;,colour=&quot;white&quot;,
+            # alpha = 0.8,
+           size = 0.3)+
+  annotate(&quot;rect&quot;,ymin = 0.25, ymax =0.5, 
+            xmin = -5, xmax = 15,
+            fill = &quot;#bdd7e7&quot;,colour=&quot;white&quot;,
+            # alpha = 0.8,
+           size = 0.3)+
+    annotate(&quot;rect&quot;,ymin = 0.5, ymax =0.75, 
+            xmin = -5, xmax = 15,
+            fill = &quot;#6baed6&quot;,colour=&quot;white&quot;,
+            # alpha = 0.8,
+            size = 0.3)+
+    annotate(&quot;rect&quot;,ymin = 0.75, ymax =1, 
+            xmin = -5, xmax = 15,
+            fill = &quot;#2171b5&quot;, colour=&quot;white&quot;,
+            # alpha = 0.8,
+            size = 0.3)+
+    
+    
+  # geom_hline(yintercept = 0.75, color = &quot;gray&quot;, size =0.8, linetype =2)+
+  geom_step(direction = &quot;hv&quot;,size = 1.2,
+            aes( color = as.factor(cost) ))+
+  scale_x_continuous(breaks = seq(0,10,1))+
+  # scale_color_manual(values = c(&quot;red&quot; , &quot;#DC143C&quot;,&quot;darkred&quot;))+
+  scale_color_manual(values = c(&quot;#fecc5c&quot; , &quot;#fd8d3c&quot;,&quot;#e31a1c&quot;))+
+  # scale_color_manual(values = c(&quot;#000000&quot; , &quot;#252525&quot;,&quot;#525252&quot;))+
+  labs(y = &quot;Probability&quot;,
+       x = &quot;Time (years)&quot;,
+       color = &quot;Cost (US$/ha)&quot;)+
+ coord_cartesian(xlim=c(0,10), ylim = c(0,1))+
+  theme_light()+
+    theme(#panel.grid.major = element_blank()+
+          panel.grid =  element_blank())
+  
+  }</code></pre>
+<!-- Efficacy decay 0.147 /year -->
+<pre class="r"><code>tebu_g1 = prob_time(tebu, prof_class =&quot;Break-even&quot;)+
+    labs(title = &quot;High annual rate of decline&quot;
+         # subtitle = &quot;Offset costs&quot;
+         )
+tebu_g2 = prob_time(tebu, prof_class =&quot;50% profit&quot;)+
+    labs(title = &quot;High annual rate of decline&quot;,
+         subtitle = &quot;50% profit&quot;
+         )
+mix_g1 = prob_time(mix, prof_class =&quot;Break-even&quot;)+
+    labs(title = &quot;Low annual rate of decline&quot;
+         # subtitle = &quot;Offset costs&quot;
+         )
+mix_g2 = prob_time(mix, prof_class =&quot;50% profit&quot;)+
+    labs(title = &quot;Low annual rate of decline&quot;,
+         subtitle = &quot;50% profit&quot;
+         )</code></pre>
+<pre class="r"><code>tebu_g1+mix_g1+
+  plot_layout(guides = &quot;collect&quot;)+
+  plot_annotation(tag_levels = &#39;A&#39;)&amp;
+  theme(legend.position = &quot;bottom&quot;,
+        plot.title = element_text(size = 10))</code></pre>
+<p><img src="main_code_profit_files/figure-html/unnamed-chunk-84-1.png" width="576" /></p>
+<pre class="r"><code>ggsave(&quot;figs/prob_time.png&quot;, dpi = 600, height = 4, width = 7)
+ggsave(&quot;figs/prob_time.pdf&quot;, dpi = 600, height = 4, width = 7)</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="rmd-source-code">JSBEYXRhIGFuYWx5c2lzDQoNCg0KIyBQYWNrYWdlcw0KSGVyZSB3ZSBsb2FkIGFsbCB0aGUgcGFja2FnZXMgd2UgYWUgZ29pbmcgdG8gdXNlIGluIHRoZSBhbmFseXNpcy4NCg0KYGBge3IgbWVzc2FnZT1GQUxTRSwgd2FybmluZz1GQUxTRX0NCmxpYnJhcnkodGlkeXZlcnNlKQ0KbGlicmFyeShnc2hlZXQpDQpsaWJyYXJ5KGNvd3Bsb3QpDQpsaWJyYXJ5KGdndGhlbWVzKQ0KbGlicmFyeShEZXNjVG9vbHMpDQpsaWJyYXJ5KG1pbnBhY2subG0pDQpsaWJyYXJ5KGFncmljb2xhZSkNCmxpYnJhcnkocmVhZHhsKQ0KbGlicmFyeShwYXRjaHdvcmspDQpgYGANCg0KDQojIFByb2JhYmlsaXR5IGRpc3RyaWJ1dGlvbnMNCg0KRmlzdCBzdGVwIGlzIHRvIGFzc2VtYmxlIHRoZSBwcm9iYWJpbGl0eSBkaXN0cmlidXRpb25zIGZvciB0aGUgZm9yIHZhcmlhYmxlIHdlIGFyZSBnb2luZyB0byB1c2UgZm9yIHRoZSBzaW11bGF0aW9ucw0KDQojIyBTQlIgc2V2ZXJpdHkgb24gdW50cmVhdGVkIGNoZWNrLg0KDQojIyMgSW1wb3J0IGRhdGENCg0KSW1wb3J0aW5nIGRhdGEgb2Ygc295YmVhbiBydXN0IHNldmVyaXR5IChTQlIpIG9uIHRoZSB1bnRyZWF0ZWQgY2hlY2sNCg0KYGBge3J9DQpzZXZfZGF0YSA9IHJlYWQuY3N2KCJkYXRhL3Nldl9kYXRhLmNzdiIpDQpoZWFkKHNldl9kYXRhKQ0KYGBgDQoNCkZpbHRlcmluZyBvbmx5IHZhbHVlcyBvZiBzZXZlcml0eSBpbiB0aGUgY2hlY2sgdHJlYXRtZW50DQpgYGB7cn0NCnNldl9jaGVjayA9IHNldl9kYXRhICU+JSANCiAgZmlsdGVyKGFjdGl2ZV9pbmdyZWRpZW50ID09ICJjaGVjayIpDQpoZWFkKHNldl9jaGVjaykNCmBgYA0KDQojIyMgRW1waXJpY2FsIGRpc3RyaWJ1dGlvbg0KDQpgYGB7cn0NCnNldl9jaGVjayAlPiUgDQogIGdncGxvdChhZXMoc2V2ZXJpdHkvMTAwKSkrDQogIGdlb21faGlzdG9ncmFtKGJpbnMgPSAyMCwgY29sb3IgPSAiYmxhY2siLCBmaWxsID0gImdyYXkiKQ0KYGBgDQoNCg0KIyMjIE1vZGVsaW5nDQoNClNpbmNlIHNldmVyaXR5IGluIHByb3BvcnRpb25hbCB0ZXJtcyBpcyBiZXR3ZWVuIHplcm8gYW5kIG9uZSwgd2UgZml0IHRoZSBlbXBpcmljYWwgZGlzdHJpYnV0aW9uIGludG8gYSBiZXRhIHByb2JhYmlsaXR5IGRpc3RyaWJ1dGlvbi4gRm9yIHRoYXQgd2UgbmVlZCB0byBmaW5kIHRoZSBzaGFwZSBhbmQgc2NhbGUgcGFyYW1ldGVycyBvZiB0aGUgYmV0YSBkaXN0cmlidXRpb24gZnVuY3Rpb24uDQoNCkZvciB0aGF0LCBvYnRhaW4gdGhlIGVtcGlyaWNhbCBjdW11bGF0aXZlIGRpc3RyaWJ1dGlvbiBhbmQgZml0IHRvIHRoZSBiZXRhIGN1bXVsYXRpdmUgZGlzdHJpYnV0aW9uLg0KDQpgYGB7cn0NCnNldiA9IHNldl9jaGVjayRzZXZlcml0eQ0KRng9IGVudmlyb25tZW50KGVjZGYoc2V2KSkkeQ0KeCA9IGVudmlyb25tZW50KGVjZGYoc2V2KSkkeC8xMDANCg0Kc3VtbWFyeShubHNMTShGeCB+IHBiZXRhKHgsIHNoYXBlMSwgc2hhcGUyLCBsb2cgPSBGQUxTRSkgLA0KICAgICAgc3RhcnQgPSBjKHNoYXBlMSA9IDEsIHNoYXBlMiA9IDEpLA0KICAgICAgY29udHJvbCA9IG5scy5sbS5jb250cm9sKG1heGl0ZXIgPSAxMDAwMDApKSkNCmBgYA0KDQojIyMgS29sbW9nb3Jvdi1TbWlybm92IFRlc3QNCmBgYHtyfQ0Ka3MudGVzdChGeCxwYmV0YSh4LCAxLjcwNywgMS4yNjYpICkNCmBgYA0KDQoNCmBgYHtyfQ0KcGxvdCh4LEZ4KQ0KY3VydmUocGJldGEoeCwgMS43MDcsIDEuMjY2KSwwLDEsIGFkZCA9IFQpDQpgYGANCg0KDQpgYGB7cn0NCnBsb3QoRngscGJldGEoeCwgMS43MDcsIDEuMjY2KSApDQphYmxpbmUoYT0wLGI9MSkNCmBgYA0KDQoNCiMjIyBWaXN1YWxpemF0aW9uDQpgYGB7cn0NCnNldl9kaXN0X3Bsb3QgPSBzZXZfY2hlY2sgJT4lIA0KICBnZ3Bsb3QoYWVzKHNldmVyaXR5LzEwMCkpKw0KIGdlb21faGlzdG9ncmFtKGFlcyh5ID0gLi5kZW5zaXR5Li4pLGJpbnMgPSAxMCwgY29sb3IgPSAid2hpdGUiLCBmaWxsID0gIiNBQzA4RkYiKSsNCiAgIHN0YXRfZnVuY3Rpb24oZnVuPWZ1bmN0aW9uKHgpIGRiZXRhKHgsIDEuNzA3LCAxLjI2NiksIGNvbG9yPSAiYmxhY2siLCBzaXplID0gMS4yKSsNCiAgdGhlbWVfYncoKSsNCiAgbGFicyh4PSJTZXZlcml0eSAocHJvcG9ydGlvbikiLCB5ID0gIkRlbnNpdHkiKQ0Kc2V2X2Rpc3RfcGxvdA0KIyBnZ3NhdmUoImZpZ3Mvc2V2X2Rpc3QucG5nIiwgZHBpPTYwMCwgaGVpZ2h0ID0gMywgd2lkdGggPSA0KQ0KYGBgDQoNCg0KDQojIyBTb3liZWFuIHByaWNlIA0KDQojIyMgSW1wb3J0IGRhdGENCg0KYGBge3J9DQpzb3liZWFuID0gZ3NoZWV0MnRibCgiaHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvMS1qUTlPZ1dkTFFDYjBpQjBGcWJyaHVWaTdMaU5ocXh2ZjlRVTQtaXVjM28vZWRpdCNnaWQ9MTA4NTMyOTM1OSIpIA0KaGVhZChzb3liZWFuKQ0KYGBgDQoNCg0KY29udmVyc2lvbiB0byBVUyBkb2xsYXINCmBgYHtyfQ0Kc2JyX3ByaWNlID0gc295YmVhbiAlPiUgDQogIGZpbHRlcih5ZWFyPj0yMDE4KSAlPiUgDQogIG11dGF0ZShwcmljZSA9IChwcmljZS82MCkvNCwNCiAgICAgICAgIG5hdGlvbmFsX3ByaWNlID0gKG5hdGlvbmFsX3ByaWNlLzYwKS80KQ0Kc2JyX3ByaWNlDQpgYGANCg0KYGBge3J9DQpzYnJfcHJpY2UgJT4lIA0KICBnZ3Bsb3QoYWVzKHllYXIscHJpY2UpKSArDQogIGdlb21faml0dGVyKGFscGhhID0uMiwgc2l6ZSA9MikrDQogIGdlb21fYm94cGxvdChhZXMoZ3JvdXAgPSB5ZWFyKSwgZmlsbCA9IE5BLCBzaXplPSAxKSsNCiAgc2NhbGVfY29sb3JfZ3JhZGllbnQoKSsNCiAgdGhlbWVfbWluaW1hbF9oZ3JpZCgpDQogICMgZmFjZXRfd3JhcCh+c3RhdGUpDQpgYGANCg0KDQpNZWFuIGFuZCBTdGFuZGFkIGRldmlhbnRpb24NCg0KYGBge3J9DQptZWFuKHNicl9wcmljZSRwcmljZSkNCnNkKHNicl9wcmljZSRwcmljZSkNCmBgYA0KDQojIyMgRW1waXJpY2FsIGRpc3RyaWJ1dGlvbg0KDQpgYGB7cn0NCnNicl9wcmljZSAlPiUgDQogIGdncGxvdChhZXMocHJpY2UpKSsNCiAgZ2VvbV9oaXN0b2dyYW0oYmlucyA9IDEwLCBmaWxsID0gInN0ZWVsYmx1ZSIsIGNvbG9yID0gIndoaXRlIikrDQogIHRoZW1lX2J3KCkrDQogIGxhYnMoeCA9ICJTb3liZWFuIHByaW5jZSIpKw0KICBzY2FsZV94X2NvbnRpbnVvdXMoYnJlYWtzID0gc2VxKDAsMSxieT0wLjAyNSkpDQpgYGANCg0KDQogDQpgYGB7cn0NCmhpc3QoKHNicl9wcmljZSRwcmljZSksIHByb2IgPSBUKQ0KY3VydmUoZG5vcm0oeCwgbWVhbihzYnJfcHJpY2UkcHJpY2UpLCBzZChzYnJfcHJpY2UkcHJpY2UpKSwwLjE1LDAuMzUsIGFkZCA9IFQpDQpgYGANCg0KDQpgYGB7cn0NCnBsb3QoZWNkZihzYnJfcHJpY2UkcHJpY2UpKQ0KY3VydmUocG5vcm0oeCwgbWVhbihzYnJfcHJpY2UkcHJpY2UpLCBzZChzYnJfcHJpY2UkcHJpY2UpKSwwLjIsMC4zNSwgYWRkID0gVCkNCmBgYA0KDQpNZWFuIGFuZCBtZWRpYW4NCmBgYHtyfQ0KbWVhbihzYnJfcHJpY2UkcHJpY2UpDQptZWRpYW4oc2JyX3ByaWNlJHByaWNlKQ0KYGBgDQoNCiMjIyBTaGFwaXJvDQpgYGB7cn0NCnNoYXBpcm8udGVzdChzYnJfcHJpY2UkcHJpY2UpDQpgYGANCg0KIyMjIEtvbG1vZ29yb3YtU21pcm5vdiBUZXN0DQpgYGB7cn0NCkZ4ID0gZW52aXJvbm1lbnQoZWNkZihzYnJfcHJpY2UkcHJpY2UpKSR5DQp4PSBlbnZpcm9ubWVudChlY2RmKHNicl9wcmljZSRwcmljZSkpJHgNCmtzLnRlc3QoRngsIHBub3JtKHgsIG1lYW4oc2JyX3ByaWNlJHByaWNlKSwgc2Qoc2JyX3ByaWNlJHByaWNlKSkpDQpgYGANCg0KYGBge3J9DQpwbG90KEZ4LCBwbm9ybSh4LCBtZWFuKHNicl9wcmljZSRwcmljZSksIHNkKHNicl9wcmljZSRwcmljZSkpKQ0KYGBgDQoNCg0KIyMjIFZpenVhbGl6YXRpb24NCg0KYGBge3J9DQpwcmljZV9wbG90ID0gc2JyX3ByaWNlICU+JSANCiAgZ2dwbG90KGFlcyhwcmljZSkpKw0KIGdlb21faGlzdG9ncmFtKGFlcyh5ID0gLi5kZW5zaXR5Li4pLGJpbnMgPSAxMCwgY29sb3IgPSAid2hpdGUiLCBmaWxsID0gIiMxQzhDMjAiKSsNCiAgIHN0YXRfZnVuY3Rpb24oZnVuPWZ1bmN0aW9uKHgpIGRub3JtKHgsIG1lYW4oc2JyX3ByaWNlJHByaWNlKSwgc2Qoc2JyX3ByaWNlJHByaWNlKSksIGNvbG9yPSAiYmxhY2siLCBzaXplID0gMS4yKSsNCiAgdGhlbWVfYncoKSsNCiAgbGFicyh4PSJTb3liZWFuIHByaWNlIChVUyQva2cpIiwgeSA9ICJEZW5zaXR5IikrDQogIHNjYWxlX3hfY29udGludW91cyhicmVha3MgPSBzZXEoMCwxLGJ5PTAuMDI1KSkNCnByaWNlX3Bsb3QNCiMgZ2dzYXZlKCJmaWdzL3Nldl9kaXN0LnBuZyIsIGRwaT02MDAsIGhlaWdodCA9IDMsIHdpZHRoID0gNCkNCmBgYA0KDQoNCg0KDQojIyBSZWdyZXNzaW9uIGNvZWZpY2llbnRzIA0KDQojIyMgaW1wb3J0IGRhdGENCkltcG9ydGluZyByZWdyZXNzaW9uIFNsb3BlIGFuZCBpbnRlcmNlcHQgZGF0YSBmcm9tIHRoZSByZWxhdGlvbnNoaXAgYmV0d2VlbiBTQlIgc2V2ZXJpdHkgYW5kIHlpZWxkDQoNCmBgYHtyfQ0KZGFtYWdlX2RhdGEgPSByZWFkX2V4Y2VsKCJkYXRhL2RhZG9zIGhpc3RvZ3JhbWEueGxzeCIpICU+JSANCiAgbXV0YXRlKFNsb3BlID0gYjEsDQogICAgICAgICBJbnRlcmNlcHQgPSBiMCkgJT4lIA0KICBkcGx5cjo6c2VsZWN0KC1iMSwtYjApDQpoZWFkKGRhbWFnZV9kYXRhKQ0KYGBgDQoNCiMjIyBFbXBpcmljYWwgZGlzdHJpYnV0aW9uDQpWaXN1YWxpemFuZG8gb3MgaGl0b2dyYW1hcyBkbyBzbG9wZSBlIGludGVyY2VwdG8NCg0KYGBge3J9DQpkYW1hZ2VfZGF0YSAlPiUgDQogIGdhdGhlcigyOjMsIGtleSA9ICJwYXIiLCB2YWx1ZSA9ICJ2YWx1ZSIpICU+JSANCiAgZ2dwbG90KGFlcyh2YWx1ZSkpKw0KICBnZW9tX2hpc3RvZ3JhbShiaW5zID0gMTAsIGNvbG9yID0gImdyYXk0MCIsIGZpbGwgPSAiZ3JheTkwIikrDQogIGZhY2V0X3dyYXAofnBhciwgc2NhbGVzID0gImZyZWVfeCIpKw0KICB0aGVtZV9idygpDQpgYGANCg0KDQojIyMgUmVncmVzc2lvbiBsaW5lcw0KYGBge3J9DQogIGdncGxvdCgpICsNCiAgZ2VvbV9wb2ludChhZXMoeCA9IDA6MTAwLCB5ID0gc2VxKDAsNTAwMCxieSA9IDUwKSksIGNvbG9yID0gTkEpKw0KICBnZW9tX2FibGluZShkYXRhID1kYW1hZ2VfZGF0YSwgYWVzKHNsb3BlID0gU2xvcGUsIGludGVyY2VwdCA9IEludGVyY2VwdCksDQogICAgICAgICAgICAgIGFscGhhID0gMC41LCBjb2xvciA9ICJncmF5IikrDQogIGdlb21fYWJsaW5lKGludGVyY2VwdCA9IDI5Nzcsc2xvcGUgPSAtMTgsIHNpemUgPSAxLjIpKw0KICBnZW9tX2FibGluZShpbnRlcmNlcHQgPSAyODYyLHNsb3BlID0gLTE5LjQgLCBzaXplID0gLjUxLCBsaW5ldHlwZSA9IDIpKw0KICBnZW9tX2FibGluZShpbnRlcmNlcHQgPSAzMDkzLHNsb3BlID0gLTE2LjYsIHNpemUgPSAuNTEsIGxpbmV0eXBlID0gMikrDQogIA0KICBsYWJzKHggPSAiU0JSIFNldmVyaXR5ICglKSIsIHkgPSAiWWllbGQgKGtnL2hhKSAiKSsNCiAgdGhlbWVfYmFzZSgpDQogIA0KYGBgDQoNCiMjIyBjb3JyZWxhdGlvbg0KQ29ycmVsYXRpb24gYmV0d2VlbiBzbG9wZSBhbmQgaW50ZXJjZXB0DQoNCmBgYHtyfQ0KY29ycmVsYXRpb24oZGFtYWdlX2RhdGEkU2xvcGUsIGRhbWFnZV9kYXRhJEludGVyY2VwdCkNCmBgYA0KDQojIyMjIHBsb3QgDQpgYGB7cn0NCmNvcnJfZW1wX3Bsb3QgPSBkYW1hZ2VfZGF0YSAlPiUgDQogIGdncGxvdChhZXMoSW50ZXJjZXB0LCBTbG9wZSkpKw0KICBnZW9tX3BvaW50KGNvbG9yID0gImJsYWNrIiwgc2l6ZSA9MiwgYWxwaGEgPTAuNSkrDQogICMgZ2VvbV9kZW5zaXR5MmRfZmlsbGVkKCkrDQogIGdlb21fc21vb3RoKG1ldGhvZCA9ICJsbSIsIHNlID0gRiwgY29sb3IgPSJSZWQiLCBzaXplPTEuMiwgZnVsbHJhbmdlPVRSVUUpKw0KICB0aGVtZV9saWdodCgpKw0KICBsYWJzKHRpdGxlID0gIkVtcGlyaWNhbDogciA9IC0wLjIxNiIpKw0KICBjb29yZF9jYXJ0ZXNpYW4oDQogICAgeGxpbSA9IGMoMCw2MDAwKSwNCiAgICB5bGltID0gYygtNzUsMCkNCiAgKQ0KY29ycl9lbXBfcGxvdA0KYGBgDQoNCg0KIyMjIEN1bXVsYXRpdmUgZGVuc2l0eQ0KDQojIyMgSW50ZXJjZXB0DQpgYGB7cn0NCm1lYW5faW50ZXJjZXB0ID0gbWVhbihkYW1hZ2VfZGF0YSRJbnRlcmNlcHQpDQpzZF9pbnRlcmNlcHQgPSBzZChkYW1hZ2VfZGF0YSRJbnRlcmNlcHQpDQoNCnBsb3QoZWNkZihkYW1hZ2VfZGF0YSRJbnRlcmNlcHQpKQ0KY3VydmUocG5vcm0oeCwgbWVhbl9pbnRlcmNlcHQsc2RfaW50ZXJjZXB0KSwgMTAwMCw1MDAwLCBhZGQgPSBULCBjb2wgPSAicmVkIikNCmBgYA0KDQojIyMgS29sbW9nb3Jvdi1TbWlybm92IFRlc3QNCmBgYHtyfQ0KRnggPSBlbnZpcm9ubWVudChlY2RmKGRhbWFnZV9kYXRhJEludGVyY2VwdCkpJHkNCng9IGVudmlyb25tZW50KGVjZGYoZGFtYWdlX2RhdGEkSW50ZXJjZXB0KSkkeA0Ka3MudGVzdChGeCwgcG5vcm0oeCwgbWVhbihkYW1hZ2VfZGF0YSRJbnRlcmNlcHQpLCBzZChkYW1hZ2VfZGF0YSRJbnRlcmNlcHQpKSkNCmBgYA0KYGBge3J9DQpwbG90KEZ4LCBwbm9ybSh4LCBtZWFuKGRhbWFnZV9kYXRhJEludGVyY2VwdCksIHNkKGRhbWFnZV9kYXRhJEludGVyY2VwdCkpKQ0KYGBgDQoNCg0KDQpgYGB7cn0NCmludGVyY2VwX3Bsb3QgPSBkYW1hZ2VfZGF0YSAlPiUgDQogIGdncGxvdChhZXMoSW50ZXJjZXB0KSkrDQogIGdlb21faGlzdG9ncmFtKGFlcyh5ID0gLi5kZW5zaXR5Li4pLGJpbnMgPSAxMCwgY29sb3IgPSAid2hpdGUiLCBmaWxsID0gIiNGRjQ5MTciKSsNCiAgc3RhdF9mdW5jdGlvbihmdW49ZnVuY3Rpb24oeCkgZG5vcm0oeCwgbWVhbl9pbnRlcmNlcHQsIHNkX2ludGVyY2VwdCksIGNvbG9yID0iYmxhY2siLCBzaXplID0xLjIpKw0KICB0aGVtZV9idygpKw0KICBsYWJzKHg9IkludGVyY2VwdCAoa2cvaGEpIiwgeSA9ICJEZW5zaXR5IikNCmludGVyY2VwX3Bsb3QNCmBgYA0KDQoNCg0KDQoNCiMjIyBTbG9wZQ0KDQpgYGB7cn0NCm1lYW5fc2xvcGUgPSBtZWFuKGRhbWFnZV9kYXRhJFNsb3BlKQ0Kc2Rfc2xvcGUgPSBzZChkYW1hZ2VfZGF0YSRTbG9wZSkNCg0KcGxvdChlY2RmKGRhbWFnZV9kYXRhJFNsb3BlKSkNCmN1cnZlKHBub3JtKHgsIG1lYW5fc2xvcGUsIHNkX3Nsb3BlKSwgLTYwLDUsIGFkZCA9IFQsIGNvbCA9ICJyZWQiKQ0KDQpgYGANCg0KDQojIyMjIE1vZGVsaW5nDQpGaXR0aW5nIGdhbW1hIGRpc3RyaWJ1dGlvbiB0byB0aGUgZW1waXJpY2FsIGN1bXVsYXRpdmUgZGVuc2l0eSBvZiB0aGUgc2xvcGUgZGF0YQ0KYGBge3J9DQpGeCA9ZW52aXJvbm1lbnQoZWNkZigtZGFtYWdlX2RhdGEkU2xvcGUpKSR5DQp4ID0gZW52aXJvbm1lbnQoZWNkZigtZGFtYWdlX2RhdGEkU2xvcGUpKSR4DQoNCnNsb3BlX3JlZyA9IG5sc0xNKEZ4IH4gcGdhbW1hKHgsIHNoYXBlLCByYXRlLGxvZyA9IEZBTFNFKSAsDQogICAgICBzdGFydCA9IGMoc2hhcGUgPSAyLjUsIHJhdGUgPSAwLjEzKSwNCiAgICAgIGNvbnRyb2wgPSBubHMubG0uY29udHJvbChtYXhpdGVyID0gMTAyNCkpDQpzdW1tYXJ5KHNsb3BlX3JlZykNCg0KYGBgDQoNCiMjIyBLb2xtb2dvcm92LVNtaXJub3YgVGVzdA0KYGBge3J9DQpzaGFwZSA9IHN1bW1hcnkoc2xvcGVfcmVnKSRjb2VmWzFdDQpyYXRlID0gc3VtbWFyeShzbG9wZV9yZWcpJGNvZWZbMl0NCg0KRnggPWVudmlyb25tZW50KGVjZGYoLWRhbWFnZV9kYXRhJFNsb3BlKSkkeQ0KeCA9IGVudmlyb25tZW50KGVjZGYoLWRhbWFnZV9kYXRhJFNsb3BlKSkkeA0Ka3MudGVzdChGeCwgcGdhbW1hKHgsIHNoYXBlLCByYXRlKSkNCmBgYA0KDQoNCmBgYHtyfQ0Kc2hhcGUgPSBzdW1tYXJ5KHNsb3BlX3JlZykkY29lZlsxXQ0KcmF0ZSA9IHN1bW1hcnkoc2xvcGVfcmVnKSRjb2VmWzJdDQoNCnNsb3BlX3Bsb3QgPSBkYW1hZ2VfZGF0YSAlPiUgDQogIGdncGxvdChhZXMoU2xvcGUpKSsNCiBnZW9tX2hpc3RvZ3JhbShhZXMoeSA9IC4uZGVuc2l0eS4uKSxiaW5zID0gMTAsIGNvbG9yID0gIndoaXRlIiwgZmlsbCA9ICIjMTU5RUU2IikrDQogICBzdGF0X2Z1bmN0aW9uKGZ1bj1mdW5jdGlvbih4KSBkZ2FtbWEoLXgsIHNoYXBlLCByYXRlKSwgc2l6ZSA9IDEuMiwgY29sb3IgPSAiYmxhY2siKSsNCiAgdGhlbWVfYncoKSsNCiAgbGFicyh4PSJTbG9wZSAoa2cvcC5wLikiLCB5ID0gIkRlbnNpdHkiKQ0Kc2xvcGVfcGxvdA0KYGBgDQoNCiMjIyBLb2xtb2dvcm92LVNtaXJub3YgVGVzdA0KYGBge3J9DQoNCmtzLnRlc3QoRngscGdhbW1hKHgsIHNoYXBlLCByYXRlKSkNCg0KYGBgDQoNCg0KDQoNCiMjIyBNdWx0aXZhcmlhdGUgU2ltdWxhdGlvbiB1c2luZyBjb3B1bGEgDQoNClNpbXVsYXRpbmcgdHdvIG5vcm1hbCBkaXN0cmlidXRpb25zIGNvcnJlbGF0ZWQgDQojIyMjIEZ1bmN0aW9uDQoNCg0KYGBge3J9DQojIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIw0KZ2VyYS5ub3JtLmJpZC5nZXJhbDwtZnVuY3Rpb24odGFtYW5oby5hbW9zdHJhLGNvcnJlbGFjYW8sbTEsbTIsc2lnbWExLHNpZ21hMikNCnsNCiAgcm88LWNvcnJlbGFjYW8NCiAgbjwtdGFtYW5oby5hbW9zdHJhDQogIHg8LW1hdHJpeCgwLG4sMikNCiAgZm9yIChpIGluIDE6bikNCiAge3hbaSwxXTwtcm5vcm0oMSxtMSxzaWdtYTEpDQogIHhbaSwyXTwtcm5vcm0oMSxtMitybypzaWdtYTEvc2lnbWEyKih4W2ksMV0tbTEpLHNpZ21hMiooc3FydCgxLXJvXjIpKSkNCiAgfQ0KICByZXR1cm4oeCkNCn0NCg0KYGBgDQoNClRlc3QgZm9yIGNvcnJlbGF0aW9uIG9mIDAuOQ0KYGBge3J9DQojdGVzdGFuZG8NCmo8LWdlcmEubm9ybS5iaWQuZ2VyYWwoMTAwMCwwLjksMCwwLDEsMSkNCg0KcGxvdChqWywxXSxqWywyXSkNCmBgYA0KDQpGb3Igb3VyIGRhdGEsIHdlIHdpbGwgdXNlIHRoZSBwb3NpdGl2ZSBjb3JyZWxhdGlvbiwgYmVjb3VzZSB3ZSB3YW50IHBvc2l0aXZlIHZhbHVlcyBvZiBzbG9wZSANCmBgYHtyfQ0KI3Rlc3RhbmRvDQpqPC1nZXJhLm5vcm0uYmlkLmdlcmFsKDEwMDAwLDAuMjE2MDA4OSwwLDAsMSwxKQ0KDQpwbG90KGpbLDFdLGpbLDJdKQ0KYGBgDQoNCg0KDQojIyMgSW50ZXJjZXB0DQpOb3cgd2Ugb2J0YWluZyB0aGUgcHJvYmFiaWxpdGllcyBmcm9tIGZpcnN0IGRpc3RyaWJ1dGlvbiBhbmQgaW5zZXJ0IGluIHRoZSBxdWFudGlsZXMgZnVuY3Rpb24gZm9yIHRoZSBub3JtYWwgZGlzdHJpYnV0aW9uIG9mIHRoZSBpbnRlcmNlcHQNCg0KYGBge3J9DQpiMCA9IHBub3JtKGpbLDJdKQ0KYjBfdCA9IHFub3JtKGIwLCAyOTc3LCA1OC45KnNxcnQoMjEwKSkNCmhpc3QoYjBfdCwgcHJvYiA9IFQpDQpjdXJ2ZShkbm9ybSh4LCBtZWFuX2ludGVyY2VwdCwgc2RfaW50ZXJjZXB0KSwgMCwgNjAwMCwgYWRkID0gVCkNCmBgYA0KDQoNCiMjIyBTbG9wZQ0KTm93IHdlIG9idGFpbmcgdGhlIHByb2JhYmlsaXRpZXMgZnJvbSBmaXJzdCBkaXN0cmlidXRpb24gYW5kIGluc2VydCBpbiB0aGUgcXVhbnRpbGVzIGZ1bmN0aW9uIGZvciB0aGUgZ2FtbWEgZGl0cmlidXRpb24gYW5kIG11bHRpcGx5IGZvciAtMSBmb3Igb2J0YWluIHRoZSBuZWdhdGl2ZSBvdXRwdXRzIG9mIHRoZSBjb2VmaWNpZW50IA0KYGBge3J9DQpiMSA9IHBub3JtKGpbLDFdKQ0KYjFfdCA9IHFnYW1tYShiMSwgc2hhcGUsIHJhdGUgPSByYXRlKSotMQ0KaGlzdChiMV90LCBwcm9iID0gVCkNCmN1cnZlKGRnYW1tYSgteCxzaGFwZT1zaGFwZSwgcmF0ZSA9IHJhdGUpLCAtNjAsMCwgYWRkID0gVCkNCmBgYA0KDQoNCk5vdyB3ZSByZWNhbGN1bGF0ZSB0aGUgY29ycmVsYXRpb24gYmV0d2VlbiB0aGUgc2ltdWxhdGVkIGNvZWZpY2llbnRzLiBJdCBtYXRjaHMhDQoNCmBgYHtyfQ0KY29ycmVsYXRpb24oYjFfdCwgYjBfdCkNCmBgYA0KDQoNCiMjIyMgVml6LiB0aGUgY29ycmVsYXRpb24NCmBgYHtyfQ0KY29ycl9zaW1fcGxvdCA9IGRhdGEuZnJhbWUoYjBfdCxiMV90ICkgJT4lDQogIG11dGF0ZShhbGZhID0oYjFfdC9iMF90KSoxMDAgKSAlPiUgDQogIGZpbHRlcihhbGZhID4gLTMgJiBhbGZhIDwgMCkgJT4lIA0KZ2dwbG90KGFlcyhiMF90LGIxX3QgKSkrDQogIGdlb21fcG9pbnQoIHNpemUgPTIsIGNvbG9yID0gIm9yYW5nZSIsIGFscGhhID0wLjMpKw0KICAjIGdlb21fZGVuc2l0eV8yZChjb2xvciA9ICJibGFjayIpKw0KICBnZW9tX3Ntb290aChtZXRob2QgPSBsbSwgY29sb3IgPSAicmVkIiwgc2UgPSBGLCBzaXplID0gMS4yKSsNCiAgdGhlbWVfbGlnaHQoKSsNCiAgbGFicyh5PSAiU2xvcGUiLA0KICAgICAgIHggPSAiSW50ZXJjZXB0IiwNCiAgICAgICB0aXRsZSA9ICJTaW11bGF0ZWQ6IHIgPSAtMC4yMDQiKSsNCiAgY29vcmRfY2FydGVzaWFuKA0KICAgIHhsaW0gPSBjKDAsNjAwMCksDQogICAgeWxpbSA9IGMoLTc1LDApDQogICkNCmNvcnJfc2ltX3Bsb3QNCmBgYA0KDQoNCiMjIyMgQ29tYm8gZGlzdHJpYnV0aW9ucw0KDQpgYGB7cn0NCg0KIyBwbG90X2dyaWQoc2V2X2Rpc3RfcGxvdCxwcmljZV9wbG90LCBpbnRlcmNlcF9wbG90LCBzbG9wZV9wbG90LCBsYWJlbHMgPSAiQVVUTyIsIG5yb3cgPTIpDQoNCihzZXZfZGlzdF9wbG90K3ByaWNlX3Bsb3QpLw0KICAoaW50ZXJjZXBfcGxvdCtzbG9wZV9wbG90KSsNCiAgIyAoY29ycl9lbXBfcGxvdCtjb3JyX3NpbV9wbG90KSsNCiAgcGxvdF9hbm5vdGF0aW9uKHRhZ19sZXZlbHMgPSAnQScpJg0KICB0aGVtZShwbG90LnRpdGxlID0gZWxlbWVudF90ZXh0KHNpemUgPTgpKQ0KICANCmdnc2F2ZSgiZmlncy9jb2VmX2Rpc3QucG5nIiwgZHBpID0gNjAwLCBoZWlnaHQgPSA1LCB3aWR0aCA9IDYpDQpnZ3NhdmUoImZpZ3MvY29lZl9kaXN0LnBkZiIsIGRwaSA9IDYwMCwgaGVpZ2h0ID0gNSwgd2lkdGggPSA2KQ0KYGBgDQoNCg0KDQojIyMgUmVsYXRpdmUgeWllbGQgbG9zcw0KDQpIZXJlIHdlIGNhbGN1bGF0ZSB0aGUgeWllbGQgcmVsYXRpdmUgbG9zcyBkdWUgdG8gU0JSIHNldmVyaXR5IHVzaW5nIHRoZSBvcmlnaW5hbCBkYXRhIHNldA0KDQpgYGB7cn0NCmVtcGlyaWNfcnlsPSBkYW1hZ2VfZGF0YSAlPiUgDQogIG11dGF0ZShjYyA9IChTbG9wZS9JbnRlcmNlcHQpKjEwMCkgJT4lIA0KICBmaWx0ZXIoIGNjID4gLTMgJiBjYyA8MCApDQpoZWFkKGVtcGlyaWNfcnlsKQ0KYGBgDQoNCmBgYHtyfQ0Kc3RhdF9lbXBfcnlsID1lbXBpcmljX3J5bCU+JSANCiAgc3VtbWFyaXNlKGRhdGEgPSAiZW1waXJpY2FsIiwNCiAgICAgICAgICAgIG1lYW4gPSAgbWVhbihjYyksDQogICAgICAgICAgICBtZWRpYW4gPSAgbWVkaWFuKGNjKSwNCiAgICAgICAgICAgIHZhcmlhbmNlID0gdmFyKGNjKSkNCmBgYA0KDQoNCmBgYHtyfQ0KDQpyZWFsX1JZTD0gZW1waXJpY19yeWwgJT4lIA0KICBnZ3Bsb3QoYWVzKGNjKSkrDQogZ2VvbV9oaXN0b2dyYW0oYWVzKHkgPSAuLmRlbnNpdHkuLiksYmlucyA9IDEwLCBjb2xvciA9ICJ3aGl0ZSIsIGZpbGwgPSAiYmxhY2siKSsNCiAgc2NhbGVfeV9jb250aW51b3VzKGxpbWl0cyA9IGMoMCwxLjQpLGJyZWFrcyA9ICBzZXEoMCwgMS40LGJ5ID0gMC40KSkrDQogIGdlb21fdmxpbmUoZGF0YSA9IHN0YXRfZW1wX3J5bCwgYWVzKHhpbnRlcmNlcHQgPSBtZWFuLCBjb2xvciA9ICJNZWFuIiksc2l6ZSA9MSkrDQogIGdlb21fdmxpbmUoZGF0YSA9IHN0YXRfZW1wX3J5bCwgYWVzKHhpbnRlcmNlcHQgPSBtZWRpYW4sIGNvbG9yID0gIk1lZGlhbiIpLHNpemUgPTEpKw0KICB0aGVtZV9idygpKw0KICBzY2FsZV9jb2xvcl9jYWxjKCkrDQogIGxhYnMoeCA9ICJSZWxhdGl2ZSB5aWVsZCBsb3NzICglL3AucC4pIiwNCiAgICAgICB5ID0gIkRlbnNpdHkiLA0KICAgICAgIGNvbG9yID0gIiIsDQogICAgICAgdGl0bGUgPSAiRW1waXJpY2FsIikrDQogIHhsaW0oLTMsMC4yKSsNCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gInRvcCIpDQpyZWFsX1JZTA0KYGBgDQoNCkFuZCBoZXJlIHdlIGNhbGN1bGF0ZSB0aGUgcmVsYXRpdmUgeWllbGQgbG9zcyBkdWUgdG8gU0JSIHNldmVyaXR5IHVzaW5nIHRoZSBzaW11bGF0ZWQgZGF0YSBzZXQNCg0KDQpgYGB7cn0NCnNpbXVsX3J5bCA9IGRhdGEuZnJhbWUoYjBfdCwgYjFfdCwgY2MgPSAoYjFfdC9iMF90KSoxMDApICU+JSANCiAgZmlsdGVyKCBjYyA+IC0zICYgY2MgPDAgKQ0KaGVhZChzaW11bF9yeWwpDQpgYGANCg0KYGBge3J9DQpzdGF0X3N1bWxfcnlsID0gc2ltdWxfcnlsJT4lIA0KICBzdW1tYXJpc2UoZGF0YSA9ICJTaW11bGF0ZWQiLA0KICAgICAgICAgICAgbWVhbiA9ICBtZWFuKGNjKSwNCiAgICAgICAgICAgIG1lZGlhbiA9ICBtZWRpYW4oY2MpLA0KICAgICAgICAgICAgdmFyaWFuY2UgPSB2YXIoY2MpKQ0KYGBgDQoNCg0KYGBge3J9DQpzaW11bF9SWUwgPXNpbXVsX3J5bCAlPiUgDQogIGdncGxvdChhZXMoY2MpKSsNCiBnZW9tX2hpc3RvZ3JhbShhZXMoeSA9IC4uZGVuc2l0eS4uKSxiaW5zID0gMTAsIGNvbG9yID0gIndoaXRlIiwgZmlsbCA9ICJvcmFuZ2UiKSsNCiAgc2NhbGVfeV9jb250aW51b3VzKGxpbWl0cyA9IGMoMCwxLjQpLGJyZWFrcyA9ICBzZXEoMCwgMS40LGJ5ID0gMC40KSkrDQogIGdlb21fdmxpbmUoZGF0YSA9IHN0YXRfc3VtbF9yeWwsIGFlcyh4aW50ZXJjZXB0ID0gbWVhbiwgY29sb3IgPSAiTWVhbiIpLHNpemUgPTEpKw0KICBnZW9tX3ZsaW5lKGRhdGEgPSBzdGF0X3N1bWxfcnlsLCBhZXMoeGludGVyY2VwdCA9IG1lZGlhbiwgY29sb3IgPSAiTWVkaWFuIiksc2l6ZSA9MSkrDQogIHRoZW1lX2J3KCkrDQogIHNjYWxlX2NvbG9yX2NhbGMoKSsNCiAgbGFicyh4ID0gIlJlbGF0aXZlIHlpZWxkIGxvc3MgKCUvcC5wLikiLA0KICAgICAgIHkgPSAiRGVuc2l0eSIsDQogICAgICAgY29sb3IgPSIiLA0KICAgICAgIHRpdGxlID0gIlNpbXVsYXRlZCIpKw0KICB4bGltKC0zLDAuMikrDQogIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJ0b3AiKQ0Kc2ltdWxfUllMDQoNCmBgYA0KDQojIyMgQ29tcGFyaXNpb24gb2YgbWVhbiwgbWVkaWFuIGFuZCB2YXJpYW5jZSANCg0KYGBge3J9DQpkYW1hZ2VfZGF0YSAlPiUgDQogIG11dGF0ZShjYyA9IChTbG9wZS9JbnRlcmNlcHQpKjEwMCkgJT4lIA0KICBmaWx0ZXIoIGNjID4gLTMgJiBjYyA8MCApICU+JSANCiAgc3VtbWFyaXNlKGRhdGEgPSAiZW1waXJpY2FsIiwNCiAgICAgICAgICAgIG1lYW4gPSAgbWVhbihjYyksDQogICAgICAgICAgICBtZWRpYW4gPSAgbWVkaWFuKGNjKSwNCiAgICAgICAgICAgIHZhcmlhbmNlID0gdmFyKGNjKSkgJT4lIA0KICBiaW5kX3Jvd3MoDQogICAgZGF0YS5mcmFtZShiMF90LCBiMV90LCBjYyA9IChiMV90L2IwX3QpKjEwMCkgJT4lIA0KICBmaWx0ZXIoIGNjID4gLTMgJiBjYyA8MCApICU+JSANCiAgc3VtbWFyaXNlKGRhdGEgPSAiU2ltdWxhdGVkIiwNCiAgICAgICAgICAgIG1lYW4gPSAgbWVhbihjYyksDQogICAgICAgICAgICBtZWRpYW4gPSAgbWVkaWFuKGNjKSwNCiAgICAgICAgICAgIHZhcmlhbmNlID0gdmFyKGNjKSkNCiAgKQ0KDQpgYGANCg0KDQojIyMgS29sbW9nb3Jvdi1TbWlybm92IFRlc3QNCmBgYHtyfQ0KYWN0dWFsX2NjID0gZGFtYWdlX2RhdGEgJT4lIA0KICBtdXRhdGUoY2MgPSAoU2xvcGUvSW50ZXJjZXB0KSoxMDApDQoNCnNpbXVsYXRlZF9jYyA9IGRhdGEuZnJhbWUoYjBfdCwgYjFfdCwgY2MgPSAoYjFfdC9iMF90KSoxMDApICU+JSANCiAgZmlsdGVyKCBjYyA+IC0zICYgY2MgPDAgKQ0KYGBgDQoNCkRpc3RyaWJ1dGlvbg0KYGBge3J9DQprcy50ZXN0KGFjdHVhbF9jYyRjYywgc2ltdWxhdGVkX2NjJGNjKQ0KYGBgDQoNCmN1bW11bGF0aXZlIGRpc3RyaWJ1dGlvbg0KYGBge3J9DQpmeF9hY3R1YWwgPSBlbnZpcm9ubWVudChlY2RmKGFjdHVhbF9jYyRjYykpJHkNCmZ4X3NpbXUgPSBlbnZpcm9ubWVudChlY2RmKHNpbXVsYXRlZF9jYyRjYykpJHkNCmtzLnRlc3QoKGZ4X2FjdHVhbCksKGZ4X3NpbXUpKQ0KYGBgDQoNCmBgYHtyfQ0KZWNkZl9kYW1hZ2UgPSBnZ3Bsb3QoKSsNCiAgc3RhdF9lY2RmKGFlcyhzaW11bGF0ZWRfY2MkY2MsY29sb3IgPSAiU2ltdWxhdGVkIiksIHNpemU9MS4yLGdlb20gPSAic3RlcCIpKw0KICBzdGF0X2VjZGYoYWVzKGFjdHVhbF9jYyRjYywgY29sb3IgPSAiRW1waXJpY2FsIiksIHNpemU9MS4yLGdlb20gPSAic3RlcCIpKw0KICB0aGVtZV9idygpKw0KICBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gYygiYmxhY2siLCJvcmFuZ2UiKSkrDQogIGxhYnMoeSA9ICJQcm9iYWJpbGl0eSIsDQogICAgICAgeCA9ICJSZWxhdGl2ZSBwZXJjZW50IHlpZWxkIGxvc3MiLA0KICAgICAgIGNvbG9yID0iIiwNCiAgICAgICB0aXRsZSA9ICJDdW11bGF0aXZlIGRpc3RyaWJ1dGlvbiBmdW5jdGlvbiIpKw0KICB0aGVtZShsZWdlbmQucG9zaXRpb24gPSAidG9wIiwNCiAgICAgICAgbGVnZW5kLmJhY2tncm91bmQgPSBlbGVtZW50X2JsYW5rKCkpDQplY2RmX2RhbWFnZQ0KYGBgDQoNCg0KIyMjIENvbWJvIFlpZWxkIGxvc3MNCg0KYGBge3IgZmlnLmhlaWdodD0zLCBmaWcud2lkdGg9OH0NCigoY29ycl9lbXBfcGxvdC9jb3JyX3NpbV9wbG90KXwocmVhbF9SWUwvc2ltdWxfUllMKStwbG90X2xheW91dChndWlkZXMgPSAnY29sbGVjdCcpfCBlY2RmX2RhbWFnZSApICsNCiAgIyBwbG90X2xheW91dChoZWlnaHRzID0gYygxLDEsMC41KSkrDQogIHBsb3RfYW5ub3RhdGlvbih0YWdfbGV2ZWxzID0gJ0EnKSAmIA0KICANCiAgdGhlbWUobGVnZW5kLnBvc2l0aW9uID0gJ2JvdHRvbScsDQogICAgICAgIHBsb3QudGl0bGUgPSBlbGVtZW50X3RleHQoc2l6ZT05KSwNCiAgICAgICAgbGVnZW5kLmtleS5zaXplPSB1bml0KDMsICJtbSIpLA0KICAgICAgICBsZWdlbmQudGV4dCA9ICBlbGVtZW50X3RleHQoc2l6ZSA9IDcpKQ0KDQpnZ3NhdmUoImZpZ3MvUllMLnBuZyIsIGRwaSA9IDYwMCwgaGVpZ2h0ID0gNSwgd2lkdGggPSAxMCkNCmdnc2F2ZSgiZmlncy9SWUwucGRmIiwgZHBpID0gNjAwLCBoZWlnaHQgPSA1LCB3aWR0aCA9IDEwKQ0KYGBgDQoNCg0KIyBTaW11bGF0aW9ucyANCmBgYHtyfQ0Kc2V0LnNlZWQoMSkNCm49NDAwMDANCmxhbWJkYSA9IHNlcSgwLDEsIGJ5PTAuMDUpDQpmdW5fcHJpY2UgPSBzZXEoLTEwLCAyNjAsIGJ5PTE1KQ0Kbl9hcGxpY2F0aW9uID0gMQ0Kb3BlcmF0aW9uYWxfY29zdCA9IDEwICANCg0KY29tYl9tYXRyaXggPSBhcy5tYXRyaXgoZGF0YS50YWJsZTo6Q0oobGFtYmRhLGZ1bl9wcmljZSkpDQpjb2xuYW1lcyhjb21iX21hdHJpeCkgPSBjKCJsYW1iZGEiLCJmdW5fcHJpY2UiKQ0KY29tYl9tYXRyaXggPSBjYmluZChjb21iX21hdHJpeCxvcGVyYXRpb25hbF9jb3N0LCBuX2FwbGljYXRpb24pDQpDID0gY29tYl9tYXRyaXhbLCJuX2FwbGljYXRpb24iXSooY29tYl9tYXRyaXhbLCJvcGVyYXRpb25hbF9jb3N0Il0rY29tYl9tYXRyaXhbLCJmdW5fcHJpY2UiXSApDQpjb21iX21hdHJpeCA9IGNiaW5kKGNvbWJfbWF0cml4LEMpDQoNCk4gPSBsZW5ndGgoY29tYl9tYXRyaXhbLDFdKSpuDQpiaWdfb25lID0gbWF0cml4KDAsIG5jb2wgPSAxMiwgbnJvdyA9TikNCmJpZ19vbmVbLDFdID0gcmVwKGNvbWJfbWF0cml4WywxXSxuKQ0KYmlnX29uZVssMl0gPSByZXAoY29tYl9tYXRyaXhbLDJdLG4pDQpiaWdfb25lWywzXSA9IHJlcChjb21iX21hdHJpeFssM10sbikNCmJpZ19vbmVbLDRdID0gcmVwKGNvbWJfbWF0cml4Wyw0XSxuKQ0KYmlnX29uZVssNV0gPSByZXAoY29tYl9tYXRyaXhbLDVdLG4pDQoNCnNldC5zZWVkKDEpDQpzbiA9IHJiZXRhKE4sIDEuNzA3LCAxLjI2NikNCnNmID0gc24qKDEtYmlnX29uZVssMV0pDQojIHNpbXVsYXRpbmcgdGhlIGNvZWZpY2llbnRlcyANCnNldC5zZWVkKDEpDQpub3JtYWxfY29ycmVsYXRlZDwtZ2VyYS5ub3JtLmJpZC5nZXJhbChOLDAuMjEsMCwwLDEsMSkNCmIwX24gPSBwbm9ybShub3JtYWxfY29ycmVsYXRlZFssMl0pDQpiMV9uID0gcG5vcm0obm9ybWFsX2NvcnJlbGF0ZWRbLDFdKQ0KYjAgPSBxbm9ybShiMF9uLCBtZWFuX2ludGVyY2VwdCxzZF9pbnRlcmNlcHQpDQpiMSA9IC1xZ2FtbWEoYjFfbiwgc2hhcGUsIHJhdGUsKQ0Kcm0oYjBfbixiMV9uLG5vcm1hbF9jb3JyZWxhdGVkKQ0KIyBiMFtiMDwwXSA9IDAuMDAwMQ0KIyBDYWxjdWxhdGluZyB0aGUgYWxoYSBjb2VmaWNpZW50DQphbGZhID0gKGIxL2IwKSoxMDANCiMgYWxmYVthbGZhID4gMF0gPSAwDQojIGFsZmFbYWxmYSA8IC0zXSA9IC0zDQoNCiMgQ2FsY3VsYXRpbmcgeWllbGQgZ2Fpbg0KIyB5biA9IGIwKigxK3NuKmFsZmEpICMgWWllbGQgIG5vbi10cmVhdGVkDQojIHlmID0gYjAqKDErc2YqYWxmYSkgIyBZaWVsZCAgdHJlYXRlZA0KeW4gID0gYjAgLSAoLWFsZmEqYjAqc24pDQp5ZiAgPSBiMCAtICgtYWxmYSpiMCpzZikNCiMgeW5beW48MF0gPSAwDQojIHlmW3lmPDBdID0gMA0KIyB5aWVsZF9nYWluID0geWYteW4gIyB5aWVsZCBnYWluDQojIHlpZWxkX2dhaW5fcGVyYyA9ICgxLSh5bi95ZikpKjEwMA0KDQoNCiMgU2ltdWxhdGluZyBzb3liZWFuIHByaWNlDQpzZXQuc2VlZCgxKQ0Kc295X3ByaWNlID0gcm5vcm0oTiwgbWVhbihzYnJfcHJpY2UkcHJpY2UpLHNkKHNicl9wcmljZSRwcmljZSkpDQojIGluY29tZSA9IHlpZWxkX2dhaW4qc295X3ByaWNlICMgY2FsY3VsYXRpbmcgdGhlIGluY29tZQ0KDQpiaWdfb25lWyw2XSA9IHluDQpiaWdfb25lWyw3XSA9IHlmDQpiaWdfb25lWyw4XSA9IHNveV9wcmljZQ0KYmlnX29uZVssOV0gPSBiMQ0KYmlnX29uZVssMTBdID0gYWxmYQ0KYmlnX29uZVssMTFdID0gYjANCmJpZ19vbmVbLDEyXSA9IHNuDQpjb2xuYW1lcyhiaWdfb25lKSAgPSBjKCJsYW1iZGEiLCJmdW5fcHJpY2UiLCJvcGVyYXRpb25hbF9jb3N0Iiwibl9hcGxpY2F0aW9uIiwiQyIsInluIiwieWYiLCJzb3lfcHJpY2UiLCJiMSIsImFsZmEiLCJiMCIsICJzbiIpDQpgYGANCg0KDQpgYGB7cn0NCmJpZ19vbmVfZGYgPSBhcy5kYXRhLmZyYW1lKGJpZ19vbmUpICU+JSANCiAgZmlsdGVyKGIwPj0wKSAlPiUgDQogIGZpbHRlcih5bj4wKSAlPiUgDQogIGZpbHRlcihhbGZhID4gLTMgJiBhbGZhIDwgMCkgJT4lIA0KICBtdXRhdGUoeWllbGRfZ2FpbiA9IHlmLXluLA0KICAgICAgICAgIyB5aWVsZF9nYWluX3BlcmMgPSAoKHlmIC0geW4pL3luKSoxMDAsDQogICAgICAgICB5aWVsZF9nYWluX3BlcmMgPSAoKHlmL3luKS0xKSoxMDAsDQogICAgICAgICBpbmNvbWUgPSB5aWVsZF9nYWluKnNveV9wcmljZSwNCiAgICAgICAgIENQID0gQy9zb3lfcHJpY2UsDQogICAgICAgICAjIHByb2ZpdCA9ICh5aWVsZF9nYWluPj1DUCkqMSwNCiAgICAgICAgIHByb2ZpdCA9IChpbmNvbWU+PUMpKjEpDQogIA0KDQpgYGANCg0KDQojIyMgQnJlYWNraW5nIGV2ZW4NCg0KIyMjIyBUZXRyaXMNCg0KYGBge3J9DQpiaWdfb25lX2RmICU+JSANCiAgIyBtdXRhdGUoc2V2X2NsYXNzID0gY2FzZV93aGVuKHNuID4gbWVkaWFuKHNuKSB+ICJIaWdoIHNldmVyaXR5IiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgc24gPD0gbWVkaWFuKHNuKSB+ICJMb3cgc2V2ZXJpdHkiKSkgJT4lIA0KICBmaWx0ZXIobGFtYmRhID49MC4zKSAlPiUNCiAgZ3JvdXBfYnkobGFtYmRhLCBDKSAlPiUgDQogIHN1bW1hcmlzZShuPW4oKSxzdW1uID0gc3VtKHByb2ZpdCksIHByb2IgPSBzdW1uL24pICU+JQ0KICAjIGZpbHRlcihwcm9iPjAuNSkgJT4lDQogIG11dGF0ZShwcm9iMiA9IGNhc2Vfd2hlbihwcm9iIDwgMC41MCB+ICJQcihJIFx1MjI2NSBDKSBcdTIyNjQgMC41ICIsDQogICAgICAgICAgICAgICAgICAgICAgICAgIHByb2IgPj0gMC41MCB+ICJQcihJIFx1MjI2NSBDKSA+IDAuNSIpKSAlPiUgIywNCiAgIyAjICAgICAgICAgICAgICAgICAgICAgICAgIHByb2IgPj0gMC43NSB+ICI3NSUgXHUyMjY0IHAgPCAxMDAlICIgICkpICU+JSANCiAgZ2dwbG90KGFlcyhhcy5mYWN0b3IobGFtYmRhKjEwMCksYXMuZmFjdG9yKEMpLCBmaWxsID0gcHJvYiwgDQogICAgICAgICAgICAgIyBjb2xvciA9IHByb2IyDQogICAgICAgICAgICAgKSkrDQogIGdlb21fdGlsZShzaXplID0gMC41LCBjb2xvciA9IndoaXRlIikrDQogIHNjYWxlX2ZpbGxfdmlyaWRpc19iKG9wdGlvbiA9IkIiLCBkaXJlY3Rpb24gPSAtMSkrDQogICMgc2NhbGVfZmlsbF9tYW51YWwodmFsdWVzID0gYygiZGFya3JlZCIsICAic3RlZWxibHVlIikpKw0KICAjIHNjYWxlX2ZpbGxfZ3JhZGllbnQyKGxvdyA9ICIjRTYwRTAwIixtaWQgPSAiIzAwMDMwRiIsIGhpZ2ggPSAiIzU1RTM0NCIsbWlkcG9pbnQgPSAwLjUpKw0KICBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gYygiI0U2MEUwMCIsIiM1NUUzNDQiKSkrDQogICMgc2NhbGVfZmlsbF9ncmFkaWVudDIobG93ID0gInJlZCIsbWlkID0gImJsYWNrIiwgaGlnaCA9ICJzdGVlbGJsdWUiLG1pZHBvaW50ID0gMC41KSsNCiAgIyBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gYygicmVkIiwic3RlZWxibHVlIikpICsgDQogIGd1aWRlcyhjb2xvciA9IGd1aWRlX2xlZ2VuZChvdmVycmlkZS5hZXMgPSBsaXN0KHNpemU9MikpKSsNCiAgIyBzY2FsZV9maWxsX3ZpcmlkaXNfZChvcHRpb24gPSAiQiIpKw0KICBsYWJzKHggPSAiRnVuZ2ljaWRlIGVmZmljYWN5ICglKSIsDQogICAgICAgeSA9ICJGdW5naWNpZGUgKyBBcHBsaWNhdGlvbiBjb3N0ICgkKSIsDQogICAgICAgZmlsbCAgPSAiUHIoSSBcdTIyNjUgQykiLA0KICAgICAgIGNvbG9yID0iIiApKw0KICAjIGZhY2V0X3dyYXAofnNldl9jbGFzcykrDQogIHRoZW1lX2xpZ2h0KCkNCiMgZ2dzYXZlKCJmaWdzL3RldHJpcy5wbmciLCBkcGkgPSA2MDAsIGhlaWdodCA9IDUsIHdpZHRoID0gNykNCmBgYA0KDQojIyMjIFRldHJpcyAyDQoNCmBgYHtyfQ0KbWVkaWFuKGJpZ19vbmVfZGYkYjApDQpgYGANCg0KYGBge3J9DQp0ZXRyaXNfcGxvdCA9IGZ1bmN0aW9uKHNfY2xhc3MsIHlfY2xhc3MsIHBhbCA9MSl7DQpiaWdfb25lX2RmICU+JSANCiAgbXV0YXRlKHNldl9jbGFzcyA9IGNhc2Vfd2hlbihzbiA+IG1lZGlhbihzbikgfiAiSGlnaCBzZXZlcml0eSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzbiA8PSBtZWRpYW4oc24pIH4gIkxvdyBzZXZlcml0eSIpLA0KICAgICAgeWllbGRfY2xhc3MgPSAgY2FzZV93aGVuKGIwID4gbWVkaWFuKGIwKSB+ICJIaWdoIHlpZWxkIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGIwIDw9IG1lZGlhbihiMCkgfiAiTG93IHlpZWxkIikpICU+JQ0KICAgIGZpbHRlcihsYW1iZGEgPj0wLjMpICU+JSANCiAgZ3JvdXBfYnkobGFtYmRhLCBDLCBzZXZfY2xhc3MseWllbGRfY2xhc3MpICU+JSANCiAgc3VtbWFyaXNlKG49bigpLHN1bW4gPSBzdW0ocHJvZml0KSwgcHJvYiA9IHN1bW4vbikgJT4lDQogIG11dGF0ZShwcm9iID0gY2FzZV93aGVuKHByb2IgPj0gLjc1IH4gIlx1MjI2NSAwLjc1IiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgcHJvYiA8IC43NSAmIHByb2IgPj0gMC41IH4gIjAuNTAtMC43NSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgIHByb2IgPCAuNTAgJiBwcm9iID49IC4yNSB+ICIwLjI1LTAuNTAiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICBwcm9iIDwgLjI1IH4gIjwgMC4yNSIpLA0KICAgICAgICAgcHJvYiA9ZmFjdG9yKHByb2IsbGV2ZWwgPSBjKCI8IDAuMjUiLCIwLjI1LTAuNTAiLCIwLjUwLTAuNzUiLCAiXHUyMjY1IDAuNzUiKSkpICU+JQ0KICAgIGZpbHRlcihzZXZfY2xhc3M9PSBzX2NsYXNzLA0KICAgICAgICAgICB5aWVsZF9jbGFzcyA9PSB5X2NsYXNzKSAlPiUgDQogIGdncGxvdChhZXMoYXMuZmFjdG9yKGxhbWJkYSoxMDApLGFzLmZhY3RvcihDKSwgZmlsbCA9IHByb2IpKSsNCiAgZ2VvbV90aWxlKHNpemUgPSAwLjI1LCBjb2xvciA9ImdyYXk3MCIpKw0KICBzY2FsZV9maWxsX2JyZXdlcihwYWxldHRlID0gcGFsKSsNCiAgbGFicyh4ID0gIkZ1bmdpY2lkZSBlZmZpY2FjeSAoJSkiLA0KICAgICAgIHkgPSAiRnVuZ2ljaWRlICsgQXBwbGljYXRpb24gY29zdCAoJCkiLA0KICAgICAgIGZpbGwgID0gIlByb2JhYmlsaXR5IiwNCiAgICAgICBjb2xvciA9IiIgKSsNCiAgIyBmYWNldF9ncmlkKH5zZXZfY2xhc3MpKw0KICBndWlkZXMoY29sb3IgPSBndWlkZV9sZWdlbmQob3ZlcnJpZGUuYWVzID0gbGlzdChzaXplPTIpKSkrDQogIHRoZW1lX2xpZ2h0KCkrDQogIHRoZW1lKHRleHQgPSBlbGVtZW50X3RleHQoc2l6ZSA9IDEwKSwNCiAgICAgICAgbGVnZW5kLnBvc2l0aW9uID0gImJvdHRvbSIsDQogICAgICAgIGF4aXMudGV4dCA9IGVsZW1lbnRfdGV4dChzaXplID0gNyksDQogICAgICAgIHBhbmVsLnNwYWNpbmcgPSB1bml0KDEuNzUsICJsaW5lcyIpLA0KICAgICAgICBzdHJpcC5iYWNrZ3JvdW5kID1lbGVtZW50X3JlY3QoZmlsbD0iTkEiKSwNCiAgICAgICAgc3RyaXAudGV4dCA9IGVsZW1lbnRfdGV4dChjb2xvciA9ICJibGFjayIsIHNpemUgPTEyKSkNCn0NCg0KYGBgDQoNCmBgYHtyfQ0KdGV0cmlzX1NoX1NoID0gdGV0cmlzX3Bsb3Qoc19jbGFzcyA9ICJIaWdoIHNldmVyaXR5IiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgeV9jbGFzcyA9ICJIaWdoIHlpZWxkIixwYWwgPTEpKw0KICBsYWJzKHRpdGxlID0gIkhpZ2ggc2V2ZXJpdHkiLA0KICAgICAgIHN1YnRpdGxlID0gIkhpZ2ggeWllbGQiKQ0KDQp0ZXRyaXNfU2xfWWggPSB0ZXRyaXNfcGxvdChzX2NsYXNzID0gIkxvdyBzZXZlcml0eSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgIHlfY2xhc3MgPSAiSGlnaCB5aWVsZCIscGFsID0xDQogICAgICAgICAgICAgICAgICAgICAgICAgKSsNCiAgbGFicyh0aXRsZSA9ICJMb3cgc2V2ZXJpdHkiLA0KICAgICAgIHN1YnRpdGxlID0gIkhpZ2ggeWllbGQiKQ0KDQp0ZXRyaXNfU2hfWWwgPSB0ZXRyaXNfcGxvdChzX2NsYXNzID0gIkhpZ2ggc2V2ZXJpdHkiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICB5X2NsYXNzID0gIkxvdyB5aWVsZCIscGFsID0yDQogICAgICAgICAgICAgICAgICAgICAgICAgKSsNCiAgbGFicyh0aXRsZSA9ICJIaWdoIHNldmVyaXR5IiwNCiAgICAgICBzdWJ0aXRsZSA9ICJMb3cgeWllbGQiKQ0KDQp0ZXRyaXNfU2xfU2ggPSB0ZXRyaXNfcGxvdChzX2NsYXNzID0gIkxvdyBzZXZlcml0eSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgIHlfY2xhc3MgPSAiTG93IHlpZWxkIixwYWwgPTINCiAgICAgICAgICAgICAgICAgICAgICAgICApKw0KICBsYWJzKHRpdGxlID0gIkxvdyBzZXZlcml0eSIsDQogICAgICAgc3VidGl0bGUgPSAiTG93IHlpZWxkIikNCg0KDQpgYGANCg0KDQoNCiMjIyMgQ29tYm8gdGV0cmlzDQpgYGB7cn0NCigodGV0cmlzX1NoX1NoK3RldHJpc19TbF9ZaCkrcGxvdF9sYXlvdXQoZ3VpZGVzID0gImNvbGxlY3QiKSkvKCh0ZXRyaXNfU2hfWWwrdGV0cmlzX1NsX1NoKSsNCiAgIHBsb3RfbGF5b3V0KGd1aWRlcyA9ICJjb2xsZWN0IikpKw0KICBwbG90X2Fubm90YXRpb24odGFnX2xldmVscyA9ICdBJykmDQogIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJib3R0b20iLA0KICAgICAgICBwbG90LnRpdGxlID0gZWxlbWVudF90ZXh0KHNpemUgPSA4KSwNCiAgICAgICAgcGxvdC5zdWJ0aXRsZSA9IGVsZW1lbnRfdGV4dChzaXplID0gOCkpDQogIA0KDQpnZ3NhdmUoImZpZ3MvYm94X2NsYXNzZXMucG5nIiwgZHBpID0gNTAwLCBoZWlnaHQgPSA4LjUsIHdpZHRoID0gNy41KQ0KZ2dzYXZlKCJmaWdzL2JveF9jbGFzc2VzLnBkZiIsIGRwaSA9IDUwMCwgaGVpZ2h0ID0gOC41LCB3aWR0aCA9IDcuNSkNCmBgYA0KDQoNCg0KIyMgWWllbGQgZ2Fpbg0KIyMjIEFic29sdXRlIGdhaW4NCg0KYGBge3J9DQpvdmVyYWxfeWcgPSBiaWdfb25lX2RmICU+JQ0KICBtdXRhdGUoc2V2X2NsYXNzID0gIiBPdmVyYWxsIikgJT4lIA0KICBncm91cF9ieShsYW1iZGEsc2V2X2NsYXNzKSAlPiUgDQogIHN1bW1hcmlzZSh5aWVsZF9nYWluX21lZGlhbiA9IG1lZGlhbih5aWVsZF9nYWluKSwNCiAgICAgICAgICAgIHlpZWxkX2dhaW5fbWVhbiA9IG1lYW4oeWllbGRfZ2FpbiksDQogICAgICAgICAgICB1cF85NSA9IHF1YW50aWxlKHlpZWxkX2dhaW4sIDAuOTc1KSwNCiAgICAgICAgICAgIGxvd185NSA9IHF1YW50aWxlKHlpZWxkX2dhaW4sIDAuMDI1KSwNCiAgICAgICAgICAgIHVwXzc1ID0gcXVhbnRpbGUoeWllbGRfZ2FpbiwgMC43NSksDQogICAgICAgICAgICBsb3dfNzUgPSBxdWFudGlsZSh5aWVsZF9nYWluLCAwLjI1KSkNCmBgYA0KDQpgYGB7cn0NCiMgbV9hYnNvbCA9IGxtKHlpZWxkX2dhaW4gfiBsYW1iZGEsIGJpZ19vbmVfZGYgJT4lIG11dGF0ZShsYW1iZGE9bGFtYmRhKjEwMCkpDQojIHN1bW1hcnkobV9hYnNvbCkNCmBgYA0KDQoNCg0KDQpgYGB7cn0NCm92ZXJfZ2dfa2cgPSBvdmVyYWxfeWcgJT4lIA0KICBnZ3Bsb3QoYWVzKGxhbWJkYSoxMDAseWllbGRfZ2Fpbl9tZWFuKSkrDQogIGdlb21fbGluZShhZXMobGFtYmRhKjEwMCwgbG93Xzk1KSwNCiAgICAgICAgICAgICAgbGluZXR5cGUgPSAyLA0KICAgICAgICAgICAgc2l6ZSA9IDAuNywNCiAgICAgICAgICAgIGZpbGwgPSBOQSkrDQogIGdlb21fbGluZShhZXMobGFtYmRhKjEwMCwgdXBfOTUpLA0KICAgICAgICAgICAgICBsaW5ldHlwZSA9IDIsDQogICAgICAgICAgICBzaXplID0gMC43LA0KICAgICAgICAgICAgZmlsbCA9IE5BKSsNCiAgZ2VvbV9saW5lKHNpemUgPSAxLjIsIGFlcyhsYW1iZGEqMTAwLHlpZWxkX2dhaW5fbWVkaWFuKSkrDQogICMgc2NhbGVfbGluZXR5cGVfbWFudWFsKHZhbHVlcz1jKDEsMikpKw0KICB0aGVtZV9saWdodCgpKw0KICAjIGdlb21fYWJsaW5lKHNsb3BlID0gOS42MSwgaW50ZXJjZXB0ID0gLTAuMSApKw0KICAjIGNvb3JkX2VxdWFsKCkrDQogIGxhYnMoeCA9ICJGdW5naWNpZGUgZWZmaWNhY3kgKCUpIiwNCiAgICAgICB5ID0gIllpZWxkIGdhaW4gKGtnL2hhKSIsDQogICAgICAgY29sb3IgPSAiRnVuZ2ljaWRlIG1peHR1cmUiLCAjKERhbGxhIGxhbmEgZXQgYWwuLCAyMDE4KQ0KICAgICAgIGxpbmV0eXBlID0gIiIsIGZpbGwgPSAiIikNCm92ZXJfZ2dfa2cNCmBgYA0KDQoNCg0KDQpgYGB7cn0NCnlnYWluX3Bsb3QgPSBmdW5jdGlvbihzX2NsYXNzKXsNCmJpZ19vbmVfZGYgJT4lIA0KICBtdXRhdGUoc2V2X2NsYXNzID0gY2FzZV93aGVuKHNuID4gbWVkaWFuKHNuKSB+ICJIaWdoIHNldmVyaXR5IiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNuIDw9IG1lZGlhbihzbikgfiAiTG93IHNldmVyaXR5IiksDQogICAgICB5aWVsZF9jbGFzcyA9ICBjYXNlX3doZW4oYjAgPiBtZWRpYW4oYjApIH4gIkhpZ2ggeWllbGQiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYjAgPD0gbWVkaWFuKGIwKSB+ICJMb3cgeWllbGQiKSkgJT4lDQogIGdyb3VwX2J5KGxhbWJkYSwgc2V2X2NsYXNzLHlpZWxkX2NsYXNzICkgJT4lIA0KICBzdW1tYXJpc2UoeWllbGRfZ2Fpbl9tZWRpYW4gPSBtZWRpYW4oeWllbGRfZ2FpbiksDQogICAgICAgICAgICB5aWVsZF9nYWluX21lYW4gPSBtZWFuKHlpZWxkX2dhaW4pLA0KICAgICAgICAgICAgdXBfOTUgPSBxdWFudGlsZSh5aWVsZF9nYWluLCAwLjk3NSksDQogICAgICAgICAgICBsb3dfOTUgPSBxdWFudGlsZSh5aWVsZF9nYWluLCAwLjAyNSksDQogICAgICAgICAgICB1cF83NSA9IHF1YW50aWxlKHlpZWxkX2dhaW4sIDAuNzUpLA0KICAgICAgICAgICAgbG93Xzc1ID0gcXVhbnRpbGUoeWllbGRfZ2FpbiwgMC4yNSkpICU+JSANCiAgbXV0YXRlKHNldl9jbGFzcyA9IGZhY3RvcihzZXZfY2xhc3MsIGxldmVscyA9IGMoIkxvdyBzZXZlcml0eSIsIkhpZ2ggc2V2ZXJpdHkiKSkpICU+JQ0KICAgIGZpbHRlcihzZXZfY2xhc3MgPT1zX2NsYXNzICkgJT4lIA0KICBnZ3Bsb3QoYWVzKGxhbWJkYSoxMDAseWllbGRfZ2Fpbl9tZWFuKSkrDQogIGdlb21fbGluZShhZXMobGFtYmRhKjEwMCwgbG93Xzk1LCBjb2xvciA9IHlpZWxkX2NsYXNzKSwNCiAgICAgICAgICAgICAgbGluZXR5cGUgPSAyLA0KICAgICAgICAgICAgc2l6ZSA9IDAuNywNCiAgICAgICAgICAgIGZpbGwgPSBOQSkrDQogIGdlb21fbGluZShhZXMobGFtYmRhKjEwMCwgdXBfOTUsY29sb3IgPSB5aWVsZF9jbGFzcyksDQogICAgICAgICAgICAgIGxpbmV0eXBlID0gMiwNCiAgICAgICAgICAgIHNpemUgPSAwLjcsDQogICAgICAgICAgICBmaWxsID0gTkEpKw0KICBnZW9tX2xpbmUoc2l6ZSA9IDEuMiwgYWVzKGxhbWJkYSoxMDAseWllbGRfZ2Fpbl9tZWRpYW4sY29sb3IgPSB5aWVsZF9jbGFzcykpKw0KICAjIHNjYWxlX2NvbG9yX21hbnVhbCh2YWx1ZXMgPSBjKCIjMDA5NjI4IiwiIzhBMDAwNCIpKSsNCiAgc2NhbGVfY29sb3JfbWFudWFsKHZhbHVlcyA9IGMoInN0ZWVsYmx1ZSIsIiMwMDk2MjgiKSkrDQogIHRoZW1lX2xpZ2h0KCkrDQogICAgY29vcmRfY2FydGVzaWFuKHlsaW09YygwLDMwMDApKSsNCiAgbGFicyh4ID0gIkZ1bmdpY2lkZSBlZmZpY2FjeSAoJSkiLA0KICAgICAgIHkgPSAiWWllbGQgZ2FpbiAoa2cvaGEpIiwNCiAgICAgICBjb2xvciA9ICJBdHRhaW5hYmxlIFlpZWxkIiwgIyhEYWxsYSBsYW5hIGV0IGFsLiwgMjAxOCkNCiAgICAgICBsaW5ldHlwZSA9ICIiKQ0KfQ0KaGlnaF9zZXZfeWcgPSB5Z2Fpbl9wbG90KHNfY2xhc3MgPSAiSGlnaCBzZXZlcml0eSIpKw0KICBsYWJzKHRpdGxlID0gIkhpZ2ggc2V2ZXJpdHkiKQ0KbG93X3Nldl95ZyA9IHlnYWluX3Bsb3Qoc19jbGFzcyA9ICJMb3cgc2V2ZXJpdHkiKSsNCiAgbGFicyh0aXRsZSA9ICJMb3cgc2V2ZXJpdHkiKQ0KYGBgDQoNCg0KYGBge3J9DQpoaWdoX3Nldl95Zytsb3dfc2V2X3lnDQpgYGANCg0KYGBge3J9DQpiaWdfb25lX2RmICU+JQ0KICBtdXRhdGUoc2V2X2NsYXNzID0gY2FzZV93aGVuKHNuID4gbWVkaWFuKHNuKSB+ICJIaWdoIHNldmVyaXR5IiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNuIDw9IG1lZGlhbihzbikgfiAiTG93IHNldmVyaXR5IiksDQogICAgICB5aWVsZF9jbGFzcyA9ICBjYXNlX3doZW4oYjAgPiBtZWRpYW4oYjApIH4gIkhpZ2ggeWllbGQiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYjAgPD0gbWVkaWFuKGIwKSB+ICJMb3cgeWllbGQiKSkgJT4lDQogIGdyb3VwX2J5KGxhbWJkYSwgc2V2X2NsYXNzLHlpZWxkX2NsYXNzICkgJT4lIA0KICBzdW1tYXJpc2UoeWllbGRfZ2Fpbl9tZWFuID0gbWVhbih5aWVsZF9nYWluKSwNCiAgICAgICAgICAgIHlpZWxkX2dhaW5fbWVkaWFuID0gbWVkaWFuKHlpZWxkX2dhaW4sIG5hLnJtID0gVCksDQogICAgICAgICAgICBsb3dfOTUgPSBxdWFudGlsZSh5aWVsZF9nYWluLCAwLjAyNSksDQogICAgICAgICAgICB1cF85NSA9IHF1YW50aWxlKHlpZWxkX2dhaW4sIDAuOTc1KSwNCiAgICAgICAgICAgIHVwXzc1ID0gcXVhbnRpbGUoeWllbGRfZ2FpbiwgMC43NSksDQogICAgICAgICAgICBsb3dfNzUgPSBxdWFudGlsZSh5aWVsZF9nYWluLCAwLjI1KSkgJT4lIA0KICBiaW5kX3Jvd3Mob3ZlcmFsX3lnKSAlPiUgDQogIGZpbHRlcihsYW1iZGE9PS43NSkgJT4lIA0KICBhcnJhbmdlKHlpZWxkX2NsYXNzKQ0KDQoNCmBgYA0KDQoNCiMjIyBQZXJjZW50ICBnYWluIA0KDQpgYGB7cn0NCm92ZXJhbF9wZXJjZXQgPSBiaWdfb25lX2RmICU+JQ0KICBtdXRhdGUoc2V2X2NsYXNzID0gIiBPdmVyYWxsIikgJT4lIA0KICBncm91cF9ieShsYW1iZGEsc2V2X2NsYXNzKSAlPiUgDQogIG11dGF0ZSh5aWVsZF9nYWluX3BlcmMgPSBjYXNlX3doZW4oeWllbGRfZ2Fpbl9wZXJjPnF1YW50aWxlKHlpZWxkX2dhaW5fcGVyYywwLjk5OSl+cXVhbnRpbGUoeWllbGRfZ2Fpbl9wZXJjLDAuOTk5KSwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB5aWVsZF9nYWluX3BlcmM8PXF1YW50aWxlKHlpZWxkX2dhaW5fcGVyYywwLjk5OSkgfnlpZWxkX2dhaW5fcGVyYykpICU+JQ0KICBzdW1tYXJpc2UoeWllbGRfZ2Fpbl9tZWFuID0gbWVhbih5aWVsZF9nYWluX3BlcmMsbmEucm0gPSBUKSwNCiAgICAgICAgICAgIHlpZWxkX2dhaW5fbWVkaWFuID0gbWVkaWFuKHlpZWxkX2dhaW5fcGVyYyxuYS5ybSA9IFQpLA0KICAgICAgICAgICAgbG93Xzk1ID0gcXVhbnRpbGUoeWllbGRfZ2Fpbl9wZXJjLCAwLjAyNSxuYS5ybSA9IFQpLA0KICAgICAgICAgICAgdXBfOTUgPSBxdWFudGlsZSh5aWVsZF9nYWluX3BlcmMsIDAuOTc1LG5hLnJtID0gVCksDQogICAgICAgICAgICB1cF83NSA9IHF1YW50aWxlKHlpZWxkX2dhaW5fcGVyYywgMC43NSxuYS5ybSA9IFQpLA0KICAgICAgICAgICAgbG93Xzc1ID0gcXVhbnRpbGUoeWllbGRfZ2Fpbl9wZXJjLCAwLjI1LG5hLnJtID0gVCkpICANCg0KDQoNCmBgYA0KDQoNCmBgYHtyfQ0Kb3Zlcl9nZyA9IG92ZXJhbF9wZXJjZXQgJT4lIA0KICBnZ3Bsb3QoYWVzKGxhbWJkYSoxMDAseWllbGRfZ2Fpbl9tZWFuKSkrDQogIGdlb21fbGluZShhZXMobGFtYmRhKjEwMCwgbG93Xzk1KSwNCiAgICAgICAgICAgICAgbGluZXR5cGUgPSAyLA0KICAgICAgICAgICAgc2l6ZSA9IDAuNywNCiAgICAgICAgICAgIGZpbGwgPSBOQSkrDQogIGdlb21fbGluZShhZXMobGFtYmRhKjEwMCwgdXBfOTUpLA0KICAgICAgICAgICAgICBsaW5ldHlwZSA9IDIsDQogICAgICAgICAgICBzaXplID0gMC43LA0KICAgICAgICAgICAgZmlsbCA9IE5BKSsNCiAgZ2VvbV9saW5lKHNpemUgPSAxLjIsIGFlcyhsYW1iZGEqMTAwLHlpZWxkX2dhaW5fbWVkaWFuKSkrDQogICMgc2NhbGVfbGluZXR5cGVfbWFudWFsKHZhbHVlcz1jKDEsMikpKw0KICB0aGVtZV9saWdodCgpKw0KICAjIGNvb3JkX2VxdWFsKCkrDQogIGxhYnMoeCA9ICJGdW5naWNpZGUgZWZmaWNhY3kgKCUpIiwNCiAgICAgICB5ID0gIllpZWxkIGdhaW4gJSIsDQogICAgICAgY29sb3IgPSAiRnVuZ2ljaWRlIG1peHR1cmUiLCAjKERhbGxhIGxhbmEgZXQgYWwuLCAyMDE4KQ0KICAgICAgIGxpbmV0eXBlID0gIiIsIGZpbGwgPSAiIikrDQogIGNvb3JkX2NhcnRlc2lhbih5bGltID0gYygwLDEwMCksIHhsaW0gPSBjKC0xMCwxMDApKQ0Kb3Zlcl9nZw0KYGBgDQoNCg0KDQpgYGB7ciBmaWcuaGVpZ2h0PTUsIGZpZy53aWR0aD0xMn0NCnlnYWluX3BlcmNfcGxvdCA9IGZ1bmN0aW9uKHNfY2xhc3Mpew0KYmlnX29uZV9kZiAlPiUgDQogIG11dGF0ZShzZXZfY2xhc3MgPSBjYXNlX3doZW4oc24gPiBtZWRpYW4oc24pIH4gIkhpZ2ggc2V2ZXJpdHkiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc24gPD0gbWVkaWFuKHNuKSB+ICJMb3cgc2V2ZXJpdHkiKSwNCiAgICAgIHlpZWxkX2NsYXNzID0gIGNhc2Vfd2hlbihiMCA+IG1lZGlhbihiMCkgfiAiSGlnaCB5aWVsZCIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBiMCA8PSBtZWRpYW4oYjApIH4gIkxvdyB5aWVsZCIpKSAlPiUNCiAgZ3JvdXBfYnkobGFtYmRhLCBzZXZfY2xhc3MseWllbGRfY2xhc3MgKSAlPiUgDQogIHN1bW1hcmlzZSh5aWVsZF9nYWluX21lZGlhbiA9IG1lZGlhbih5aWVsZF9nYWluX3BlcmMpLA0KICAgICAgICAgICAgeWllbGRfZ2Fpbl9tZWFuID0gbWVhbih5aWVsZF9nYWluX3BlcmMpLA0KICAgICAgICAgICAgdXBfOTUgPSBxdWFudGlsZSh5aWVsZF9nYWluX3BlcmMsIDAuOTc1KSwNCiAgICAgICAgICAgIGxvd185NSA9IHF1YW50aWxlKHlpZWxkX2dhaW5fcGVyYywgMC4wMjUpLA0KICAgICAgICAgICAgdXBfNzUgPSBxdWFudGlsZSh5aWVsZF9nYWluX3BlcmMsIDAuNzUpLA0KICAgICAgICAgICAgbG93Xzc1ID0gcXVhbnRpbGUoeWllbGRfZ2Fpbl9wZXJjLCAwLjI1KSkgJT4lIA0KICBtdXRhdGUoc2V2X2NsYXNzID0gZmFjdG9yKHNldl9jbGFzcywgbGV2ZWxzID0gYygiTG93IHNldmVyaXR5IiwiSGlnaCBzZXZlcml0eSIpKSkgJT4lDQogICAgZmlsdGVyKHNldl9jbGFzcyA9PXNfY2xhc3MgKSAlPiUgDQogIGdncGxvdChhZXMobGFtYmRhKjEwMCx5aWVsZF9nYWluX21lYW4pKSsNCiAgZ2VvbV9saW5lKGFlcyhsYW1iZGEqMTAwLCBsb3dfOTUsIGNvbG9yID0geWllbGRfY2xhc3MpLA0KICAgICAgICAgICAgICBsaW5ldHlwZSA9IDIsDQogICAgICAgICAgICBzaXplID0gMC43LA0KICAgICAgICAgICAgZmlsbCA9IE5BKSsNCiAgZ2VvbV9saW5lKGFlcyhsYW1iZGEqMTAwLCB1cF85NSxjb2xvciA9IHlpZWxkX2NsYXNzKSwNCiAgICAgICAgICAgICAgbGluZXR5cGUgPSAyLA0KICAgICAgICAgICAgc2l6ZSA9IDAuNywNCiAgICAgICAgICAgIGZpbGwgPSBOQSkrDQogIGdlb21fbGluZShzaXplID0gMS4yLCBhZXMobGFtYmRhKjEwMCx5aWVsZF9nYWluX21lZGlhbixjb2xvciA9IHlpZWxkX2NsYXNzKSkrDQogICMgc2NhbGVfY29sb3JfbWFudWFsKHZhbHVlcyA9IGMoIiMwMDk2MjgiLCIjOEEwMDA0IikpKw0KICBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gYygic3RlZWxibHVlIiwiIzAwOTYyOCIpKSsNCg0KICB0aGVtZV9saWdodCgpKw0KICBsYWJzKHggPSAiRnVuZ2ljaWRlIGVmZmljYWN5ICglKSIsDQogICAgICAgeSA9ICJZaWVsZCBnYWluICglKSIsDQogICAgICAgY29sb3IgPSAiQXR0YWluYWJsZSBZaWVsZCIsIA0KICAgICAgIGxpbmV0eXBlID0gIiIsIGZpbGwgPSAiIikrDQogIGNvb3JkX2NhcnRlc2lhbih5bGltID0gYygwLDEwMCkpDQp9DQpoaWdoX3Nldl95Z19wZXJjID0geWdhaW5fcGVyY19wbG90KHNfY2xhc3MgPSAiSGlnaCBzZXZlcml0eSIpKw0KICBsYWJzKHRpdGxlID0gIkhpZ2ggc2V2ZXJpdHkiKQ0KbG93X3Nldl95Z19wZXJjID0geWdhaW5fcGVyY19wbG90KHNfY2xhc3MgPSAiTG93IHNldmVyaXR5IikrDQogIGxhYnModGl0bGUgPSAiTG93IHNldmVyaXR5IikNCg0KYGBgDQoNCiMjIyBDb21ibyB5aWVkIGdhaW4NCmBgYHtyfQ0KKGhpZ2hfc2V2X3lnK2xvd19zZXZfeWcpLw0KKGhpZ2hfc2V2X3lnX3BlcmMrbG93X3Nldl95Z19wZXJjKSsNCiAgcGxvdF9sYXlvdXQoZ3VpZGVzID0gImNvbGxlY3QiLA0KICAgICAgICAgICAgICAgaGVpZ2h0cyA9IGMoMSwxKSkrDQogIHBsb3RfYW5ub3RhdGlvbih0YWdfbGV2ZWxzID0gJ0EnKSYgDQogIHRoZW1lKHBsb3QudGl0bGUgPSBlbGVtZW50X3RleHQoc2l6ZSA9OCkpDQogIA0KICANCmdnc2F2ZSgiZmlncy95aWVsZF9nYWluX3BlcmMucG5nIiwgZHBpID0gNjAwLCBoZWlnaHQgPSA2LCB3aWR0aCA9OCkNCmdnc2F2ZSgiZmlncy95aWVsZF9nYWluX3BlcmMucGRmIiwgZHBpID0gNjAwLCBoZWlnaHQgPSA2LCB3aWR0aCA9OCkNCmBgYA0KDQoNCg0KYGBge3J9DQogYmlnX29uZV9kZiAlPiUNCiAgbXV0YXRlKHNldl9jbGFzcyA9IGNhc2Vfd2hlbihzbiA+IG1lZGlhbihzbikgfiAiSGlnaCBzZXZlcml0eSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzbiA8PSBtZWRpYW4oc24pIH4gIkxvdyBzZXZlcml0eSIpLA0KICAgICAgeWllbGRfY2xhc3MgPSAgY2FzZV93aGVuKGIwID4gbWVkaWFuKGIwKSB+ICJIaWdoIHlpZWxkIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGIwIDw9IG1lZGlhbihiMCkgfiAiTG93IHlpZWxkIikpICU+JQ0KICBncm91cF9ieShsYW1iZGEsc2V2X2NsYXNzLHlpZWxkX2NsYXNzKSAlPiUNCiAgbXV0YXRlKHlpZWxkX2dhaW5fcGVyYyA9IGNhc2Vfd2hlbih5aWVsZF9nYWluX3BlcmM+cXVhbnRpbGUoeWllbGRfZ2Fpbl9wZXJjLDAuOTk5KX5xdWFudGlsZSh5aWVsZF9nYWluX3BlcmMsMC45OTkpLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHlpZWxkX2dhaW5fcGVyYzw9cXVhbnRpbGUoeWllbGRfZ2Fpbl9wZXJjLDAuOTk5KSB+eWllbGRfZ2Fpbl9wZXJjKSkgJT4lDQogIHN1bW1hcmlzZSh5aWVsZF9nYWluX21lYW4gPSBtZWFuKCh5aWVsZF9nYWluX3BlcmMpLG5hLnJtID0gVCksDQogICAgICAgICAgICB5aWVsZF9nYWluX21lZGlhbiA9IG1lZGlhbigoeWllbGRfZ2Fpbl9wZXJjKSxuYS5ybSA9IFQpLA0KICAgICAgICAgICAgbG93Xzk1ID0gcXVhbnRpbGUoKHlpZWxkX2dhaW5fcGVyYyksIDAuMDI1LG5hLnJtID0gVCksDQogICAgICAgICAgICB1cF85NSA9IHF1YW50aWxlKCh5aWVsZF9nYWluX3BlcmMpLCAwLjk3NSxuYS5ybSA9IFQpLA0KICAgICAgICAgICAgdXBfNzUgPSBxdWFudGlsZSgoeWllbGRfZ2Fpbl9wZXJjKSwgMC43NSxuYS5ybSA9IFQpLA0KICAgICAgICAgICAgbG93Xzc1ID0gcXVhbnRpbGUoKHlpZWxkX2dhaW5fcGVyYyksIDAuMjUsbmEucm0gPSBUKSkgJT4lIA0KICBiaW5kX3Jvd3Mob3ZlcmFsX3BlcmNldCklPiUgDQogIGZpbHRlcihsYW1iZGE9PTAuNzUpICU+JSANCiAgYXJyYW5nZSh5aWVsZF9jbGFzcykNCg0KYGBgDQoNCg0KIyBFeGFtcGxlcw0KDQpGdW5naWNpZGUgUElDTytURUJVDQoNCmBgYHtyfQ0KbiA9IDEwMDANCiMgeWllbGQgPSBybm9ybSgxMDAwLDY4Mi4xMSwgMjguOTcpDQplZmZpY2FjeSA9ICgxLWV4cChybm9ybSgxMDAwLC0xLjIwNCwwLjA0NjIpKSkNCg0Kc2V2X24gPSByYmV0YShuLCAxLjcwNywgMS4yNjYpDQpzZXZfZiA9IHNldl9uKigxLWVmZmljYWN5KSANCg0Kbm9ybWFsX2NvcnJlbGF0ZWQ8LWdlcmEubm9ybS5iaWQuZ2VyYWwobiwwLjIxLDAsMCwxLDEpDQpiMF9uID0gcG5vcm0obm9ybWFsX2NvcnJlbGF0ZWRbLDJdKQ0KYjFfbiA9IHBub3JtKG5vcm1hbF9jb3JyZWxhdGVkWywxXSkNCmIwID0gcW5vcm0oYjBfbiwgbWVhbl9pbnRlcmNlcHQsc2RfaW50ZXJjZXB0KQ0KYjEgPSAtcWdhbW1hKGIxX24sIHNoYXBlLCByYXRlLCkNCnJtKGIwX24sYjFfbixub3JtYWxfY29ycmVsYXRlZCkNCg0KIyBDYWxjdWxhdGluZyB0aGUgYWxwaGEgY29lZmljaWVudA0KYWxmYSA9IChiMS9iMCkqMTAwDQoNCiMgQ2FsY3VsYXRpbmcgeWllbGQgZ2Fpbg0KeW4gID0gYjAgLSAoLWFsZmEqYjAqc2V2X24pDQp5ZiAgPSBiMCAtICgtYWxmYSpiMCpzZXZfZikNCg0KY29zdCA9IDEyNQ0Kc295X3ByaWNlID0gcm5vcm0obiwgbWVhbihzYnJfcHJpY2UkcHJpY2UpLHNkKHNicl9wcmljZSRwcmljZSkpDQoNCnlpZWxkX2dhaW4gPSB5Zi15bg0KeWllbGRfZ2Fpbl9wZXJjID0gKCh5ZiAtIHluKS95bikqMTAwDQp5aWVsZF9nYWluX3BlcmMgPSAoKHlmL3luKS0xKSoxMDANCmluY29tZSA9IHlpZWxkX2dhaW4qc295X3ByaWNlDQpDUCA9IGNvc3Qvc295X3ByaWNlDQpwcm9maXQgPSAoeWllbGRfZ2Fpbj49Q1ApKjENCm1lYW4ocHJvZml0KQ0KDQpoaXN0KGluY29tZS1jb3N0KQ0KaGlzdChlZmZpY2FjeSkNCmBgYA0KDQoNCiMjIHNpbXVsYXRpb25zIG92ZXJ0aW1lDQojIyMgVGVidQ0KYGBge3J9DQpib3hfdGltZSA9IGRhdGEuZnJhbWUoKQ0KdGltZSA9IHNlcSgwLDEwLCAxKQ0KDQpiMF9kZWNsaW5lID0tMS41MTgNCmIwX3NlX2RlY2xpbmUgPSAgMC4wNjUNCmIxX2RlY2xpbmUgPSAwLjE0Nw0KYjFfc2VfZGVjbGluZSA9IDAuMDEyDQpuID0gMzAwMDANCmZvcihpIGluIDE6bGVuZ3RoKHRpbWUpKXsNCiAgDQp5ID0gIHJub3JtKG4sIGIwX2RlY2xpbmUsYjBfc2VfZGVjbGluZSkgKyB0aW1lW2ldKiBybm9ybShuLGIxX2RlY2xpbmUsYjFfc2VfZGVjbGluZSkgIA0KZWZmaWNhY3kgPSAoMS1leHAoeSkpDQphID0gZGF0YS5mcmFtZSh0aW1lID0gdGltZVtpXSxsYW1iZGE9ZWZmaWNhY3kpDQpib3hfdGltZSA9IGJveF90aW1lICU+JSANCiAgYmluZF9yb3dzKGEpDQp9DQoNCiMgYm94X3RpbWUNCg0KDQoNCiMgYm94X3RpbWUgJT4lIA0KIyAgIGdncGxvdChhZXModGltZSwgbGFtYmRhKjEwMCkpKw0KIyAgIGdlb21fcG9pbnQoKSsNCiMgICBsYWJzKHkgPSAiRWZmaWNhY3kiKSsNCiMgICB5bGltKDAsMTAwKQ0KDQpgYGANCg0KYGBge3J9DQpzaW11bF9kZWNheSA9IGZ1bmN0aW9uKGRhdGFfZWYsIGNvc3Qpew0KIyBjb3N0ID0gNzUNCk4gPSBuKmxlbmd0aCh0aW1lKQ0Kc2V2X24gPSByYmV0YShOLCAxLjcwNywgMS4yNjYpDQpzZXZfZiA9IHNldl9uKigxLWRhdGFfZWYkbGFtYmRhKSANCm5vcm1hbF9jb3JyZWxhdGVkPC1nZXJhLm5vcm0uYmlkLmdlcmFsKE4sMC4yMSwwLDAsMSwxKQ0KYjBfbiA9IHBub3JtKG5vcm1hbF9jb3JyZWxhdGVkWywyXSkNCmIxX24gPSBwbm9ybShub3JtYWxfY29ycmVsYXRlZFssMV0pDQpiMCA9IHFub3JtKGIwX24sIG1lYW5faW50ZXJjZXB0LHNkX2ludGVyY2VwdCkNCmIxID0gLXFnYW1tYShiMV9uLCBzaGFwZSwgcmF0ZSwpDQpybShiMF9uLGIxX24sbm9ybWFsX2NvcnJlbGF0ZWQpDQoNCiMgQ2FsY3VsYXRpbmcgdGhlIGFscGhhIGNvZWZpY2llbnQNCmFsZmEgPSAoYjEvYjApKjEwMA0KDQojIENhbGN1bGF0aW5nIHlpZWxkIGdhaW4NCnluICA9IGIwIC0gKC1hbGZhKmIwKnNldl9uKQ0KeWYgID0gYjAgLSAoLWFsZmEqYjAqc2V2X2YpDQoNCnNveV9wcmljZSA9IHJub3JtKE4sIG1lYW4oc2JyX3ByaWNlJHByaWNlKSxzZChzYnJfcHJpY2UkcHJpY2UpKQ0KDQp5aWVsZF9nYWluID0geWYteW4NCnlpZWxkX2dhaW5fcGVyYyA9ICgoeWYgLSB5bikveW4pKjEwMA0KeWllbGRfZ2Fpbl9wZXJjID0gKCh5Zi95biktMSkqMTAwDQppbmNvbWUgPSB5aWVsZF9nYWluKnNveV9wcmljZQ0KQ1AgPSBjb3N0L3NveV9wcmljZQ0KcHJvZml0ID0gKHlpZWxkX2dhaW4+PUNQKQ0KcHJvZml0XzUwID0gKGluY29tZT49Y29zdCsoY29zdCowLjUpKSMqMQ0KDQpib3hfdGltZTIgPSBkYXRhX2VmICU+JSANCiAgbXV0YXRlKHlpZWxkX2dhaW4pICU+JSANCiAgbXV0YXRlKHlpZWxkX2dhaW5fcGVyYykgJT4lIA0KICBtdXRhdGUoaW5jb21lKSAlPiUgDQogIG11dGF0ZShDUCwgY29zdCkgJT4lIA0KICBtdXRhdGUocHJvZml0LA0KICAgICAgICAgcHJvZml0XzUwKSAlPiUgDQogIGdyb3VwX2J5KHRpbWUpICU+JSANCiAgbXV0YXRlKFAgPSBtZWFuKHByb2ZpdCksDQogICAgICAgICBQXzUwID0gbWVhbihwcm9maXRfNTApKQ0KcmV0dXJuKGJveF90aW1lMikNCn0NCg0KYGBgDQoNCmBgYHtyfQ0KdGVidV83NSA9IHNpbXVsX2RlY2F5KGRhdGFfZWYgPSBib3hfdGltZSwgY29zdCA9IDc1KQ0KdGVidV8xMDAgPSBzaW11bF9kZWNheShkYXRhX2VmID0gYm94X3RpbWUsIGNvc3QgPSAxMDApDQp0ZWJ1XzEyNSA9IHNpbXVsX2RlY2F5KGRhdGFfZWYgPSBib3hfdGltZSwgY29zdCA9IDEyNSkNCnRlYnUgPSBiaW5kX3Jvd3ModGVidV83NSx0ZWJ1XzEwMCwgdGVidV8xMjUpDQpgYGANCg0KDQpgYGB7cn0NCnRlYnUgJT4lIA0KICBncm91cF9ieSh0aW1lLGNvc3QpICU+JSANCiAgc2xpY2UoMUwpICU+JSANCiAgcGl2b3RfbG9uZ2VyKDEwOjExLCBuYW1lc190byA9ICJQcm9maXRzIiwgdmFsdWVzX3RvID0gInByb2IiKSAlPiUgDQogIG11dGF0ZShQcm9maXRzID0gY2FzZV93aGVuKFByb2ZpdHMgPT0iUCIgfiAiIEJyZWFrLWV2ZW4iLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICBQcm9maXRzID09IlBfNTAiIH4gIjUwJSBwcm9maXQiKSkgJT4lIA0KICBnZ3Bsb3QoKSsNCiAgZ2VvbV9obGluZSh5aW50ZXJjZXB0ID0gMC41LCBjb2xvciA9ICJncmF5Iiwgc2l6ZSA9MSwgbGluZXR5cGUgPTIpKw0KICBnZW9tX2xpbmUoYWVzKCh0aW1lKzIwMDQpLCBwcm9iLCBjb2xvciA9IGFzLmZhY3Rvcihjb3N0KSApLA0KICAgICAgICAgICAgc2l6ZSA9IDEuMikrDQogIGZhY2V0X3dyYXAoflByb2ZpdHMpKw0KICBzY2FsZV9jb2xvcl9jb2xvcmJsaW5kKCkrDQogIGxhYnMoeSA9ICJQcm9iYWJpbGl0eSBvZiBvZmZzZXRpbmcgY29zdHMiLA0KICAgICAgIHggPSAiVGltZSIsDQogICAgICAgY29sb3IgPSAiQ29zdCAoVVMkKSIpKw0KICB5bGltKDAsMSkrDQogIHRoZW1lX21pbmltYWxfZ3JpZCgpDQpgYGANCg0KDQojIyMgQ3lwcg0KDQpgYGB7cn0NCmJveF90aW1lX21peCA9IGRhdGEuZnJhbWUoKQ0KdGltZSA9IHNlcSgwLDEwLCAxKQ0KI21peCBpbnRlcmNlcHQNCiMgYjBfZGVjbGluZSA9LTIuMTUxDQojIGIwX3NlX2RlY2xpbmUgPSAgMC4xMjENCg0KIyB0ZWJ1IGludGVyY2VwdA0KYjBfZGVjbGluZSA9LTEuNTE4DQpiMF9zZV9kZWNsaW5lID0gIDAuMDY1DQoNCiMgYjFfZGVjbGluZSA9IDAuMTMyDQojIGIxX3NlX2RlY2xpbmUgPSAwLjAyMg0KDQpiMV9kZWNsaW5lID0wLjA2MQ0KYjFfc2VfZGVjbGluZSA9IDAuMDE1DQoNCm4gPSAzMDAwMA0KZm9yKGkgaW4gMTpsZW5ndGgodGltZSkpew0KICANCnkgPSAgcm5vcm0obiwgYjBfZGVjbGluZSxiMF9zZV9kZWNsaW5lKSArIHRpbWVbaV0qIHJub3JtKG4sYjFfZGVjbGluZSxiMV9zZV9kZWNsaW5lKSAgDQplZmZpY2FjeSA9ICgxLWV4cCh5KSkNCmEgPSBkYXRhLmZyYW1lKHRpbWUgPSB0aW1lW2ldLGxhbWJkYT1lZmZpY2FjeSkNCmJveF90aW1lX21peCA9IGJveF90aW1lX21peCAlPiUgDQogIGJpbmRfcm93cyhhKQ0KfQ0KDQoNCmBgYA0KDQoNCmBgYHtyfQ0KbWl4Xzc1ID0gc2ltdWxfZGVjYXkoZGF0YV9lZiA9ICBib3hfdGltZV9taXgsIGNvc3QgPSA3NSkNCm1peF8xMDAgPSBzaW11bF9kZWNheShkYXRhX2VmID0gYm94X3RpbWVfbWl4LCBjb3N0ID0gMTAwKQ0KbWl4XzEyNSA9IHNpbXVsX2RlY2F5KGRhdGFfZWYgPSBib3hfdGltZV9taXgsIGNvc3QgPSAxMjUpDQptaXggPSBiaW5kX3Jvd3MobWl4Xzc1LG1peF8xMDAsIG1peF8xMjUpDQpgYGANCg0KDQpgYGB7cn0NCm1peCAlPiUgDQogIGdyb3VwX2J5KHRpbWUsY29zdCkgJT4lIA0KICBzbGljZSgxTCkgJT4lIA0KICBwaXZvdF9sb25nZXIoMTA6MTEsIG5hbWVzX3RvID0gIlByb2ZpdHMiLCB2YWx1ZXNfdG8gPSAicHJvYiIpICU+JSANCiAgbXV0YXRlKFByb2ZpdHMgPSBjYXNlX3doZW4oUHJvZml0cyA9PSJQIiB+ICIgQnJlYWstZXZlbiIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgIFByb2ZpdHMgPT0iUF81MCIgfiAiNTAlIHByb2ZpdCIpKSAlPiUgDQogIGdncGxvdCgpKw0KICBnZW9tX2hsaW5lKHlpbnRlcmNlcHQgPSAwLjUsIGNvbG9yID0gImdyYXkiLCBzaXplID0xLCBsaW5ldHlwZSA9MikrDQogIGdlb21fbGluZShhZXMoKHRpbWUrMjAwNCksIHByb2IsIGNvbG9yID0gYXMuZmFjdG9yKGNvc3QpICksDQogICAgICAgICAgICBzaXplID0gMS4yKSsNCiAgZmFjZXRfd3JhcCh+UHJvZml0cykrICANCiAgc2NhbGVfY29sb3JfY29sb3JibGluZCgpKw0KICBsYWJzKHkgPSAiUHJvYmFiaWxpdHkgb2Ygb2Zmc2V0aW5nIGNvc3RzIiwNCiAgICAgICB4ID0gIlRpbWUiLA0KICAgICAgIGNvbG9yID0gIkNvc3QgKFVTJCkiKSsNCiAgeWxpbSgwLDEpKw0KICB0aGVtZV9saWdodCgpDQpgYGANCg0KIyMjIyBDb21ibyBmaWd1cmENCmBgYHtyfQ0KcHJvYl90aW1lID0gIGZ1bmN0aW9uKGRhdGEsIHByb2ZfY2xhc3Mpew0KDQpkYXRhICU+JSANCiAgZ3JvdXBfYnkodGltZSxjb3N0KSAlPiUgDQogIHNsaWNlKDFMKSAlPiUgDQogIHBpdm90X2xvbmdlcigxMDoxMSwgbmFtZXNfdG8gPSAiUHJvZml0cyIsIHZhbHVlc190byA9ICJwcm9iIikgJT4lIA0KICBtdXRhdGUoUHJvZml0cyA9IGNhc2Vfd2hlbihQcm9maXRzID09IlAiIH4gIkJyZWFrLWV2ZW4iLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICBQcm9maXRzID09IlBfNTAiIH4gIjUwJSBwcm9maXQiKSkgJT4lIA0KICBmaWx0ZXIoUHJvZml0cyA9PSBwcm9mX2NsYXNzKSAlPiUgDQogIGdncGxvdChhZXMoKHRpbWUpLCBwcm9iKSkrDQogICAgDQogIGFubm90YXRlKCJyZWN0Iix5bWluID0gMCwgeW1heCA9MC4yNSwgDQogICAgICAgICAgICB4bWluID0gLTUsIHhtYXggPSAxNSwNCiAgICAgICAgICAgIGZpbGwgPSAiI2VmZjNmZiIsY29sb3VyPSJ3aGl0ZSIsDQogICAgICAgICAgICAjIGFscGhhID0gMC44LA0KICAgICAgICAgICBzaXplID0gMC4zKSsNCiAgYW5ub3RhdGUoInJlY3QiLHltaW4gPSAwLjI1LCB5bWF4ID0wLjUsIA0KICAgICAgICAgICAgeG1pbiA9IC01LCB4bWF4ID0gMTUsDQogICAgICAgICAgICBmaWxsID0gIiNiZGQ3ZTciLGNvbG91cj0id2hpdGUiLA0KICAgICAgICAgICAgIyBhbHBoYSA9IDAuOCwNCiAgICAgICAgICAgc2l6ZSA9IDAuMykrDQogICAgYW5ub3RhdGUoInJlY3QiLHltaW4gPSAwLjUsIHltYXggPTAuNzUsIA0KICAgICAgICAgICAgeG1pbiA9IC01LCB4bWF4ID0gMTUsDQogICAgICAgICAgICBmaWxsID0gIiM2YmFlZDYiLGNvbG91cj0id2hpdGUiLA0KICAgICAgICAgICAgIyBhbHBoYSA9IDAuOCwNCiAgICAgICAgICAgIHNpemUgPSAwLjMpKw0KICAgIGFubm90YXRlKCJyZWN0Iix5bWluID0gMC43NSwgeW1heCA9MSwgDQogICAgICAgICAgICB4bWluID0gLTUsIHhtYXggPSAxNSwNCiAgICAgICAgICAgIGZpbGwgPSAiIzIxNzFiNSIsIGNvbG91cj0id2hpdGUiLA0KICAgICAgICAgICAgIyBhbHBoYSA9IDAuOCwNCiAgICAgICAgICAgIHNpemUgPSAwLjMpKw0KICAgIA0KICAgIA0KICAjIGdlb21faGxpbmUoeWludGVyY2VwdCA9IDAuNzUsIGNvbG9yID0gImdyYXkiLCBzaXplID0wLjgsIGxpbmV0eXBlID0yKSsNCiAgZ2VvbV9zdGVwKGRpcmVjdGlvbiA9ICJodiIsc2l6ZSA9IDEuMiwNCiAgICAgICAgICAgIGFlcyggY29sb3IgPSBhcy5mYWN0b3IoY29zdCkgKSkrDQogIHNjYWxlX3hfY29udGludW91cyhicmVha3MgPSBzZXEoMCwxMCwxKSkrDQogICMgc2NhbGVfY29sb3JfbWFudWFsKHZhbHVlcyA9IGMoInJlZCIgLCAiI0RDMTQzQyIsImRhcmtyZWQiKSkrDQogIHNjYWxlX2NvbG9yX21hbnVhbCh2YWx1ZXMgPSBjKCIjZmVjYzVjIiAsICIjZmQ4ZDNjIiwiI2UzMWExYyIpKSsNCiAgIyBzY2FsZV9jb2xvcl9tYW51YWwodmFsdWVzID0gYygiIzAwMDAwMCIgLCAiIzI1MjUyNSIsIiM1MjUyNTIiKSkrDQogIGxhYnMoeSA9ICJQcm9iYWJpbGl0eSIsDQogICAgICAgeCA9ICJUaW1lICh5ZWFycykiLA0KICAgICAgIGNvbG9yID0gIkNvc3QgKFVTJC9oYSkiKSsNCiBjb29yZF9jYXJ0ZXNpYW4oeGxpbT1jKDAsMTApLCB5bGltID0gYygwLDEpKSsNCiAgdGhlbWVfbGlnaHQoKSsNCiAgICB0aGVtZSgjcGFuZWwuZ3JpZC5tYWpvciA9IGVsZW1lbnRfYmxhbmsoKSsNCiAgICAgICAgICBwYW5lbC5ncmlkID0gIGVsZW1lbnRfYmxhbmsoKSkNCiAgDQogIH0NCmBgYA0KPCEtLSBFZmZpY2FjeSBkZWNheSAwLjE0NyAveWVhciAtLT4NCmBgYHtyfQ0KdGVidV9nMSA9IHByb2JfdGltZSh0ZWJ1LCBwcm9mX2NsYXNzID0iQnJlYWstZXZlbiIpKw0KICAgIGxhYnModGl0bGUgPSAiSGlnaCBhbm51YWwgcmF0ZSBvZiBkZWNsaW5lIg0KICAgICAgICAgIyBzdWJ0aXRsZSA9ICJPZmZzZXQgY29zdHMiDQogICAgICAgICApDQp0ZWJ1X2cyID0gcHJvYl90aW1lKHRlYnUsIHByb2ZfY2xhc3MgPSI1MCUgcHJvZml0IikrDQogICAgbGFicyh0aXRsZSA9ICJIaWdoIGFubnVhbCByYXRlIG9mIGRlY2xpbmUiLA0KICAgICAgICAgc3VidGl0bGUgPSAiNTAlIHByb2ZpdCINCiAgICAgICAgICkNCm1peF9nMSA9IHByb2JfdGltZShtaXgsIHByb2ZfY2xhc3MgPSJCcmVhay1ldmVuIikrDQogICAgbGFicyh0aXRsZSA9ICJMb3cgYW5udWFsIHJhdGUgb2YgZGVjbGluZSINCiAgICAgICAgICMgc3VidGl0bGUgPSAiT2Zmc2V0IGNvc3RzIg0KICAgICAgICAgKQ0KbWl4X2cyID0gcHJvYl90aW1lKG1peCwgcHJvZl9jbGFzcyA9IjUwJSBwcm9maXQiKSsNCiAgICBsYWJzKHRpdGxlID0gIkxvdyBhbm51YWwgcmF0ZSBvZiBkZWNsaW5lIiwNCiAgICAgICAgIHN1YnRpdGxlID0gIjUwJSBwcm9maXQiDQogICAgICAgICApDQpgYGANCg0KYGBge3IgZmlnLmhlaWdodD00LCBmaWcud2lkdGg9Nn0NCnRlYnVfZzErbWl4X2cxKw0KICBwbG90X2xheW91dChndWlkZXMgPSAiY29sbGVjdCIpKw0KICBwbG90X2Fubm90YXRpb24odGFnX2xldmVscyA9ICdBJykmDQogIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJib3R0b20iLA0KICAgICAgICBwbG90LnRpdGxlID0gZWxlbWVudF90ZXh0KHNpemUgPSAxMCkpDQpnZ3NhdmUoImZpZ3MvcHJvYl90aW1lLnBuZyIsIGRwaSA9IDYwMCwgaGVpZ2h0ID0gNCwgd2lkdGggPSA3KQ0KZ2dzYXZlKCJmaWdzL3Byb2JfdGltZS5wZGYiLCBkcGkgPSA2MDAsIGhlaWdodCA9IDQsIHdpZHRoID0gNykNCmBgYA0KDQoNCg0KDQoNCg0K</div>
+
+
+Copyright 2017 Emerson Del Ponte
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("main_code_profit.Rmd");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

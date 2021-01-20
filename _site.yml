@@ -1,0 +1,33 @@
+name: SBR_fungicide_profitability
+output_dir: docs
+output:
+  html_document:
+    code_download: true
+    css: my-style.css
+    theme: cosmo 
+    df_print: paged
+    highlight: default
+    include:
+      after_body: footer.md
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+    lib_dir: site_libs
+    self_contained: yes
+bibliography: crossref.bib
+csl: chicago-author-date.csl
+navbar:
+  title: Profitability fungicide SBR control
+  left:
+  - text: About
+    icon: fa fa-home
+    href: index.html
+  - text: Data analysis 
+    icon: fa fa-file-code-o
+    href: main_code_profit.html
+    
+  right:
+  - text: source
+    icon: fa-github-square
+    href: https://github.com/AlvesKS/simulation_fungicide_profit

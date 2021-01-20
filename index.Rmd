@@ -1,0 +1,14 @@
+% About
+
+<img src = "figs/box_classes.png" width = 250px align = right> In this website are available the codes used to reproduce the analysis and results of the research conducted by a D.sc student Kaique dos S. Alves under the supervision of Prof. Emerson Del Ponte, Universidade Federal de Vicosa, MG, Brazil.
+
+ In this study a Monte Carlo simulation framework was developed to calculate profitability depending on the fungicide program's efficacy and total cost for soybean rust management in Brazil.  
+  
+   
+
+## Citation
+
+ 
+
+
+

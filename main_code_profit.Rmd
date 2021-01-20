@@ -1,20 +1,8 @@
----
-title: "Fungicide Profitability for Soybean Rust Management in Brazil: A Stochastic Simulation Approach"
-author: "Kaique Alves"
-output: 
-  html_document: 
-    fig_height: 5
-    fig_width: 7
-    theme: yeti
-    highlight: tango
-    toc: yes
-    toc_float:
-      collapsed: no
-      smooth_scroll: no
----
+% Data analysis
 
 
 # Packages
+Here we load all the packages we ae going to use in the analysis.
 
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -25,40 +13,49 @@ library(DescTools)
 library(minpack.lm)
 library(agricolae)
 library(readxl)
-library(ggridges)
+library(patchwork)
 ```
 
-# Severity
 
-## Import data
-Importing data of soybean rust severity (SBR)
+# Probability distributions
+
+Fist step is to assemble the probability distributions for the for variable we are going to use for the simulations
+
+## SBR severity on untreated check.
+
+### Import data
+
+Importing data of soybean rust severity (SBR) on the untreated check
 
 ```{r}
-sev_data = read.csv("sev_data.csv")
+sev_data = read.csv("data/sev_data.csv")
 head(sev_data)
 ```
 
-Filtering only values of severity in the cheack treatment
+Filtering only values of severity in the check treatment
 ```{r}
 sev_check = sev_data %>% 
   filter(active_ingredient == "check")
 head(sev_check)
 ```
 
-## Empirical distribution 
-Severity distribution
+### Empirical distribution
+
 ```{r}
 sev_check %>% 
   ggplot(aes(severity/100))+
-geom_histogram(bins = 20, color = "black", fill = "gray")
+  geom_histogram(bins = 20, color = "black", fill = "gray")
 ```
 
 
-## Modeling
-Modeling severity cumulative density to beta cumulative density 
+### Modeling
+
+Since severity in proportional terms is between zero and one, we fit the empirical distribution into a beta probability distribution. For that we need to find the shape and scale parameters of the beta distribution function.
+
+For that, obtain the empirical cumulative distribution and fit to the beta cumulative distribution.
+
 ```{r}
 sev = sev_check$severity
-
 Fx= environment(ecdf(sev))$y
 x = environment(ecdf(sev))$x/100
 
@@ -67,23 +64,41 @@ summary(nlsLM(Fx ~ pbeta(x, shape1, shape2, log = FALSE) ,
       control = nls.lm.control(maxiter = 100000)))
 ```
 
-
-## Visualization
+### Kolmogorov-Smirnov Test
 ```{r}
-sev_dist_plot = sev_check %>% 
-  ggplot(aes(severity/100))+
- geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "Steelblue")+
-   stat_function(fun=function(x) dbeta(x, 1.707, 1.266), color= "red", size = 1)+
-  theme_bw()+
-  labs(x="Severity", y = "Density")
-sev_dist_plot
-ggsave("figs/sev_dist.png", dpi=600, height = 3, width = 4)
+ks.test(Fx,pbeta(x, 1.707, 1.266) )
 ```
 
 
-# Soybean price 
+```{r}
+plot(x,Fx)
+curve(pbeta(x, 1.707, 1.266),0,1, add = T)
+```
 
-## Import data
+
+```{r}
+plot(Fx,pbeta(x, 1.707, 1.266) )
+abline(a=0,b=1)
+```
+
+
+### Visualization
+```{r}
+sev_dist_plot = sev_check %>% 
+  ggplot(aes(severity/100))+
+ geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "#AC08FF")+
+   stat_function(fun=function(x) dbeta(x, 1.707, 1.266), color= "black", size = 1.2)+
+  theme_bw()+
+  labs(x="Severity (proportion)", y = "Density")
+sev_dist_plot
+# ggsave("figs/sev_dist.png", dpi=600, height = 3, width = 4)
+```
+
+
+
+## Soybean price 
+
+### Import data
 
 ```{r}
 soybean = gsheet2tbl("https://docs.google.com/spreadsheets/d/1-jQ9OgWdLQCb0iB0FqbrhuVi7LiNhqxvf9QU4-iuc3o/edit#gid=1085329359") 
@@ -94,7 +109,7 @@ head(soybean)
 conversion to US dollar
 ```{r}
 sbr_price = soybean %>% 
-  filter(year>=2015) %>% 
+  filter(year>=2018) %>% 
   mutate(price = (price/60)/4,
          national_price = (national_price/60)/4)
 sbr_price
@@ -111,12 +126,6 @@ sbr_price %>%
 ```
 
 
-```{r}
-sbr_price %>% 
-  ggplot(aes(y = as.factor(year),price)) +
-  geom_density_ridges2()
-```
-
 Mean and Standad deviantion
 
 ```{r}
@@ -124,7 +133,7 @@ mean(sbr_price$price)
 sd(sbr_price$price)
 ```
 
-## Empirical distribution
+### Empirical distribution
 
 ```{r}
 sbr_price %>% 
@@ -134,7 +143,8 @@ sbr_price %>%
   labs(x = "Soybean prince")+
   scale_x_continuous(breaks = seq(0,1,by=0.025))
 ```
- 
+
+
  
 ```{r}
 hist((sbr_price$price), prob = T)
@@ -153,37 +163,54 @@ mean(sbr_price$price)
 median(sbr_price$price)
 ```
 
+### Shapiro
+```{r}
+shapiro.test(sbr_price$price)
+```
 
-## Vizualization
+### Kolmogorov-Smirnov Test
+```{r}
+Fx = environment(ecdf(sbr_price$price))$y
+x= environment(ecdf(sbr_price$price))$x
+ks.test(Fx, pnorm(x, mean(sbr_price$price), sd(sbr_price$price)))
+```
+
+```{r}
+plot(Fx, pnorm(x, mean(sbr_price$price), sd(sbr_price$price)))
+```
+
+
+### Vizualization
 
 ```{r}
 price_plot = sbr_price %>% 
   ggplot(aes(price))+
- geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "Steelblue")+
-   stat_function(fun=function(x) dnorm(x, mean(sbr_price$price), sd(sbr_price$price)), color= "red", size = 1)+
+ geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "#1C8C20")+
+   stat_function(fun=function(x) dnorm(x, mean(sbr_price$price), sd(sbr_price$price)), color= "black", size = 1.2)+
   theme_bw()+
   labs(x="Soybean price (US$/kg)", y = "Density")+
   scale_x_continuous(breaks = seq(0,1,by=0.025))
 price_plot
-ggsave("figs/sev_dist.png", dpi=600, height = 3, width = 4)
+# ggsave("figs/sev_dist.png", dpi=600, height = 3, width = 4)
 ```
 
 
 
 
-# Regression coeficients 
-## import data
+## Regression coeficients 
+
+### import data
 Importing regression Slope and intercept data from the relationship between SBR severity and yield
 
 ```{r}
-damage_data = read_excel("dados histograma.xlsx") %>% 
+damage_data = read_excel("data/dados histograma.xlsx") %>% 
   mutate(Slope = b1,
          Intercept = b0) %>% 
-  select(-b1,-b0)
+  dplyr::select(-b1,-b0)
 head(damage_data)
 ```
 
-## Empirical distribution
+### Empirical distribution
 Visualizando os hitogramas do slope e intercepto
 
 ```{r}
@@ -196,7 +223,7 @@ damage_data %>%
 ```
 
 
-## Regression lines
+### Regression lines
 ```{r}
   ggplot() +
   geom_point(aes(x = 0:100, y = seq(0,5000,by = 50)), color = NA)+
@@ -211,24 +238,33 @@ damage_data %>%
   
 ```
 
-## correlation
+### correlation
 Correlation between slope and intercept
 
 ```{r}
 correlation(damage_data$Slope, damage_data$Intercept)
 ```
 
-Visualizing correlation 
+#### plot 
 ```{r}
-damage_data %>% 
+corr_emp_plot = damage_data %>% 
   ggplot(aes(Intercept, Slope))+
-  geom_point(shape =1, size =2)+
-  geom_smooth(method = "lm", se = F, color ="black")+
-  theme_base()
+  geom_point(color = "black", size =2, alpha =0.5)+
+  # geom_density2d_filled()+
+  geom_smooth(method = "lm", se = F, color ="Red", size=1.2, fullrange=TRUE)+
+  theme_light()+
+  labs(title = "Empirical: r = -0.216")+
+  coord_cartesian(
+    xlim = c(0,6000),
+    ylim = c(-75,0)
+  )
+corr_emp_plot
 ```
 
-## Cumulative density
-###Intercept
+
+### Cumulative density
+
+### Intercept
 ```{r}
 mean_intercept = mean(damage_data$Intercept)
 sd_intercept = sd(damage_data$Intercept)
@@ -237,16 +273,31 @@ plot(ecdf(damage_data$Intercept))
 curve(pnorm(x, mean_intercept,sd_intercept), 1000,5000, add = T, col = "red")
 ```
 
+### Kolmogorov-Smirnov Test
+```{r}
+Fx = environment(ecdf(damage_data$Intercept))$y
+x= environment(ecdf(damage_data$Intercept))$x
+ks.test(Fx, pnorm(x, mean(damage_data$Intercept), sd(damage_data$Intercept)))
+```
+```{r}
+plot(Fx, pnorm(x, mean(damage_data$Intercept), sd(damage_data$Intercept)))
+```
+
+
 
 ```{r}
 intercep_plot = damage_data %>% 
   ggplot(aes(Intercept))+
-  geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "steelblue")+
-  stat_function(fun=function(x) dnorm(x, mean_intercept, sd_intercept), color ="red", size =1)+
+  geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "#FF4917")+
+  stat_function(fun=function(x) dnorm(x, mean_intercept, sd_intercept), color ="black", size =1.2)+
   theme_bw()+
-  labs(x="Intercept", y = "Density")
+  labs(x="Intercept (kg/ha)", y = "Density")
 intercep_plot
 ```
+
+
+
+
 
 ### Slope
 
@@ -260,7 +311,7 @@ curve(pnorm(x, mean_slope, sd_slope), -60,5, add = T, col = "red")
 ```
 
 
-## Modeling
+#### Modeling
 Fitting gamma distribution to the empirical cumulative density of the slope data
 ```{r}
 Fx =environment(ecdf(-damage_data$Slope))$y
@@ -273,29 +324,44 @@ summary(slope_reg)
 
 ```
 
+### Kolmogorov-Smirnov Test
+```{r}
+shape = summary(slope_reg)$coef[1]
+rate = summary(slope_reg)$coef[2]
+
+Fx =environment(ecdf(-damage_data$Slope))$y
+x = environment(ecdf(-damage_data$Slope))$x
+ks.test(Fx, pgamma(x, shape, rate))
+```
+
+
 ```{r}
 shape = summary(slope_reg)$coef[1]
 rate = summary(slope_reg)$coef[2]
 
 slope_plot = damage_data %>% 
   ggplot(aes(Slope))+
- geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "steelblue")+
-   stat_function(fun=function(x) dgamma(-x, shape, rate), size = 1, color = "red")+
+ geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "#159EE6")+
+   stat_function(fun=function(x) dgamma(-x, shape, rate), size = 1.2, color = "black")+
   theme_bw()+
-  labs(x="Slope", y = "Density")
+  labs(x="Slope (kg/p.p.)", y = "Density")
 slope_plot
 ```
 
+### Kolmogorov-Smirnov Test
 ```{r}
-plot_grid(sev_dist_plot,price_plot, intercep_plot, slope_plot, labels = "AUTO", nrow =2)
-ggsave("figs/coef_dist.png", dpi = 600, height = 6, width = 9)
+
+ks.test(Fx,pgamma(x, shape, rate))
+
 ```
 
 
-# Multivariate Simulation using copula 
 
-Simulatating two normal distributions correlated 
-## Function
+
+### Multivariate Simulation using copula 
+
+Simulating two normal distributions correlated 
+#### Function
 
 
 ```{r}
@@ -325,14 +391,14 @@ plot(j[,1],j[,2])
 For our data, we will use the positive correlation, becouse we want positive values of slope 
 ```{r}
 #testando
-j<-gera.norm.bid.geral(20000,0.21,0,0,1,1)
+j<-gera.norm.bid.geral(10000,0.2160089,0,0,1,1)
 
 plot(j[,1],j[,2])
 ```
 
 
 
-## Intercept
+### Intercept
 Now we obtaing the probabilities from first distribution and insert in the quantiles function for the normal distribution of the intercept
 
 ```{r}
@@ -343,7 +409,7 @@ curve(dnorm(x, mean_intercept, sd_intercept), 0, 6000, add = T)
 ```
 
 
-## Slope
+### Slope
 Now we obtaing the probabilities from first distribution and insert in the quantiles function for the gamma ditribution and multiply for -1 for obtain the negative outputs of the coeficient 
 ```{r}
 b1 = pnorm(j[,1])
@@ -360,69 +426,134 @@ correlation(b1_t, b0_t)
 ```
 
 
-Vizualizing the correlation
+#### Viz. the correlation
 ```{r}
-ggplot()+
-  geom_point(aes(b1_t, b0_t), shape =1)+
-  geom_smooth(method = lm,
-              aes(b1_t, b0_t), color = "red", se = F)+
-  theme_bw()
-
+corr_sim_plot = data.frame(b0_t,b1_t ) %>%
+  mutate(alfa =(b1_t/b0_t)*100 ) %>% 
+  filter(alfa > -3 & alfa < 0) %>% 
+ggplot(aes(b0_t,b1_t ))+
+  geom_point( size =2, color = "orange", alpha =0.3)+
+  # geom_density_2d(color = "black")+
+  geom_smooth(method = lm, color = "red", se = F, size = 1.2)+
+  theme_light()+
+  labs(y= "Slope",
+       x = "Intercept",
+       title = "Simulated: r = -0.204")+
+  coord_cartesian(
+    xlim = c(0,6000),
+    ylim = c(-75,0)
+  )
+corr_sim_plot
 ```
 
 
-## Relative yield loss
-
-Here we calculate the yield relative loss due to SBR severirity using the original data set
+#### Combo distributions
 
 ```{r}
-real_RYL = damage_data %>% 
+
+# plot_grid(sev_dist_plot,price_plot, intercep_plot, slope_plot, labels = "AUTO", nrow =2)
+
+(sev_dist_plot+price_plot)/
+  (intercep_plot+slope_plot)+
+  # (corr_emp_plot+corr_sim_plot)+
+  plot_annotation(tag_levels = 'A')&
+  theme(plot.title = element_text(size =8))
+  
+ggsave("figs/coef_dist.png", dpi = 600, height = 5, width = 6)
+ggsave("figs/coef_dist.pdf", dpi = 600, height = 5, width = 6)
+```
+
+
+
+### Relative yield loss
+
+Here we calculate the yield relative loss due to SBR severity using the original data set
+
+```{r}
+empiric_ryl= damage_data %>% 
   mutate(cc = (Slope/Intercept)*100) %>% 
-  filter( cc > -3 & cc <0 ) %>% 
+  filter( cc > -3 & cc <0 )
+head(empiric_ryl)
+```
+
+```{r}
+stat_emp_ryl =empiric_ryl%>% 
+  summarise(data = "empirical",
+            mean =  mean(cc),
+            median =  median(cc),
+            variance = var(cc))
+```
+
+
+```{r}
+
+real_RYL= empiric_ryl %>% 
   ggplot(aes(cc))+
- geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "Steelblue")+
-# geom_histogram(color ="white", fill = "steelblue", bins = 20)+
+ geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "black")+
+  scale_y_continuous(limits = c(0,1.4),breaks =  seq(0, 1.4,by = 0.4))+
+  geom_vline(data = stat_emp_ryl, aes(xintercept = mean, color = "Mean"),size =1)+
+  geom_vline(data = stat_emp_ryl, aes(xintercept = median, color = "Median"),size =1)+
   theme_bw()+
-  labs(x = "Relative yield loss")+
-  xlim(-3,0.2)
+  scale_color_calc()+
+  labs(x = "Relative yield loss (%/p.p.)",
+       y = "Density",
+       color = "",
+       title = "Empirical")+
+  xlim(-3,0.2)+
+  theme(legend.position = "top")
 real_RYL
 ```
 
-And here we calculate the relative yield loss due to SBR severirity using the simulated data set
+And here we calculate the relative yield loss due to SBR severity using the simulated data set
 
 
 ```{r}
-simul_RYL = data.frame(b0_t, b1_t, cc = (b1_t/b0_t)*100) %>% 
-  filter( cc > -3 & cc <0 ) %>% 
+simul_ryl = data.frame(b0_t, b1_t, cc = (b1_t/b0_t)*100) %>% 
+  filter( cc > -3 & cc <0 )
+head(simul_ryl)
+```
+
+```{r}
+stat_suml_ryl = simul_ryl%>% 
+  summarise(data = "Simulated",
+            mean =  mean(cc),
+            median =  median(cc),
+            variance = var(cc))
+```
+
+
+```{r}
+simul_RYL =simul_ryl %>% 
   ggplot(aes(cc))+
- geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "Steelblue")+
-# geom_histogram(color ="white", fill = "steelblue", bins = 20)+
+ geom_histogram(aes(y = ..density..),bins = 10, color = "white", fill = "orange")+
+  scale_y_continuous(limits = c(0,1.4),breaks =  seq(0, 1.4,by = 0.4))+
+  geom_vline(data = stat_suml_ryl, aes(xintercept = mean, color = "Mean"),size =1)+
+  geom_vline(data = stat_suml_ryl, aes(xintercept = median, color = "Median"),size =1)+
   theme_bw()+
-  labs(x = "Relative yield loss")+
-  xlim(-3,0.2)
+  scale_color_calc()+
+  labs(x = "Relative yield loss (%/p.p.)",
+       y = "Density",
+       color ="",
+       title = "Simulated")+
+  xlim(-3,0.2)+
+  theme(legend.position = "top")
 simul_RYL
 
 ```
-
-```{r fig.height=3, fig.width=8}
-plot_grid(real_RYL, simul_RYL, labels = "AUTO")
-ggsave("figs/RYL.png", dpi = 600, height = 3, width = 7)
-```
-
 
 ### Comparision of mean, median and variance 
 
 ```{r}
 damage_data %>% 
   mutate(cc = (Slope/Intercept)*100) %>% 
-  filter( cc > -2.5 & cc <0 ) %>% 
+  filter( cc > -3 & cc <0 ) %>% 
   summarise(data = "empirical",
             mean =  mean(cc),
             median =  median(cc),
             variance = var(cc)) %>% 
   bind_rows(
     data.frame(b0_t, b1_t, cc = (b1_t/b0_t)*100) %>% 
-  filter( cc > -2.5 & cc <0 ) %>% 
+  filter( cc > -3 & cc <0 ) %>% 
   summarise(data = "Simulated",
             mean =  mean(cc),
             median =  median(cc),
@@ -432,10 +563,64 @@ damage_data %>%
 ```
 
 
+### Kolmogorov-Smirnov Test
+```{r}
+actual_cc = damage_data %>% 
+  mutate(cc = (Slope/Intercept)*100)
+
+simulated_cc = data.frame(b0_t, b1_t, cc = (b1_t/b0_t)*100) %>% 
+  filter( cc > -3 & cc <0 )
+```
+
+Distribution
+```{r}
+ks.test(actual_cc$cc, simulated_cc$cc)
+```
+
+cummulative distribution
+```{r}
+fx_actual = environment(ecdf(actual_cc$cc))$y
+fx_simu = environment(ecdf(simulated_cc$cc))$y
+ks.test((fx_actual),(fx_simu))
+```
+
+```{r}
+ecdf_damage = ggplot()+
+  stat_ecdf(aes(simulated_cc$cc,color = "Simulated"), size=1.2,geom = "step")+
+  stat_ecdf(aes(actual_cc$cc, color = "Empirical"), size=1.2,geom = "step")+
+  theme_bw()+
+  scale_color_manual(values = c("black","orange"))+
+  labs(y = "Probability",
+       x = "Relative percent yield loss",
+       color ="",
+       title = "Cumulative distribution function")+
+  theme(legend.position = "top",
+        legend.background = element_blank())
+ecdf_damage
+```
+
+
+### Combo Yield loss
+
+```{r fig.height=3, fig.width=8}
+((corr_emp_plot/corr_sim_plot)|(real_RYL/simul_RYL)+plot_layout(guides = 'collect')| ecdf_damage ) +
+  # plot_layout(heights = c(1,1,0.5))+
+  plot_annotation(tag_levels = 'A') & 
+  
+  theme(legend.position = 'bottom',
+        plot.title = element_text(size=9),
+        legend.key.size= unit(3, "mm"),
+        legend.text =  element_text(size = 7))
+
+ggsave("figs/RYL.png", dpi = 600, height = 5, width = 10)
+ggsave("figs/RYL.pdf", dpi = 600, height = 5, width = 10)
+```
+
 
 # Simulations 
 ```{r}
-n=10000
+set.seed(1)
+n=40000
 lambda = seq(0,1, by=0.05)
 fun_price = seq(-10, 260, by=15)
 n_aplication = 1
@@ -455,9 +640,11 @@ big_one[,3] = rep(comb_matrix[,3],n)
 big_one[,4] = rep(comb_matrix[,4],n)
 big_one[,5] = rep(comb_matrix[,5],n)
 
+set.seed(1)
 sn = rbeta(N, 1.707, 1.266)
 sf = sn*(1-big_one[,1])
-# simulating the coeficientes  ###########
+# simulating the coeficientes 
+set.seed(1)
 normal_correlated<-gera.norm.bid.geral(N,0.21,0,0,1,1)
 b0_n = pnorm(normal_correlated[,2])
 b1_n = pnorm(normal_correlated[,1])
@@ -467,20 +654,22 @@ rm(b0_n,b1_n,normal_correlated)
 # b0[b0<0] = 0.0001
 # Calculating the alha coeficient
 alfa = (b1/b0)*100
-# # alfa[alfa > 0] = 0
+# alfa[alfa > 0] = 0
 # alfa[alfa < -3] = -3
 
 # Calculating yield gain
-# yn = b0*(1+sn*alfa) # Yield  non-treated 
-# yf = b0*(1+sf*alfa) # Yield  treated 
+# yn = b0*(1+sn*alfa) # Yield  non-treated
+# yf = b0*(1+sf*alfa) # Yield  treated
 yn  = b0 - (-alfa*b0*sn)
 yf  = b0 - (-alfa*b0*sf)
 # yn[yn<0] = 0
 # yf[yf<0] = 0
 # yield_gain = yf-yn # yield gain
 # yield_gain_perc = (1-(yn/yf))*100
-########################################
+
+
 # Simulating soybean price
+set.seed(1)
 soy_price = rnorm(N, mean(sbr_price$price),sd(sbr_price$price))
 # income = yield_gain*soy_price # calculating the income
 
@@ -494,6 +683,7 @@ big_one[,12] = sn
 colnames(big_one)  = c("lambda","fun_price","operational_cost","n_aplication","C","yn","yf","soy_price","b1","alfa","b0", "sn")
 ```
 
+
 ```{r}
 big_one_df = as.data.frame(big_one) %>% 
   filter(b0>=0) %>% 
@@ -504,46 +694,38 @@ big_one_df = as.data.frame(big_one) %>%
          yield_gain_perc = ((yf/yn)-1)*100,
          income = yield_gain*soy_price,
          CP = C/soy_price,
-         profit = (yield_gain>=CP)*1)
+         # profit = (yield_gain>=CP)*1,
+         profit = (income>=C)*1)
   
 
 ```
 
 
+### Breacking even
 
-## plot 1
-```{r}
-big_one_df %>% 
-  group_by(lambda, C) %>% 
-  summarise(n=n(),sumn = sum(profit), prob = sumn/n) %>%
-  ggplot(aes(lambda, prob, group =factor((C/n_aplication)-10), color = ((C/n_aplication)-10)))+
-  geom_hline(yintercept = 0.5)+
-  geom_line()+
-  labs(x = "Fungicide efficacy (Proportion)",
-       y = "Probability of offsetting costs",
-       color  = "Fungicide cost ($)")+
-  theme_light()
-ggsave("figs/curves.png", dpi = 600, height = 3, width = 6)
-```
-
-## Tetris
+#### Tetris
 
 ```{r}
 big_one_df %>% 
   # mutate(sev_class = case_when(sn > median(sn) ~ "High severity",
                                  # sn <= median(sn) ~ "Low severity")) %>% 
+  filter(lambda >=0.3) %>%
   group_by(lambda, C) %>% 
   summarise(n=n(),sumn = sum(profit), prob = sumn/n) %>%
   # filter(prob>0.5) %>%
   mutate(prob2 = case_when(prob < 0.50 ~ "Pr(I \u2265 C) \u2264 0.5 ",
                           prob >= 0.50 ~ "Pr(I \u2265 C) > 0.5")) %>% #,
   # #                         prob >= 0.75 ~ "75% \u2264 p < 100% "  )) %>% 
-  ggplot(aes(as.factor(lambda*100),as.factor(C), fill = prob, color = prob2))+
-  geom_tile(size = 0.5)+
-  # scale_fill_viridis_d()+
+  ggplot(aes(as.factor(lambda*100),as.factor(C), fill = prob, 
+             # color = prob2
+             ))+
+  geom_tile(size = 0.5, color ="white")+
+  scale_fill_viridis_b(option ="B", direction = -1)+
   # scale_fill_manual(values = c("darkred",  "steelblue"))+
-  scale_fill_gradient2(low = "red",mid = "black", high = "steelblue",midpoint = 0.5)+
-  scale_color_manual(values = c("red","steelblue")) + 
+  # scale_fill_gradient2(low = "#E60E00",mid = "#00030F", high = "#55E344",midpoint = 0.5)+
+  scale_color_manual(values = c("#E60E00","#55E344"))+
+  # scale_fill_gradient2(low = "red",mid = "black", high = "steelblue",midpoint = 0.5)+
+  # scale_color_manual(values = c("red","steelblue")) + 
   guides(color = guide_legend(override.aes = list(size=2)))+
   # scale_fill_viridis_d(option = "B")+
   labs(x = "Fungicide efficacy (%)",
@@ -552,75 +734,103 @@ big_one_df %>%
        color ="" )+
   # facet_wrap(~sev_class)+
   theme_light()
-ggsave("figs/tetris.png", dpi = 600, height = 5, width = 7)
+# ggsave("figs/tetris.png", dpi = 600, height = 5, width = 7)
 ```
 
-## Tetris 2
+#### Tetris 2
+
 ```{r}
+median(big_one_df$b0)
+```
+
+```{r}
+tetris_plot = function(s_class, y_class, pal =1){
 big_one_df %>% 
   mutate(sev_class = case_when(sn > median(sn) ~ "High severity",
-                                 sn <= median(sn) ~ "Low severity")) %>%
-  mutate(price_class = case_when(soy_price > median(soy_price) ~ "High prices",
-                                soy_price <= median(soy_price) ~ "Low prices")) %>%
-  group_by(lambda, C,sev_class,price_class) %>% 
+                                 sn <= median(sn) ~ "Low severity"),
+      yield_class =  case_when(b0 > median(b0) ~ "High yield",
+                                 b0 <= median(b0) ~ "Low yield")) %>%
+    filter(lambda >=0.3) %>% 
+  group_by(lambda, C, sev_class,yield_class) %>% 
   summarise(n=n(),sumn = sum(profit), prob = sumn/n) %>%
-
-  mutate(prob2 = case_when(prob < 0.50 ~ "Pr(I \u2265 C) \u2264 0.5 ",
-                          prob >= 0.50 ~ "Pr(I \u2265 C) > 0.5")) %>% #,
-  ggplot(aes(as.factor(lambda*100),as.factor(C), fill = prob, color = prob2))+
-  geom_tile(size = 0.5)+
-  scale_fill_gradient2(low = "red",mid = "black", high = "steelblue",midpoint = 0.5)+
-  scale_color_manual(values = c("red","steelblue")) + 
+  mutate(prob = case_when(prob >= .75 ~ "\u2265 0.75",
+                          prob < .75 & prob >= 0.5 ~ "0.50-0.75",
+                          prob < .50 & prob >= .25 ~ "0.25-0.50",
+                          prob < .25 ~ "< 0.25"),
+         prob =factor(prob,level = c("< 0.25","0.25-0.50","0.50-0.75", "\u2265 0.75"))) %>%
+    filter(sev_class== s_class,
+           yield_class == y_class) %>% 
+  ggplot(aes(as.factor(lambda*100),as.factor(C), fill = prob))+
+  geom_tile(size = 0.25, color ="gray70")+
+  scale_fill_brewer(palette = pal)+
   labs(x = "Fungicide efficacy (%)",
        y = "Fungicide + Application cost ($)",
-       fill  = "Pr(I \u2265 C)",
+       fill  = "Probability",
        color ="" )+
-  facet_grid(price_class~sev_class)+
+  # facet_grid(~sev_class)+
   guides(color = guide_legend(override.aes = list(size=2)))+
   theme_light()+
   theme(text = element_text(size = 10),
+        legend.position = "bottom",
+        axis.text = element_text(size = 7),
+        panel.spacing = unit(1.75, "lines"),
         strip.background =element_rect(fill="NA"),
-        strip.text = element_text(color = "black"))
-ggsave("figs/tetris_facet.png", dpi = 600, height = 6.5, width = 9)
+        strip.text = element_text(color = "black", size =12))
+}
+
 ```
-
-
 
 ```{r}
-big_one_df %>% 
-  group_by(lambda ) %>% 
-  summarise(yield_gain_m = mean(yield_gain),
-            up = quantile(yield_gain, 0.975),
-            low = quantile(yield_gain, 0.025)) %>% 
-  ggplot(aes(lambda*100,yield_gain_m, color = yield_gain_m))+
-  geom_point(size = 3)+
-  geom_errorbar(aes(ymin = low, ymax = up), size = 0.7, width = 0)+
-  scale_color_gradient(low = "black", high = "steelblue")+
-  theme_bw()+
-  labs(x = "Fungicide efficacy (%)",
-       y = "Yield gain (kg/ha)")+
-  theme(legend.position = "none")
-# ggsave("figs/yield_gain.png", dpi = 600, height = 4, width = 6)
-  
+tetris_Sh_Sh = tetris_plot(s_class = "High severity",
+                          y_class = "High yield",pal =1)+
+  labs(title = "High severity",
+       subtitle = "High yield")
+
+tetris_Sl_Yh = tetris_plot(s_class = "Low severity",
+                          y_class = "High yield",pal =1
+                         )+
+  labs(title = "Low severity",
+       subtitle = "High yield")
+
+tetris_Sh_Yl = tetris_plot(s_class = "High severity",
+                          y_class = "Low yield",pal =2
+                         )+
+  labs(title = "High severity",
+       subtitle = "Low yield")
+
+tetris_Sl_Sh = tetris_plot(s_class = "Low severity",
+                          y_class = "Low yield",pal =2
+                         )+
+  labs(title = "Low severity",
+       subtitle = "Low yield")
+
+
 ```
+
+
+
+#### Combo tetris
+```{r}
+((tetris_Sh_Sh+tetris_Sl_Yh)+plot_layout(guides = "collect"))/((tetris_Sh_Yl+tetris_Sl_Sh)+
+   plot_layout(guides = "collect"))+
+  plot_annotation(tag_levels = 'A')&
+  theme(legend.position = "bottom",
+        plot.title = element_text(size = 8),
+        plot.subtitle = element_text(size = 8))
+  
+
+ggsave("figs/box_classes.png", dpi = 500, height = 8.5, width = 7.5)
+ggsave("figs/box_classes.pdf", dpi = 500, height = 8.5, width = 7.5)
+```
+
+
 
 ## Yield gain
-
-```{r}
-fun = c("BIXF + TRIF + PROT","AZOX + BENZ","PYRA + EPOX + FLUX","TFLX + PROT","PYRA + FLUX","PICO + CYPR","AZOX + CYPR")
-C = c(83.74,83.50,79.25,79.42,70.75,60.36,48.45)
-C_L = c(79.56,80.08,74.48,76.11,66.49,56.10,43.22)
-C_U = c(87.06,86.33,83.13,82.28,74.47,64.21,53.20)
-D = c(1028.64,1006.42,943.77,893.7,814.69,594.34,437.84)
-D_L = c(949.18,915.42,861.32,818.68, 741.7,533.92,386.33)
-D_U = c(1108.10,1097.43,1026.23,968.7,887.58, 654.76,489.36)
-
-dat = data.frame(fun, C,C_L,C_U,D,D_L,D_U)
-```
+### Absolute gain
 
 ```{r}
 overal_yg = big_one_df %>%
-  mutate(sev_class = "Overall") %>% 
+  mutate(sev_class = " Overall") %>% 
   group_by(lambda,sev_class) %>% 
   summarise(yield_gain_median = median(yield_gain),
             yield_gain_mean = mean(yield_gain),
@@ -630,161 +840,523 @@ overal_yg = big_one_df %>%
             low_75 = quantile(yield_gain, 0.25))
 ```
 
+```{r}
+# m_absol = lm(yield_gain ~ lambda, big_one_df %>% mutate(lambda=lambda*100))
+# summary(m_absol)
+```
+
+
+
 
 ```{r}
-y_gain = big_one_df %>%
+over_gg_kg = overal_yg %>% 
+  ggplot(aes(lambda*100,yield_gain_mean))+
+  geom_line(aes(lambda*100, low_95),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(aes(lambda*100, up_95),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(size = 1.2, aes(lambda*100,yield_gain_median))+
+  # scale_linetype_manual(values=c(1,2))+
+  theme_light()+
+  # geom_abline(slope = 9.61, intercept = -0.1 )+
+  # coord_equal()+
+  labs(x = "Fungicide efficacy (%)",
+       y = "Yield gain (kg/ha)",
+       color = "Fungicide mixture", #(Dalla lana et al., 2018)
+       linetype = "", fill = "")
+over_gg_kg
+```
+
+
+
+
+```{r}
+ygain_plot = function(s_class){
+big_one_df %>% 
   mutate(sev_class = case_when(sn > median(sn) ~ "High severity",
-                                 sn <= median(sn) ~ "Low severity")) %>%
-  group_by(lambda, sev_class ) %>% 
+                                 sn <= median(sn) ~ "Low severity"),
+      yield_class =  case_when(b0 > median(b0) ~ "High yield",
+                                 b0 <= median(b0) ~ "Low yield")) %>%
+  group_by(lambda, sev_class,yield_class ) %>% 
   summarise(yield_gain_median = median(yield_gain),
             yield_gain_mean = mean(yield_gain),
             up_95 = quantile(yield_gain, 0.975),
             low_95 = quantile(yield_gain, 0.025),
             up_75 = quantile(yield_gain, 0.75),
             low_75 = quantile(yield_gain, 0.25)) %>% 
-  bind_rows(overal_yg) %>% 
-  mutate(sev_class = factor(sev_class, levels = c("Overall","Low severity","High severity"))) %>%
-    filter(sev_class == "High severity") %>% 
-  ggplot(aes(lambda*100,yield_gain_median))+
-  geom_ribbon(aes(ymin = low_95, ymax = up_95,fill = "95% Credible Interval"))+# ,alpha = .2)+
-  geom_ribbon(aes(ymin = low_75, ymax = up_75, fill = "Quartiles 25%-75%"))+# ,alpha = .3)+
-  geom_line(size = 1, color = "#23415a", aes(linetype = "Median"))+
-  
-  geom_point(data = dat, aes(C,D, color = fun))+
-  geom_errorbar(data = dat, aes(C,D, ymin = D_L, ymax = D_U, color = fun))+
-  geom_errorbarh(data = dat, aes(C,D, xmin = C_L, xmax = C_U, color = fun))+
-  scale_color_colorblind()+
-  scale_fill_manual(values = c("#b5cde0", "#90b4d2"))+
-  facet_wrap(~sev_class)+
+  mutate(sev_class = factor(sev_class, levels = c("Low severity","High severity"))) %>%
+    filter(sev_class ==s_class ) %>% 
+  ggplot(aes(lambda*100,yield_gain_mean))+
+  geom_line(aes(lambda*100, low_95, color = yield_class),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(aes(lambda*100, up_95,color = yield_class),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(size = 1.2, aes(lambda*100,yield_gain_median,color = yield_class))+
+  # scale_color_manual(values = c("#009628","#8A0004"))+
+  scale_color_manual(values = c("steelblue","#009628"))+
   theme_light()+
+    coord_cartesian(ylim=c(0,3000))+
   labs(x = "Fungicide efficacy (%)",
        y = "Yield gain (kg/ha)",
-       color = "Fungicide mixture",
-       linetype = "", fill = "")+
-  theme()
-y_gain
-ggsave("figs/yield_gain2.png", dpi = 600, height = 6, width =8)
+       color = "Attainable Yield", #(Dalla lana et al., 2018)
+       linetype = "")
+}
+high_sev_yg = ygain_plot(s_class = "High severity")+
+  labs(title = "High severity")
+low_sev_yg = ygain_plot(s_class = "Low severity")+
+  labs(title = "Low severity")
+```
+
+
+```{r}
+high_sev_yg+low_sev_yg
 ```
 
 ```{r}
 big_one_df %>%
   mutate(sev_class = case_when(sn > median(sn) ~ "High severity",
-                                 sn <= median(sn) ~ "Low severity")) %>%
-  group_by(lambda, sev_class ) %>% 
-  summarise(yield_gain_median = median(yield_gain),
-            # yield_gain_mean = mean(yield_gain),
-            up_95 = quantile(yield_gain, 0.975),
+                                 sn <= median(sn) ~ "Low severity"),
+      yield_class =  case_when(b0 > median(b0) ~ "High yield",
+                                 b0 <= median(b0) ~ "Low yield")) %>%
+  group_by(lambda, sev_class,yield_class ) %>% 
+  summarise(yield_gain_mean = mean(yield_gain),
+            yield_gain_median = median(yield_gain, na.rm = T),
             low_95 = quantile(yield_gain, 0.025),
+            up_95 = quantile(yield_gain, 0.975),
             up_75 = quantile(yield_gain, 0.75),
             low_75 = quantile(yield_gain, 0.25)) %>% 
-  bind_rows(overal_yg)
+  bind_rows(overal_yg) %>% 
+  filter(lambda==.75) %>% 
+  arrange(yield_class)
+
+
 ```
 
 
-## Yield gain percent
+### Percent  gain 
 
 ```{r}
 overal_percet = big_one_df %>%
-  mutate(sev_class = "Overall") %>% 
+  mutate(sev_class = " Overall") %>% 
   group_by(lambda,sev_class) %>% 
-  summarise(yield_gain_median = median(yield_gain_perc,na.rm = T),
-            yield_gain_mean = mean(yield_gain_perc,na.rm = T),
-            up_95 = quantile(yield_gain_perc, 0.975,na.rm = T),
+  mutate(yield_gain_perc = case_when(yield_gain_perc>quantile(yield_gain_perc,0.999)~quantile(yield_gain_perc,0.999),
+                                     yield_gain_perc<=quantile(yield_gain_perc,0.999) ~yield_gain_perc)) %>%
+  summarise(yield_gain_mean = mean(yield_gain_perc,na.rm = T),
+            yield_gain_median = median(yield_gain_perc,na.rm = T),
             low_95 = quantile(yield_gain_perc, 0.025,na.rm = T),
+            up_95 = quantile(yield_gain_perc, 0.975,na.rm = T),
             up_75 = quantile(yield_gain_perc, 0.75,na.rm = T),
             low_75 = quantile(yield_gain_perc, 0.25,na.rm = T))  
-```
 
+
+
+```
 
 
 ```{r}
-fun = c("AZOX","CYPR","TEBU","AZOX+CYPR","PICO+CYPR","PYRA+EPOX","TRIF+PROT")
-C = c(61.8,55.8,57.8,79.0,80.2,76.7,83.6)
-C_L = c(57.7,52.11,54.5,76.5,77.6,73.7,81.4)
-C_U = c(NA, 59.2,60.9,81.4,82.5,79.4,85.6)
-
-D = c(29.6,27.7,29.6,49.2,51.1,47.2,64.8)
-D_L = c(25.2,24.2,26.3,43.6,45.1,41.6,57.2)
-D_U = c(NA,31.3,33.1,55.2,57.4,53,72.8)
-
-dat2 = data.frame(fun, C,C_L,C_U,D,D_L,D_U)
-```
-
-
-```{r fig.height=5, fig.width=12}
-y_gain_perc = big_one_df %>%
-  mutate(sev_class = case_when(sn > median(sn) ~ "High severity",
-                                 sn <= median(sn) ~ "Low severity")) %>% 
-  group_by(lambda,sev_class) %>% 
-  summarise(yield_gain_median = median(yield_gain_perc,na.rm = T),
-            yield_gain_mean = mean(yield_gain_perc,na.rm = T),
-            up_95 = quantile(yield_gain_perc, 0.975,na.rm = T),
-            low_95 = quantile(yield_gain_perc, 0.025,na.rm = T),
-            up_75 = quantile(yield_gain_perc, 0.75,na.rm = T),
-            low_75 = quantile(yield_gain_perc, 0.25,na.rm = T)) %>% 
-  bind_rows(overal_percet) %>% 
-  mutate(sev_class = factor(sev_class, levels = c("Overall","Low severity","High severity"))) %>% 
-  filter(sev_class == "High severity") %>% 
+over_gg = overal_percet %>% 
   ggplot(aes(lambda*100,yield_gain_mean))+
-  geom_ribbon(aes(ymin = low_95, ymax = up_95,fill = "95% Credible Interval"))+# ,alpha = .2)+
-  geom_ribbon(aes(ymin = low_75, ymax = up_75, fill = "Quartiles 25%-75%"))+# ,alpha = .3)+
-  # geom_line(size = 0.5, color = "black", aes(linetype = "Simulated mean"))+
-  geom_line(size = 1, color = "#23415a",aes(lambda*100,yield_gain_median,linetype = "Median" ))+
-  
-  
-  geom_point(data = dat2, aes(C,D, color = fun))+
-  geom_errorbar(data = dat2, aes(C,D, ymin = D_L, ymax = D_U, color = fun))+
-  geom_errorbarh(data = dat2, aes(C,D, xmin = C_L, xmax = C_U, color = fun))+
-  scale_fill_manual(values = c("#b5cde0", "#90b4d2"))+
+  geom_line(aes(lambda*100, low_95),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(aes(lambda*100, up_95),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(size = 1.2, aes(lambda*100,yield_gain_median))+
   # scale_linetype_manual(values=c(1,2))+
-  scale_color_colorblind()+
-    facet_wrap(~sev_class)+
   theme_light()+
   # coord_equal()+
   labs(x = "Fungicide efficacy (%)",
        y = "Yield gain %",
        color = "Fungicide mixture", #(Dalla lana et al., 2018)
        linetype = "", fill = "")+
+  coord_cartesian(ylim = c(0,100), xlim = c(-10,100))
+over_gg
+```
+
+
+
+```{r fig.height=5, fig.width=12}
+ygain_perc_plot = function(s_class){
+big_one_df %>% 
+  mutate(sev_class = case_when(sn > median(sn) ~ "High severity",
+                                 sn <= median(sn) ~ "Low severity"),
+      yield_class =  case_when(b0 > median(b0) ~ "High yield",
+                                 b0 <= median(b0) ~ "Low yield")) %>%
+  group_by(lambda, sev_class,yield_class ) %>% 
+  summarise(yield_gain_median = median(yield_gain_perc),
+            yield_gain_mean = mean(yield_gain_perc),
+            up_95 = quantile(yield_gain_perc, 0.975),
+            low_95 = quantile(yield_gain_perc, 0.025),
+            up_75 = quantile(yield_gain_perc, 0.75),
+            low_75 = quantile(yield_gain_perc, 0.25)) %>% 
+  mutate(sev_class = factor(sev_class, levels = c("Low severity","High severity"))) %>%
+    filter(sev_class ==s_class ) %>% 
+  ggplot(aes(lambda*100,yield_gain_mean))+
+  geom_line(aes(lambda*100, low_95, color = yield_class),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(aes(lambda*100, up_95,color = yield_class),
+              linetype = 2,
+            size = 0.7,
+            fill = NA)+
+  geom_line(size = 1.2, aes(lambda*100,yield_gain_median,color = yield_class))+
+  # scale_color_manual(values = c("#009628","#8A0004"))+
+  scale_color_manual(values = c("steelblue","#009628"))+
+
+  theme_light()+
+  labs(x = "Fungicide efficacy (%)",
+       y = "Yield gain (%)",
+       color = "Attainable Yield", 
+       linetype = "", fill = "")+
   coord_cartesian(ylim = c(0,100))
-y_gain_perc  
-    ggsave("figs/yield_gain_perc.png", dpi = 600, height = 6, width =8)
+}
+high_sev_yg_perc = ygain_perc_plot(s_class = "High severity")+
+  labs(title = "High severity")
+low_sev_yg_perc = ygain_perc_plot(s_class = "Low severity")+
+  labs(title = "Low severity")
 
 ```
 
-<!-- # ```{r} -->
-<!-- # plot_grid( plot_grid(y_gain+ -->
-<!-- #                        theme(legend.position = "none", -->
-<!-- #                              strip.background =element_rect(fill="NA"), -->
-<!-- #                              strip.text = element_text(color = "black")), -->
-<!-- #           y_gain_perc+ -->
-<!-- #             theme(legend.position = "bottom", -->
-<!-- #                   strip.background =element_rect(fill="NA"), -->
-<!-- #                   strip.text = element_text(color = "black")), -->
-<!-- #           nrow = 2, rel_heights = c(0.83,1))) -->
-<!-- # ggsave("figs/combo_yield_gain.png", dpi = 600, height = 9, width =6) -->
-<!-- # ``` -->
+### Combo yied gain
+```{r}
+(high_sev_yg+low_sev_yg)/
+(high_sev_yg_perc+low_sev_yg_perc)+
+  plot_layout(guides = "collect",
+               heights = c(1,1))+
+  plot_annotation(tag_levels = 'A')& 
+  theme(plot.title = element_text(size =8))
+  
+  
+ggsave("figs/yield_gain_perc.png", dpi = 600, height = 6, width =8)
+ggsave("figs/yield_gain_perc.pdf", dpi = 600, height = 6, width =8)
+```
 
 
 
 ```{r}
  big_one_df %>%
   mutate(sev_class = case_when(sn > median(sn) ~ "High severity",
-                                 sn <= median(sn) ~ "Low severity")) %>% 
-  group_by(lambda,sev_class) %>% 
-  summarise(yield_gain_median = median((yield_gain_perc),na.rm = T),
-            yield_gain_mean = mean((yield_gain_perc),na.rm = T),
-            up_95 = quantile((yield_gain_perc), 0.975,na.rm = T),
+                                 sn <= median(sn) ~ "Low severity"),
+      yield_class =  case_when(b0 > median(b0) ~ "High yield",
+                                 b0 <= median(b0) ~ "Low yield")) %>%
+  group_by(lambda,sev_class,yield_class) %>%
+  mutate(yield_gain_perc = case_when(yield_gain_perc>quantile(yield_gain_perc,0.999)~quantile(yield_gain_perc,0.999),
+                                     yield_gain_perc<=quantile(yield_gain_perc,0.999) ~yield_gain_perc)) %>%
+  summarise(yield_gain_mean = mean((yield_gain_perc),na.rm = T),
+            yield_gain_median = median((yield_gain_perc),na.rm = T),
             low_95 = quantile((yield_gain_perc), 0.025,na.rm = T),
+            up_95 = quantile((yield_gain_perc), 0.975,na.rm = T),
             up_75 = quantile((yield_gain_perc), 0.75,na.rm = T),
             low_75 = quantile((yield_gain_perc), 0.25,na.rm = T)) %>% 
-  bind_rows(overal_percet)
+  bind_rows(overal_percet)%>% 
+  filter(lambda==0.75) %>% 
+  arrange(yield_class)
 
 ```
 
 
+# Examples
+
+Fungicide PICO+TEBU
+
+```{r}
+n = 1000
+# yield = rnorm(1000,682.11, 28.97)
+efficacy = (1-exp(rnorm(1000,-1.204,0.0462)))
+
+sev_n = rbeta(n, 1.707, 1.266)
+sev_f = sev_n*(1-efficacy) 
+
+normal_correlated<-gera.norm.bid.geral(n,0.21,0,0,1,1)
+b0_n = pnorm(normal_correlated[,2])
+b1_n = pnorm(normal_correlated[,1])
+b0 = qnorm(b0_n, mean_intercept,sd_intercept)
+b1 = -qgamma(b1_n, shape, rate,)
+rm(b0_n,b1_n,normal_correlated)
+
+# Calculating the alpha coeficient
+alfa = (b1/b0)*100
+
+# Calculating yield gain
+yn  = b0 - (-alfa*b0*sev_n)
+yf  = b0 - (-alfa*b0*sev_f)
+
+cost = 125
+soy_price = rnorm(n, mean(sbr_price$price),sd(sbr_price$price))
+
+yield_gain = yf-yn
+yield_gain_perc = ((yf - yn)/yn)*100
+yield_gain_perc = ((yf/yn)-1)*100
+income = yield_gain*soy_price
+CP = cost/soy_price
+profit = (yield_gain>=CP)*1
+mean(profit)
+
+hist(income-cost)
+hist(efficacy)
+```
+
+
+## simulations overtime
+### Tebu
+```{r}
+box_time = data.frame()
+time = seq(0,10, 1)
+
+b0_decline =-1.518
+b0_se_decline =  0.065
+b1_decline = 0.147
+b1_se_decline = 0.012
+n = 30000
+for(i in 1:length(time)){
+  
+y =  rnorm(n, b0_decline,b0_se_decline) + time[i]* rnorm(n,b1_decline,b1_se_decline)  
+efficacy = (1-exp(y))
+a = data.frame(time = time[i],lambda=efficacy)
+box_time = box_time %>% 
+  bind_rows(a)
+}
+
+# box_time
 
 
 
+# box_time %>% 
+#   ggplot(aes(time, lambda*100))+
+#   geom_point()+
+#   labs(y = "Efficacy")+
+#   ylim(0,100)
+
+```
+
+```{r}
+simul_decay = function(data_ef, cost){
+# cost = 75
+N = n*length(time)
+sev_n = rbeta(N, 1.707, 1.266)
+sev_f = sev_n*(1-data_ef$lambda) 
+normal_correlated<-gera.norm.bid.geral(N,0.21,0,0,1,1)
+b0_n = pnorm(normal_correlated[,2])
+b1_n = pnorm(normal_correlated[,1])
+b0 = qnorm(b0_n, mean_intercept,sd_intercept)
+b1 = -qgamma(b1_n, shape, rate,)
+rm(b0_n,b1_n,normal_correlated)
+
+# Calculating the alpha coeficient
+alfa = (b1/b0)*100
+
+# Calculating yield gain
+yn  = b0 - (-alfa*b0*sev_n)
+yf  = b0 - (-alfa*b0*sev_f)
+
+soy_price = rnorm(N, mean(sbr_price$price),sd(sbr_price$price))
+
+yield_gain = yf-yn
+yield_gain_perc = ((yf - yn)/yn)*100
+yield_gain_perc = ((yf/yn)-1)*100
+income = yield_gain*soy_price
+CP = cost/soy_price
+profit = (yield_gain>=CP)
+profit_50 = (income>=cost+(cost*0.5))#*1
+
+box_time2 = data_ef %>% 
+  mutate(yield_gain) %>% 
+  mutate(yield_gain_perc) %>% 
+  mutate(income) %>% 
+  mutate(CP, cost) %>% 
+  mutate(profit,
+         profit_50) %>% 
+  group_by(time) %>% 
+  mutate(P = mean(profit),
+         P_50 = mean(profit_50))
+return(box_time2)
+}
+
+```
+
+```{r}
+tebu_75 = simul_decay(data_ef = box_time, cost = 75)
+tebu_100 = simul_decay(data_ef = box_time, cost = 100)
+tebu_125 = simul_decay(data_ef = box_time, cost = 125)
+tebu = bind_rows(tebu_75,tebu_100, tebu_125)
+```
+
+
+```{r}
+tebu %>% 
+  group_by(time,cost) %>% 
+  slice(1L) %>% 
+  pivot_longer(10:11, names_to = "Profits", values_to = "prob") %>% 
+  mutate(Profits = case_when(Profits =="P" ~ " Break-even",
+                             Profits =="P_50" ~ "50% profit")) %>% 
+  ggplot()+
+  geom_hline(yintercept = 0.5, color = "gray", size =1, linetype =2)+
+  geom_line(aes((time+2004), prob, color = as.factor(cost) ),
+            size = 1.2)+
+  facet_wrap(~Profits)+
+  scale_color_colorblind()+
+  labs(y = "Probability of offseting costs",
+       x = "Time",
+       color = "Cost (US$)")+
+  ylim(0,1)+
+  theme_minimal_grid()
+```
+
+
+### Cypr
+
+```{r}
+box_time_mix = data.frame()
+time = seq(0,10, 1)
+#mix intercept
+# b0_decline =-2.151
+# b0_se_decline =  0.121
+
+# tebu intercept
+b0_decline =-1.518
+b0_se_decline =  0.065
+
+# b1_decline = 0.132
+# b1_se_decline = 0.022
+
+b1_decline =0.061
+b1_se_decline = 0.015
+
+n = 30000
+for(i in 1:length(time)){
+  
+y =  rnorm(n, b0_decline,b0_se_decline) + time[i]* rnorm(n,b1_decline,b1_se_decline)  
+efficacy = (1-exp(y))
+a = data.frame(time = time[i],lambda=efficacy)
+box_time_mix = box_time_mix %>% 
+  bind_rows(a)
+}
+
+
+```
+
+
+```{r}
+mix_75 = simul_decay(data_ef =  box_time_mix, cost = 75)
+mix_100 = simul_decay(data_ef = box_time_mix, cost = 100)
+mix_125 = simul_decay(data_ef = box_time_mix, cost = 125)
+mix = bind_rows(mix_75,mix_100, mix_125)
+```
+
+
+```{r}
+mix %>% 
+  group_by(time,cost) %>% 
+  slice(1L) %>% 
+  pivot_longer(10:11, names_to = "Profits", values_to = "prob") %>% 
+  mutate(Profits = case_when(Profits =="P" ~ " Break-even",
+                             Profits =="P_50" ~ "50% profit")) %>% 
+  ggplot()+
+  geom_hline(yintercept = 0.5, color = "gray", size =1, linetype =2)+
+  geom_line(aes((time+2004), prob, color = as.factor(cost) ),
+            size = 1.2)+
+  facet_wrap(~Profits)+  
+  scale_color_colorblind()+
+  labs(y = "Probability of offseting costs",
+       x = "Time",
+       color = "Cost (US$)")+
+  ylim(0,1)+
+  theme_light()
+```
+
+#### Combo figura
+```{r}
+prob_time =  function(data, prof_class){
+
+data %>% 
+  group_by(time,cost) %>% 
+  slice(1L) %>% 
+  pivot_longer(10:11, names_to = "Profits", values_to = "prob") %>% 
+  mutate(Profits = case_when(Profits =="P" ~ "Break-even",
+                             Profits =="P_50" ~ "50% profit")) %>% 
+  filter(Profits == prof_class) %>% 
+  ggplot(aes((time), prob))+
+    
+  annotate("rect",ymin = 0, ymax =0.25, 
+            xmin = -5, xmax = 15,
+            fill = "#eff3ff",colour="white",
+            # alpha = 0.8,
+           size = 0.3)+
+  annotate("rect",ymin = 0.25, ymax =0.5, 
+            xmin = -5, xmax = 15,
+            fill = "#bdd7e7",colour="white",
+            # alpha = 0.8,
+           size = 0.3)+
+    annotate("rect",ymin = 0.5, ymax =0.75, 
+            xmin = -5, xmax = 15,
+            fill = "#6baed6",colour="white",
+            # alpha = 0.8,
+            size = 0.3)+
+    annotate("rect",ymin = 0.75, ymax =1, 
+            xmin = -5, xmax = 15,
+            fill = "#2171b5", colour="white",
+            # alpha = 0.8,
+            size = 0.3)+
+    
+    
+  # geom_hline(yintercept = 0.75, color = "gray", size =0.8, linetype =2)+
+  geom_step(direction = "hv",size = 1.2,
+            aes( color = as.factor(cost) ))+
+  scale_x_continuous(breaks = seq(0,10,1))+
+  # scale_color_manual(values = c("red" , "#DC143C","darkred"))+
+  scale_color_manual(values = c("#fecc5c" , "#fd8d3c","#e31a1c"))+
+  # scale_color_manual(values = c("#000000" , "#252525","#525252"))+
+  labs(y = "Probability",
+       x = "Time (years)",
+       color = "Cost (US$/ha)")+
+ coord_cartesian(xlim=c(0,10), ylim = c(0,1))+
+  theme_light()+
+    theme(#panel.grid.major = element_blank()+
+          panel.grid =  element_blank())
+  
+  }
+```
+<!-- Efficacy decay 0.147 /year -->
+```{r}
+tebu_g1 = prob_time(tebu, prof_class ="Break-even")+
+    labs(title = "High annual rate of decline"
+         # subtitle = "Offset costs"
+         )
+tebu_g2 = prob_time(tebu, prof_class ="50% profit")+
+    labs(title = "High annual rate of decline",
+         subtitle = "50% profit"
+         )
+mix_g1 = prob_time(mix, prof_class ="Break-even")+
+    labs(title = "Low annual rate of decline"
+         # subtitle = "Offset costs"
+         )
+mix_g2 = prob_time(mix, prof_class ="50% profit")+
+    labs(title = "Low annual rate of decline",
+         subtitle = "50% profit"
+         )
+```
+
+```{r fig.height=4, fig.width=6}
+tebu_g1+mix_g1+
+  plot_layout(guides = "collect")+
+  plot_annotation(tag_levels = 'A')&
+  theme(legend.position = "bottom",
+        plot.title = element_text(size = 10))
+ggsave("figs/prob_time.png", dpi = 600, height = 4, width = 7)
+ggsave("figs/prob_time.pdf", dpi = 600, height = 4, width = 7)
+```
 
 
 
